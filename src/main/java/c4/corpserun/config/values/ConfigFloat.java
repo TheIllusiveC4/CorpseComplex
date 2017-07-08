@@ -8,7 +8,13 @@ public enum ConfigFloat {
     OFFHAND_DURABILITY_LOSS("Offhand Durability Loss",ConfigCategories.DURABILITY.name,0.2f,0,1, "Percent of offhand durability lost on death"),
     MAIN_INVENTORY_DURABILITY_LOSS("Main Inventory Durability Loss",ConfigCategories.DURABILITY.name,0.2f,0,1, "Percent of durability lost on main inventory items on death"),
     XP_LOSS_PERCENT("Lost XP Percent",ConfigCategories.EXPERIENCE.name, 0.25f, 0, 1, "Percent of experience lost on death"),
-    XP_RECOVER_PERCENT("Recoverable XP Percent",ConfigCategories.EXPERIENCE.name, 1.0f, 0, 1, "Percent of lost experience that can be recovered");
+    XP_RECOVER_PERCENT("Recoverable XP Percent",ConfigCategories.EXPERIENCE.name, 1.0f, 0, 1, "Percent of lost experience that can be recovered"),
+    ARMOR_ENERGY_LOSS("Armor Energy Loss",ConfigCategories.ENERGY.name,0.2f,0,1,"Percent of armor energy drained on death"),
+    HOTBAR_ENERGY_LOSS("Hotbar Energy Loss",ConfigCategories.ENERGY.name,0.2f,0,1,"Percent of energy drained on hotbar items on death"),
+    MAINHAND_ENERGY_LOSS("Mainhand Energy Loss",ConfigCategories.ENERGY.name,0.2f,0,1, "Percent of mainhand energy drained on death"),
+    OFFHAND_ENERGY_LOSS("Offhand Energy Loss",ConfigCategories.ENERGY.name,0.2f,0,1, "Percent of offhand energy drained on death"),
+    MAIN_INVENTORY_ENERGY_LOSS("Main Inventory Energy Loss",ConfigCategories.ENERGY.name,0.2f,0,1, "Percent of energy lost on main inventory items on death");
+
 
     public final String name;
     public final String category;

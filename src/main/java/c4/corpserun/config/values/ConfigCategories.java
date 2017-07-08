@@ -5,7 +5,8 @@ public enum ConfigCategories {
     EXPERIENCE ("experience", "Experience Management"),
     INVENTORY ("inventory", "Inventory Management"),
     DURABILITY ("durability", "Durability Loss"),
-    EFFECTS ("effects", "Effects on Respawn");
+    EFFECTS ("effects", "Effects on Respawn"),
+    ENERGY ("energy", "Energy Drain");
 
     public final String name;
     public final String comment;

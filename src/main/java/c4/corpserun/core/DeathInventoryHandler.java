@@ -6,6 +6,9 @@ import c4.corpserun.config.values.ConfigStringList;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public class DeathInventoryHandler {
 
@@ -29,25 +32,33 @@ public class DeathInventoryHandler {
 
             ItemStack itemStack = inventoryPlayer.getStackInSlot(index);
 
+            if (itemStack.isEmpty()) { continue;}
+
             if (!ConfigBool.KEEP_HOTBAR.value && index == inventoryPlayer.currentItem)
-                { storeItem(index, itemStack, ConfigBool.KEEP_MAINHAND.value, ConfigFloat.MAINHAND_DURABILITY_LOSS.value);}
+                { storeItem(index, itemStack, ConfigBool.KEEP_MAINHAND.value, ConfigFloat.MAINHAND_DURABILITY_LOSS.value, ConfigFloat.MAINHAND_ENERGY_LOSS.value);}
             else if (index < 9)
-                { storeItem(index, itemStack, ConfigBool.KEEP_HOTBAR.value, ConfigFloat.HOTBAR_DURABILITY_LOSS.value);}
+                { storeItem(index, itemStack, ConfigBool.KEEP_HOTBAR.value, ConfigFloat.HOTBAR_DURABILITY_LOSS.value, ConfigFloat.HOTBAR_ENERGY_LOSS.value);}
             else if (index >= 9 && index < 36)
-                { storeItem(index, itemStack, ConfigBool.KEEP_MAIN_INVENTORY.value, ConfigFloat.MAIN_INVENTORY_DURABILITY_LOSS.value);}
+                { storeItem(index, itemStack, ConfigBool.KEEP_MAIN_INVENTORY.value, ConfigFloat.MAIN_INVENTORY_DURABILITY_LOSS.value, ConfigFloat.MAIN_INVENTORY_ENERGY_LOSS.value);}
             else if (index >= 36 && index < 40)
-                { storeItem(index, itemStack, ConfigBool.KEEP_ARMOR.value, ConfigFloat.ARMOR_DURABILITY_LOSS.value);}
+                { storeItem(index, itemStack, ConfigBool.KEEP_ARMOR.value, ConfigFloat.ARMOR_DURABILITY_LOSS.value, ConfigFloat.ARMOR_ENERGY_LOSS.value);}
             else if (index == 40)
-                { storeItem(index, itemStack, ConfigBool.KEEP_OFFHAND.value, ConfigFloat.OFFHAND_DURABILITY_LOSS.value);}
+                { storeItem(index, itemStack, ConfigBool.KEEP_OFFHAND.value, ConfigFloat.OFFHAND_DURABILITY_LOSS.value, ConfigFloat.OFFHAND_ENERGY_LOSS.value);}
         }
     }
 
-    private void storeItem (int index, ItemStack itemStack, boolean checkConfig, float durabilityConfig) {
-
-        if (itemStack.isEmpty()) { return; }
+    private void storeItem (int index, ItemStack itemStack, boolean checkConfig, float durabilityConfig, float energyConfig) {
 
         if (ConfigBool.ENABLE_DURABILITY_LOSS.value && itemStack.isItemStackDamageable()){
             itemStack.damageItem(Math.round(itemStack.getMaxDamage() * durabilityConfig), inventoryPlayer.player);
+        }
+
+        if (ConfigBool.ENABLE_ENERGY_DRAIN.value && itemStack.hasCapability(CapabilityEnergy.ENERGY, null)) {
+            IEnergyStorage energy = itemStack.getCapability(CapabilityEnergy.ENERGY, null);
+            int energyLoss = Math.round(energy.getMaxEnergyStored() * energyConfig);
+            while (energyLoss > 0 && energy.getEnergyStored() > 0) {
+                energyLoss -= energy.extractEnergy(energyLoss,false);
+            }
         }
 
         if (checkToKeepItem(index, itemStack, checkConfig)) {

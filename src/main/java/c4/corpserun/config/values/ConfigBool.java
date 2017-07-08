@@ -11,7 +11,8 @@ public enum ConfigBool {
     DESTROY_CURSED("Destroy Cursed Items",ConfigCategories.INVENTORY.name, false, "Set to true to destroy cursed items instead of dropping them"),
     ENABLE_DURABILITY_LOSS("Enable Durability Loss on Death",ConfigCategories.DURABILITY.name, true,"Set to true to enable durability loss on death"),
     KEEP_XP("Retain All XP",ConfigCategories.EXPERIENCE.name, false, "Set to true to keep all XP on death"),
-    ENABLE_CURE("Enable Curing Items",ConfigCategories.EFFECTS.name,true,"Set to true to enable curing buffs/debuffs (via milk buckets or other implementations)");
+    ENABLE_CURE("Enable Curing Items",ConfigCategories.EFFECTS.name,true,"Set to true to enable curing buffs/debuffs (via milk buckets or other implementations)"),
+    ENABLE_ENERGY_DRAIN("Enable Energy Drain on Death",ConfigCategories.ENERGY.name, true, "Set to true to enable energy drain on death");
 
     public final String name;
     public final String category;
