@@ -12,7 +12,8 @@ public enum ConfigBool {
     ENABLE_DURABILITY_LOSS("Enable Durability Loss on Death",ConfigCategories.DURABILITY.name, true,"Set to true to enable durability loss on death"),
     KEEP_XP("Retain All XP",ConfigCategories.EXPERIENCE.name, false, "Set to true to keep all XP on death"),
     ENABLE_CURE("Enable Curing Items",ConfigCategories.EFFECTS.name,true,"Set to true to enable curing buffs/debuffs (via milk buckets or other implementations)"),
-    ENABLE_ENERGY_DRAIN("Enable Energy Drain on Death",ConfigCategories.ENERGY.name, true, "Set to true to enable energy drain on death");
+    ENABLE_ENERGY_DRAIN("Enable Energy Drain on Death",ConfigCategories.ENERGY.name, true, "Set to true to enable energy drain on death"),
+    KEEP_HUNGER("Retain Hunger Level",ConfigCategories.HUNGER.name, true, "Set to true to retain hunger level on death");
 
     public final String name;
     public final String category;

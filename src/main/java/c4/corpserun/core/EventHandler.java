@@ -5,6 +5,7 @@ import c4.corpserun.capability.IDeathInventory;
 import c4.corpserun.config.ConfigEffectsHelper;
 import c4.corpserun.config.values.ConfigBool;
 import c4.corpserun.config.values.ConfigFloat;
+import c4.corpserun.config.values.ConfigInt;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -77,15 +78,22 @@ public class EventHandler {
     public void onPlayerRespawnBegin(PlayerEvent.Clone e) {
 
         EntityPlayer player = e.getEntityPlayer();
+        EntityPlayer oldPlayer = e.getOriginal();
 
         if (!e.isWasDeath()) { return;}
 
         if (!player.world.getGameRules().getBoolean("keepInventory")) {
-            IDeathInventory oldDeathStorage = e.getOriginal().getCapability(DeathInventoryProvider.DEATH_INV_CAP, null);
+            IDeathInventory oldDeathStorage = oldPlayer.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null);
             addStorageContents(oldDeathStorage.getDeathInventory(), player.inventory);
         }
 
-        player.addExperience(e.getOriginal().experienceTotal);
+        if (ConfigBool.KEEP_HUNGER.value) {
+            player.getFoodStats().setFoodLevel(Math.max(ConfigInt.MIN_FOOD.value, (Math.min(ConfigInt.MAX_FOOD.value, oldPlayer.getFoodStats().getFoodLevel()))));
+        } else {
+            player.getFoodStats().setFoodLevel(Math.max(ConfigInt.MIN_FOOD.value, (Math.min(ConfigInt.MAX_FOOD.value, 20))));
+        }
+
+        player.addExperience(oldPlayer.experienceTotal);
     }
 
     @SubscribeEvent

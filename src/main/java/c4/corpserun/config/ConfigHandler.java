@@ -1,10 +1,7 @@
 package c4.corpserun.config;
 
 import c4.corpserun.CorpseRun;
-import c4.corpserun.config.values.ConfigBool;
-import c4.corpserun.config.values.ConfigCategories;
-import c4.corpserun.config.values.ConfigFloat;
-import c4.corpserun.config.values.ConfigStringList;
+import c4.corpserun.config.values.*;
 import c4.corpserun.proxy.CommonProxy;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -44,6 +41,10 @@ public class ConfigHandler {
 
         for(ConfigBool bool : ConfigBool.values()) {
             bool.value = cfg.getBoolean(bool.name, bool.category, bool.defaultBool, bool.comment);
+        }
+
+        for(ConfigInt num : ConfigInt.values()) {
+            num.value = cfg.getInt(num.name, num.category, num.defaultInt, num.min, num.max, num.comment);
         }
 
         for(ConfigFloat num : ConfigFloat.values()) {

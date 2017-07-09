@@ -6,7 +6,8 @@ public enum ConfigCategories {
     INVENTORY ("inventory", "Inventory Management"),
     DURABILITY ("durability", "Durability Loss"),
     EFFECTS ("effects", "Effects on Respawn"),
-    ENERGY ("energy", "Energy Drain");
+    ENERGY ("energy", "Energy Drain"),
+    HUNGER ("hunger", "Hunger Management");
 
     public final String name;
     public final String comment;
