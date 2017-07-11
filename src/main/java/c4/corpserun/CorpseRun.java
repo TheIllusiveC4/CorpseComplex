@@ -16,7 +16,7 @@ public class CorpseRun {
 
     public static final String MODID = "corpserun";
     public static final String MODNAME = "Corpse Run";
-    public static final String MODVER = "0.3b";
+    public static final String MODVER = "0.3.1b";
 
     @SidedProxy(clientSide = "c4.corpserun.proxy.ClientProxy", serverSide = "c4.corpserun.proxy.ServerProxy")
     public static CommonProxy proxy;
