@@ -17,4 +17,12 @@ public enum ConfigCategories {
         this.comment = comment;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
 }

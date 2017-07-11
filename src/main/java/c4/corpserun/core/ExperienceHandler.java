@@ -2,7 +2,7 @@ package c4.corpserun.core;
 
 import net.minecraft.entity.player.EntityPlayer;
 
-public class ExperienceHandler {
+public final class ExperienceHandler {
 
     public static void addExperience(EntityPlayer player, int amount) {
 

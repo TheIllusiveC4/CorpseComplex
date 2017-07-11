@@ -1,7 +1,7 @@
 [{
   "modid": "corpserun",
   "name": "Corpse Run",
-  "description": "A post-death configuration system for inventory, experience, etc.",
+  "description": "Configure what you keep when you die, plus many additional post-death options.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",

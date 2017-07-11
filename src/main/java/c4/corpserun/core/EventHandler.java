@@ -28,13 +28,13 @@ public class EventHandler {
     @SubscribeEvent (priority = EventPriority.HIGHEST)
     public void onPlayerDeath (LivingDeathEvent e) {
 
-        if(!(e.getEntityLiving() instanceof EntityPlayer)
+        if (!(e.getEntityLiving() instanceof EntityPlayer)
                 || e.getEntity().getEntityWorld().getGameRules().getBoolean("keepInventory")) { return;}
 
         EntityPlayer player = (EntityPlayer) e.getEntityLiving();
 
-        IDeathInventory deathStorage = player.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null);
-        deathStorage.assignDeathInventory(new DeathInventoryHandler(player.inventory).getStorage());
+        DeathInventoryHandler deathInventoryHandler = new DeathInventoryHandler(player);
+        deathInventoryHandler.iterateInventory();
     }
 
     /*Set priority to low here so we hopefully give the
@@ -44,14 +44,19 @@ public class EventHandler {
     @SubscribeEvent (priority = EventPriority.LOWEST)
     public void onPlayerDrop (PlayerDropsEvent e) {
 
-        EntityPlayer player = e.getEntityPlayer();
+        if (ConfigBool.ENABLE_INVENTORY.getValue()) {
 
-        if (player.getEntityWorld().getGameRules().getBoolean("keepInventory")) { return;}
+            if (ConfigBool.DESTROY_DROPPED_ITEMS.getValue()) {
+                e.getDrops().clear();
+            }
 
-        if (ConfigBool.DESTROY_DROPPED_ITEMS.value)         {   e.getDrops().clear();}
+            EntityPlayer player = e.getEntityPlayer();
 
-        IDeathInventory deathStorage = player.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null);
-        addStorageContents(deathStorage.getDeathInventory(), player.inventory);
+            if (player.getEntityWorld().getGameRules().getBoolean("keepInventory")) {return;}
+
+            IDeathInventory deathStorage = player.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null);
+            DeathInventoryHandler.addStorageContents(deathStorage.getDeathInventory(), player.inventory);
+        }
     }
 
     @SubscribeEvent
@@ -59,18 +64,21 @@ public class EventHandler {
 
         if (!(e.getEntityLiving() instanceof EntityPlayer)) { return;}
 
-        EntityPlayer player = (EntityPlayer) e.getEntityLiving();
+        if (ConfigBool.ENABLE_XP.getValue()) {
 
-        if (ConfigBool.KEEP_XP.value) {
-            e.setCanceled(true);
-        } else {
-            int dropXP = Math.round(player.experienceTotal * (ConfigFloat.XP_LOSS_PERCENT.value) * (ConfigFloat.XP_RECOVER_PERCENT.value));
-            int keptXP = Math.round(player.experienceTotal * (1 - ConfigFloat.XP_LOSS_PERCENT.value));
-            e.setDroppedExperience(dropXP);
-            player.experienceLevel = 0;
-            player.experience = 0.0F;
-            player.experienceTotal = 0;
-            ExperienceHandler.addExperience(player,keptXP);
+            EntityPlayer player = (EntityPlayer) e.getEntityLiving();
+
+            if (ConfigBool.KEEP_XP.getValue()) {
+                e.setCanceled(true);
+            } else {
+                int dropXP = Math.round(player.experienceTotal * (ConfigFloat.XP_LOSS_PERCENT.getValue()) * (ConfigFloat.XP_RECOVER_PERCENT.getValue()));
+                int keptXP = Math.round(player.experienceTotal * (1 - ConfigFloat.XP_LOSS_PERCENT.getValue()));
+                e.setDroppedExperience(dropXP);
+                player.experienceLevel = 0;
+                player.experience = 0.0F;
+                player.experienceTotal = 0;
+                ExperienceHandler.addExperience(player, keptXP);
+            }
         }
     }
 
@@ -82,48 +90,42 @@ public class EventHandler {
 
         if (!e.isWasDeath()) { return;}
 
-        if (!player.world.getGameRules().getBoolean("keepInventory")) {
-            IDeathInventory oldDeathStorage = oldPlayer.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null);
-            addStorageContents(oldDeathStorage.getDeathInventory(), player.inventory);
+        if (ConfigBool.ENABLE_INVENTORY.getValue()) {
+            if (!player.world.getGameRules().getBoolean("keepInventory")) {
+                IDeathInventory oldDeathStorage = oldPlayer.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null);
+                DeathInventoryHandler.addStorageContents(oldDeathStorage.getDeathInventory(), player.inventory);
+            }
         }
 
-        if (ConfigBool.KEEP_HUNGER.value) {
-            player.getFoodStats().setFoodLevel(Math.max(ConfigInt.MIN_FOOD.value, (Math.min(ConfigInt.MAX_FOOD.value, oldPlayer.getFoodStats().getFoodLevel()))));
-        } else {
-            player.getFoodStats().setFoodLevel(Math.max(ConfigInt.MIN_FOOD.value, (Math.min(ConfigInt.MAX_FOOD.value, 20))));
+        if (ConfigBool.ENABLE_HUNGER.getValue()) {
+            if (ConfigBool.KEEP_HUNGER.getValue()) {
+                player.getFoodStats().setFoodLevel(Math.max(ConfigInt.MIN_FOOD.getValue(), (Math.min(ConfigInt.MAX_FOOD.getValue(), oldPlayer.getFoodStats().getFoodLevel()))));
+            } else {
+                player.getFoodStats().setFoodLevel(Math.max(ConfigInt.MIN_FOOD.getValue(), (Math.min(ConfigInt.MAX_FOOD.getValue(), 20))));
+            }
         }
 
-        player.addExperience(oldPlayer.experienceTotal);
+        if (ConfigBool.ENABLE_XP.getValue()) {  player.addExperience(oldPlayer.experienceTotal);}
     }
 
     @SubscribeEvent
     public void onPlayerRespawnFinish(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent e) {
 
-        ArrayList<String[]> effectsToApply = ConfigEffectsHelper.getEffectsList();
-        if (effectsToApply.isEmpty()) { return;}
-
-        for (String[] s : effectsToApply) {
-            PotionEffect potionEffect = new PotionEffect(
-                    Potion.getPotionFromResourceLocation(s[0]),
-                    Integer.parseInt(s[1]) * 20,
-                    Integer.parseInt(s[2])-1);
-            if (!ConfigBool.ENABLE_CURE.value) {
-                ArrayList<ItemStack> noCures = new ArrayList<>(0);
-                potionEffect.setCurativeItems(noCures);
+        if (ConfigBool.ENABLE_EFFECTS.getValue()) {
+            ArrayList<String[]> effectsToApply = ConfigEffectsHelper.getEffectsList();
+            if (effectsToApply.isEmpty()) {
+                return;
             }
-            e.player.addPotionEffect(potionEffect);
-        }
-    }
 
-    private void addStorageContents(NonNullList<ItemStack> storage, InventoryPlayer inventory) {
-        for (int x = 0; x < storage.size(); x++) {
-
-            if (storage.get(x).isEmpty()) { continue;}
-
-            if (!inventory.getStackInSlot(x).isEmpty()) {
-                inventory.addItemStackToInventory(storage.get(x));
-            } else {
-                inventory.setInventorySlotContents(x, storage.get(x));
+            for (String[] s : effectsToApply) {
+                PotionEffect potionEffect = new PotionEffect(
+                        Potion.getPotionFromResourceLocation(s[0]),
+                        Integer.parseInt(s[1]) * 20,
+                        Integer.parseInt(s[2]) - 1);
+                if (!ConfigBool.ENABLE_CURE.getValue()) {
+                    potionEffect.setCurativeItems(new ArrayList<>(0));
+                }
+                e.player.addPotionEffect(potionEffect);
             }
         }
     }
