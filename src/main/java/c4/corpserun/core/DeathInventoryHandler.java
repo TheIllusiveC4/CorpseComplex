@@ -80,7 +80,7 @@ public class DeathInventoryHandler {
 
         if (DeathItemHandler.keepItem(itemStack, toKeep)) {
             deathInventory.storeDeathItem(inventoryPlayer, index, itemStack);
-            System.out.println("Index: " + index + ", " + "Item: " + itemStack);
+//            System.out.println("Index: " + index + ", " + "Item: " + itemStack);
         } else {
             if (ConfigBool.DESTROY_CURSED.getValue()) {
                 inventoryPlayer.removeStackFromSlot(index);
