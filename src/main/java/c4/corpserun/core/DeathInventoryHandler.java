@@ -13,15 +13,11 @@ public class DeathInventoryHandler {
 
     private InventoryPlayer inventoryPlayer;
     private IDeathInventory deathInventory;
-    private float durabilityLoss;
-    private float energyLoss;
     private boolean toKeep;
 
     public DeathInventoryHandler(EntityPlayer player) {
         inventoryPlayer = player.inventory;
         deathInventory = player.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null);
-        durabilityLoss = 0;
-        energyLoss = 0;
         toKeep = false;
     }
 
@@ -32,63 +28,40 @@ public class DeathInventoryHandler {
 
             if (itemStack.isEmpty()) {  continue;}
 
-            assignConfigValues(index);
+            if (ConfigBool.ENABLE_INVENTORY.getValue()) {
+                toKeep = DeathItemHandler.keepItem(inventoryPlayer, index, itemStack);
+                if (DeathItemHandler.isCursed(itemStack) && ConfigBool.DESTROY_CURSED.getValue()){
+                    inventoryPlayer.removeStackFromSlot(index);
+                    continue;
+                }
+            }
 
             if (ConfigBool.ENABLE_DURABILITY_LOSS.getValue()) {
-                DeathItemHandler.loseDurability(inventoryPlayer.player, itemStack, durabilityLoss);
+                if (toKeep) {
+                    DeathItemHandler.loseDurability(inventoryPlayer.player, itemStack, ConfigFloat.KEEP_DURABILITY_LOSS.getValue());
+                } else {
+                    DeathItemHandler.loseDurability(inventoryPlayer.player, itemStack, ConfigFloat.DROP_DURABILITY_LOSS.getValue());
+                }
             }
 
             if (ConfigBool.ENABLE_ENERGY_DRAIN.getValue()) {
-                DeathItemHandler.loseEnergy(itemStack, energyLoss);
+                if (toKeep) {
+                    DeathItemHandler.loseEnergy(itemStack, ConfigFloat.KEEP_ENERGY_DRAIN.getValue());
+                } else {
+                    DeathItemHandler.loseEnergy(itemStack, ConfigFloat.DROP_ENERGY_DRAIN.getValue());
+                }
             }
 
             if (ConfigBool.ENABLE_INVENTORY.getValue()) {
-                storeItem(itemStack, index);
+                if (Math.random() >= ConfigFloat.RANDOM_DROP_CHANCE.getValue()) {
+                    deathInventory.storeDeathItem(inventoryPlayer, index, itemStack);
+//                  System.out.println("Index: " + index + ", " + "Item: " + itemStack);
+                }
             }
         }
     }
 
-    private void assignConfigValues (int index) {
-        if (index == inventoryPlayer.currentItem) {
-            durabilityLoss = ConfigFloat.MAINHAND_DURABILITY_LOSS.getValue();
-            energyLoss = ConfigFloat.MAINHAND_ENERGY_LOSS.getValue();
-            toKeep = ConfigBool.KEEP_MAINHAND.getValue();
-        }
-        else if (index < 9) {
-            durabilityLoss = ConfigFloat.HOTBAR_DURABILITY_LOSS.getValue();
-            energyLoss = ConfigFloat.HOTBAR_ENERGY_LOSS.getValue();
-            toKeep = ConfigBool.KEEP_HOTBAR.getValue();
-        }
-        else if (index >= 9 && index < 36) {
-            durabilityLoss = ConfigFloat.MAIN_INVENTORY_DURABILITY_LOSS.getValue();
-            energyLoss = ConfigFloat.MAIN_INVENTORY_ENERGY_LOSS.getValue();
-            toKeep = ConfigBool.KEEP_MAIN_INVENTORY.getValue();
-        }
-        else if (index >= 36 && index < 40) {
-            durabilityLoss = ConfigFloat.ARMOR_DURABILITY_LOSS.getValue();
-            energyLoss = ConfigFloat.ARMOR_ENERGY_LOSS.getValue();
-            toKeep = ConfigBool.KEEP_ARMOR.getValue();
-        }
-        else if (index == 40) {
-            durabilityLoss = ConfigFloat.OFFHAND_DURABILITY_LOSS.getValue();
-            energyLoss = ConfigFloat.OFFHAND_ENERGY_LOSS.getValue();
-            toKeep = ConfigBool.KEEP_OFFHAND.getValue();
-        }
-    }
-
-    private void storeItem(ItemStack itemStack, int index) {
-
-        if (DeathItemHandler.keepItem(itemStack, toKeep)) {
-            deathInventory.storeDeathItem(inventoryPlayer, index, itemStack);
-//            System.out.println("Index: " + index + ", " + "Item: " + itemStack);
-        } else {
-            if (ConfigBool.DESTROY_CURSED.getValue()) {
-                inventoryPlayer.removeStackFromSlot(index);
-            }
-        }
-    }
-
-    public static void addStorageContents(NonNullList<ItemStack> storage, InventoryPlayer inventory) {
+    public static void addStorageToInventory(NonNullList<ItemStack> storage, InventoryPlayer inventory) {
         for (int x = 0; x < storage.size(); x++) {
             if (storage.get(x).isEmpty()) { continue;}
 

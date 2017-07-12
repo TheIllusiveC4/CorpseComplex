@@ -1,5 +1,6 @@
 package c4.corpserun.core;
 
+import c4.corpserun.config.values.ConfigBool;
 import c4.corpserun.config.values.ConfigStringList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -27,13 +28,29 @@ public final class DeathItemHandler {
         }
     }
 
-    public static boolean keepItem (ItemStack itemStack, boolean checkConfig) {
+    public static boolean keepItem (InventoryPlayer inventoryPlayer, int index, ItemStack itemStack) {
 
         if (isEssential(itemStack)) {   return true;}
 
-        if (isCursed(itemStack))    {   return false;}
+        if (isCursed(itemStack)) { return false;}
 
-        return checkConfig;
+        if (index == inventoryPlayer.currentItem) {
+            return ConfigBool.KEEP_MAINHAND.getValue();
+        }
+        else if (index < 9) {
+            return ConfigBool.KEEP_HOTBAR.getValue();
+        }
+        else if (index >= 9 && index < 36) {
+            return ConfigBool.KEEP_MAIN_INVENTORY.getValue();
+        }
+        else if (index >= 36 && index < 40) {
+            return ConfigBool.KEEP_ARMOR.getValue();
+        }
+        else if (index == 40) {
+            return ConfigBool.KEEP_OFFHAND.getValue();
+        }
+
+        return false;
     }
 
     private static boolean isEssential(ItemStack itemStack) {
@@ -46,7 +63,7 @@ public final class DeathItemHandler {
         return false;
     }
 
-    private static boolean isCursed(ItemStack itemStack) {
+    public static boolean isCursed(ItemStack itemStack) {
 
         for (String s : ConfigStringList.CURSED_ITEMS.getValue()) {
             if (s.equals(itemStack.getItem().getRegistryName().toString())) {

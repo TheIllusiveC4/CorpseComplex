@@ -7,6 +7,7 @@ import net.minecraft.util.NonNullList;
 public class DeathInventory implements IDeathInventory {
 
     private NonNullList<ItemStack> deathInventory = NonNullList.withSize(41,ItemStack.EMPTY);
+    private NonNullList<ItemStack> compatInventory = NonNullList.withSize(13, ItemStack.EMPTY);
 
     public void changeSize(int size) {
         deathInventory = NonNullList.withSize(size, ItemStack.EMPTY);

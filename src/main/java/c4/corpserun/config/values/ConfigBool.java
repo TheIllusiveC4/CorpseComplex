@@ -15,7 +15,7 @@ public enum ConfigBool {
     DESTROY_CURSED("Destroy Cursed Items",ConfigCategories.INVENTORY.name, false, "Set to true to destroy cursed items instead of dropping them"),
     KEEP_XP("Retain All XP",ConfigCategories.EXPERIENCE.name, false, "Set to true to keep all XP on death"),
     ENABLE_CURE("Enable Curing Items",ConfigCategories.EFFECTS.name, true,"Set to true to enable curing buffs/debuffs (via milk buckets or other implementations)"),
-    KEEP_HUNGER("Retain Hunger Level",ConfigCategories.HUNGER.name, false, "Set to true to retain hunger level on death"),
+    KEEP_FOOD("Retain Food Level",ConfigCategories.HUNGER.name, false, "Set to true to retain food level on death"),
 
     ENABLE_ENERGY_DRAIN(".Enable Energy Drain Module",ConfigCategories.ENERGY.getName(), false, "Set to true to enable energy drain on death"),
     ENABLE_DURABILITY_LOSS(".Enable Durability Loss Module",ConfigCategories.DURABILITY.getName(), false, "Set to true to enable durability loss on death"),

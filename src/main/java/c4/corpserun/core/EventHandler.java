@@ -8,18 +8,13 @@ import c4.corpserun.config.values.ConfigFloat;
 import c4.corpserun.config.values.ConfigInt;
 import c4.corpserun.config.values.compatibility.ConfigCompatBool;
 import c4.corpserun.core.compatibility.CompatTAN;
-import jdk.nashorn.internal.objects.annotations.Function;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -59,7 +54,7 @@ public class EventHandler {
             if (player.getEntityWorld().getGameRules().getBoolean("keepInventory")) {return;}
 
             IDeathInventory deathStorage = player.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null);
-            DeathInventoryHandler.addStorageContents(deathStorage.getDeathInventory(), player.inventory);
+            DeathInventoryHandler.addStorageToInventory(deathStorage.getDeathInventory(), player.inventory);
         }
     }
 
@@ -97,12 +92,12 @@ public class EventHandler {
         if (ConfigBool.ENABLE_INVENTORY.getValue()) {
             if (!player.world.getGameRules().getBoolean("keepInventory")) {
                 IDeathInventory oldDeathStorage = oldPlayer.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null);
-                DeathInventoryHandler.addStorageContents(oldDeathStorage.getDeathInventory(), player.inventory);
+                DeathInventoryHandler.addStorageToInventory(oldDeathStorage.getDeathInventory(), player.inventory);
             }
         }
 
         if (ConfigBool.ENABLE_HUNGER.getValue()) {
-            if (ConfigBool.KEEP_HUNGER.getValue()) {
+            if (ConfigBool.KEEP_FOOD.getValue()) {
                 player.getFoodStats().setFoodLevel(Math.max(ConfigInt.MIN_FOOD.getValue(), (Math.min(ConfigInt.MAX_FOOD.getValue(), oldPlayer.getFoodStats().getFoodLevel()))));
             } else {
                 player.getFoodStats().setFoodLevel(Math.max(ConfigInt.MIN_FOOD.getValue(), (Math.min(ConfigInt.MAX_FOOD.getValue(), 20))));
