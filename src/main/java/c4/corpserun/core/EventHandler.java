@@ -6,6 +6,9 @@ import c4.corpserun.config.ConfigEffectsHelper;
 import c4.corpserun.config.values.ConfigBool;
 import c4.corpserun.config.values.ConfigFloat;
 import c4.corpserun.config.values.ConfigInt;
+import c4.corpserun.config.values.compatibility.ConfigCompatBool;
+import c4.corpserun.core.compatibility.CompatTAN;
+import jdk.nashorn.internal.objects.annotations.Function;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,6 +19,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -106,6 +110,12 @@ public class EventHandler {
         }
 
         if (ConfigBool.ENABLE_XP.getValue()) {  player.addExperience(oldPlayer.experienceTotal);}
+
+        if (CompatTAN.isLoaded() && ConfigCompatBool.ENABLE_TAN.getValue()){
+            if (ConfigCompatBool.KEEP_THIRST.getValue()) { CompatTAN.keepThirst(oldPlayer, player); }
+            if (ConfigCompatBool.KEEP_HYDRATION.getValue()) { CompatTAN.keepHydration(oldPlayer, player); }
+            if (ConfigCompatBool.KEEP_TEMPERATURE.getValue()) { CompatTAN.keepTemperature(oldPlayer, player); }
+        }
     }
 
     @SubscribeEvent

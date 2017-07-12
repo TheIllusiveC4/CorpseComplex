@@ -1,5 +1,9 @@
 package c4.corpserun.config.values;
 
+import c4.corpserun.config.ConfigHandler;
+import c4.corpserun.config.values.compatibility.ConfigCompatCategories;
+import net.minecraftforge.common.config.ConfigCategory;
+
 public enum ConfigBool {
 
     DESTROY_DROPPED_ITEMS("Destroy Dropped Items",ConfigCategories.INVENTORY.name, false, "Set to true to destroy all dropped items on death"),
@@ -12,6 +16,7 @@ public enum ConfigBool {
     KEEP_XP("Retain All XP",ConfigCategories.EXPERIENCE.name, false, "Set to true to keep all XP on death"),
     ENABLE_CURE("Enable Curing Items",ConfigCategories.EFFECTS.name, true,"Set to true to enable curing buffs/debuffs (via milk buckets or other implementations)"),
     KEEP_HUNGER("Retain Hunger Level",ConfigCategories.HUNGER.name, false, "Set to true to retain hunger level on death"),
+
     ENABLE_ENERGY_DRAIN(".Enable Energy Drain Module",ConfigCategories.ENERGY.getName(), false, "Set to true to enable energy drain on death"),
     ENABLE_DURABILITY_LOSS(".Enable Durability Loss Module",ConfigCategories.DURABILITY.getName(), false, "Set to true to enable durability loss on death"),
     ENABLE_XP(".Enable Experience Module",ConfigCategories.EXPERIENCE.getName(), false, "Set to true to enable experience modifications on death"),
@@ -23,6 +28,7 @@ public enum ConfigBool {
     public final String category;
     public final boolean defaultBool;
     public final String comment;
+    public final boolean compat;
 
     public boolean value;
 
@@ -31,6 +37,7 @@ public enum ConfigBool {
         this.category = category;
         this.defaultBool = defaultBool;
         this.comment = comment;
+        this.compat = false;
     }
 
     public boolean getValue() {

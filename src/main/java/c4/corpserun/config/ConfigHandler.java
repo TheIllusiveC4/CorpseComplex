@@ -2,7 +2,10 @@ package c4.corpserun.config;
 
 import c4.corpserun.CorpseRun;
 import c4.corpserun.config.values.*;
+import c4.corpserun.config.values.compatibility.ConfigCompatBool;
+import c4.corpserun.config.values.compatibility.ConfigCompatCategories;
 import c4.corpserun.proxy.CommonProxy;
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -12,6 +15,7 @@ import org.apache.logging.log4j.Level;
 public class ConfigHandler {
 
     public static Configuration cfg = CommonProxy.config;
+    public static boolean compat = false;
 
     public static void readConfig() {
 
@@ -19,6 +23,7 @@ public class ConfigHandler {
             cfg.load();
             initConfigCategories();
             initConfigValues();
+            if (compat) { initCompatValues();}
         } catch (Exception e1) {
             CorpseRun.logger.log(Level.ERROR, "Problem loading config file!", e1);
         } finally {
@@ -32,6 +37,22 @@ public class ConfigHandler {
 
         for(ConfigCategories categories : ConfigCategories.values()) {
             cfg.addCustomCategoryComment(categories.name, categories.comment);
+        }
+
+        for (ConfigCompatCategories categories : ConfigCompatCategories.values()) {
+            if (categories.isLoaded()) {
+                setCompatActive();
+                break;
+            }
+        }
+
+        if (compat) {
+            cfg.addCustomCategoryComment("compatibility", "Compatibility Management");
+            for (ConfigCompatCategories categories : ConfigCompatCategories.values()) {
+                if (categories.isLoaded()) {
+                    cfg.addCustomCategoryComment(ConfigCategory.getQualifiedName(categories.getName(), cfg.getCategory("compatibility")), categories.getComment());
+                }
+            }
         }
     }
 
@@ -56,6 +77,16 @@ public class ConfigHandler {
         }
     }
 
+    private static void initCompatValues() {
+        for(ConfigCompatBool bool : ConfigCompatBool.values()) {
+            if (bool.isActive) { bool.value = cfg.getBoolean(bool.name, bool.category, bool.defaultBool, bool.comment);}
+        }
+    }
+
+    private static void setCompatActive() {
+        compat = true;
+    }
+
     @Mod.EventBusSubscriber
     private static class EventHandler {
 
@@ -63,7 +94,8 @@ public class ConfigHandler {
         public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
             if (event.getModID().equals(CorpseRun.MODID)) {
 
-                ConfigHandler.initConfigValues();
+                initConfigValues();
+                if (compat) { initCompatValues();}
 
                 if (cfg.hasChanged()){
                     cfg.save();

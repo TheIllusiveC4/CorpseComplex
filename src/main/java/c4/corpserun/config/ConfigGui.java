@@ -23,6 +23,10 @@ public class ConfigGui extends GuiConfig{
             list.add(new ConfigElement(ConfigHandler.cfg.getCategory(categories.name)));
         }
 
+        if (ConfigHandler.compat) {
+            list.add(new ConfigElement(ConfigHandler.cfg.getCategory("compatibility")));
+        }
+
         return list;
     }
 }

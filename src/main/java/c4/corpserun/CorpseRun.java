@@ -1,11 +1,13 @@
 package c4.corpserun;
 
+import c4.corpserun.debug.DebugCommand;
 import c4.corpserun.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = CorpseRun.MODID, name = CorpseRun.MODNAME, version = CorpseRun.MODVER,
@@ -16,7 +18,7 @@ public class CorpseRun {
 
     public static final String MODID = "corpserun";
     public static final String MODNAME = "Corpse Run";
-    public static final String MODVER = "0.3.1b";
+    public static final String MODVER = "0.4b";
 
     @SidedProxy(clientSide = "c4.corpserun.proxy.ClientProxy", serverSide = "c4.corpserun.proxy.ServerProxy")
     public static CommonProxy proxy;
@@ -41,5 +43,10 @@ public class CorpseRun {
     public void postInit(FMLPostInitializationEvent e) {
         proxy.postInit(e);
     }
+
+//    @Mod.EventHandler
+//    public void serverLoad(FMLServerStartingEvent event) {
+//        event.registerServerCommand(new DebugCommand());
+//    }
 
 }

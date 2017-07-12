@@ -9,5 +9,7 @@
   "authorList": ["C4"],
   "credits": "",
   "logoFile": "",
-  "screenshots": []
+  "screenshots": [],
+  "dependencies": ["toughasnails"],
+  "useDependencyInformation": true
 }]
