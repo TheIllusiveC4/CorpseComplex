@@ -2,74 +2,72 @@ package c4.corpserun.core;
 
 import c4.corpserun.capability.DeathInventoryProvider;
 import c4.corpserun.capability.IDeathInventory;
+import c4.corpserun.config.ConfigHandler;
 import c4.corpserun.config.values.ConfigBool;
 import c4.corpserun.config.values.ConfigFloat;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-public class DeathInventoryHandler {
+abstract class DeathInventoryHandler {
 
-    private InventoryPlayer inventoryPlayer;
-    private IDeathInventory deathInventory;
-    private boolean toKeep;
+    protected EntityPlayer player;
+    protected String modid;
+    protected IDeathInventory deathInventory;
+    protected NonNullList<ItemStack> storage;
 
-    public DeathInventoryHandler(EntityPlayer player) {
-        inventoryPlayer = player.inventory;
+    public DeathInventoryHandler (EntityPlayer player, String modid) {
+        this.player = player;
+        this.modid = modid;
         deathInventory = player.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null);
-        toKeep = false;
     }
 
-    public void iterateInventory () {
+    protected void initStorage() {
+        storage = deathInventory.assignStorage(modid, getSizeInventory());
+    }
 
-        for (int index = 0; index < inventoryPlayer.getSizeInventory(); index++) {
-            ItemStack itemStack = inventoryPlayer.getStackInSlot(index);
+    protected NonNullList<ItemStack> getStorage() {
+        return storage;
+    }
 
-            if (itemStack.isEmpty()) {  continue;}
+    protected void iterateInventory() {
 
-            if (ConfigBool.ENABLE_INVENTORY.getValue()) {
-                toKeep = DeathItemHandler.keepItem(inventoryPlayer, index, itemStack);
-                if (DeathItemHandler.isCursed(itemStack) && ConfigBool.DESTROY_CURSED.getValue()){
-                    inventoryPlayer.removeStackFromSlot(index);
+        boolean storeStack = false;
+
+        for (int index = 0; index < getSizeInventory(); index++) {
+            ItemStack itemStack = getStackInSlot(index);
+
+            if (itemStack.isEmpty()) {
+                continue;
+            }
+
+            if (ConfigHandler.isInventoryModuleEnabled()) {
+                storeStack = toStoreStack(index, itemStack);
+                if (DeathItemHelper.isCursed(itemStack) && ConfigBool.DESTROY_CURSED.getValue()){
+                    removeStackFromSlot(index);
                     continue;
                 }
             }
 
-            if (ConfigBool.ENABLE_DURABILITY_LOSS.getValue()) {
-                if (toKeep) {
-                    DeathItemHandler.loseDurability(inventoryPlayer.player, itemStack, ConfigFloat.KEEP_DURABILITY_LOSS.getValue());
-                } else {
-                    DeathItemHandler.loseDurability(inventoryPlayer.player, itemStack, ConfigFloat.DROP_DURABILITY_LOSS.getValue());
-                }
+            if (ConfigHandler.isDurabilityModuleEnabled()) {
+                DeathItemHelper.loseDurability(player, itemStack, storeStack);
             }
 
-            if (ConfigBool.ENABLE_ENERGY_DRAIN.getValue()) {
-                if (toKeep) {
-                    DeathItemHandler.loseEnergy(itemStack, ConfigFloat.KEEP_ENERGY_DRAIN.getValue());
-                } else {
-                    DeathItemHandler.loseEnergy(itemStack, ConfigFloat.DROP_ENERGY_DRAIN.getValue());
-                }
+            if (ConfigHandler.isEnergyModuleEnabled()) {
+                DeathItemHelper.loseEnergy(itemStack, storeStack);
             }
 
-            if (ConfigBool.ENABLE_INVENTORY.getValue()) {
+            if (ConfigHandler.isInventoryModuleEnabled() && storeStack) {
                 if (Math.random() >= ConfigFloat.RANDOM_DROP_CHANCE.getValue()) {
-                    deathInventory.storeDeathItem(inventoryPlayer, index, itemStack);
-//                  System.out.println("Index: " + index + ", " + "Item: " + itemStack);
+                    storeStackFromInventory(index, itemStack);
                 }
             }
         }
     }
 
-    public static void addStorageToInventory(NonNullList<ItemStack> storage, InventoryPlayer inventory) {
-        for (int x = 0; x < storage.size(); x++) {
-            if (storage.get(x).isEmpty()) { continue;}
-
-            if (!inventory.getStackInSlot(x).isEmpty()) {
-                inventory.addItemStackToInventory(storage.get(x));
-            } else {
-                inventory.setInventorySlotContents(x, storage.get(x));
-            }
-        }
-    }
+    abstract int getSizeInventory();
+    abstract boolean toStoreStack(int index, ItemStack itemStack);
+    abstract ItemStack getStackInSlot(int index);
+    abstract void removeStackFromSlot(int index);
+    abstract void storeStackFromInventory(int index, ItemStack itemStack);
 }

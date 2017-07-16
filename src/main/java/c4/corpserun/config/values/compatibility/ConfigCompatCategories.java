@@ -1,9 +1,6 @@
 package c4.corpserun.config.values.compatibility;
 
-import c4.corpserun.config.ConfigHandler;
 import c4.corpserun.core.compatibility.CompatTAN;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.fml.common.Loader;
 
 public enum ConfigCompatCategories {
 

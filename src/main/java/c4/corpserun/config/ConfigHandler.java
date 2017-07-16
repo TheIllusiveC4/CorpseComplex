@@ -4,6 +4,7 @@ import c4.corpserun.CorpseRun;
 import c4.corpserun.config.values.*;
 import c4.corpserun.config.values.compatibility.ConfigCompatBool;
 import c4.corpserun.config.values.compatibility.ConfigCompatCategories;
+import c4.corpserun.config.values.compatibility.ConfigCompatInt;
 import c4.corpserun.proxy.CommonProxy;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
@@ -81,11 +82,33 @@ public class ConfigHandler {
         for(ConfigCompatBool bool : ConfigCompatBool.values()) {
             if (bool.isActive) { bool.value = cfg.getBoolean(bool.name, bool.category, bool.defaultBool, bool.comment);}
         }
+
+        for(ConfigCompatInt num : ConfigCompatInt.values()) {
+            if (num.isActive) { num.value = cfg.getInt(num.name, num.category, num.defaultInt, num.min, num.max, num.comment);}
+        }
     }
 
     private static void setCompatActive() {
         compat = true;
     }
+
+    public static boolean isInventoryModuleEnabled() {
+        return ConfigBool.ENABLE_INVENTORY.getValue();
+    }
+
+    public static boolean isDurabilityModuleEnabled() {
+        return ConfigBool.ENABLE_DURABILITY_LOSS.getValue();
+    }
+
+    public static boolean isEnergyModuleEnabled() {
+        return ConfigBool.ENABLE_ENERGY_DRAIN.getValue();
+    }
+
+    public static boolean isExperienceModuleEnabled() { return ConfigBool.ENABLE_XP.getValue();}
+
+    public static boolean isHungerModuleEnabled() { return ConfigBool.ENABLE_HUNGER.getValue();}
+
+    public static boolean isEffectsModuleEnabled() { return ConfigBool.ENABLE_EFFECTS.getValue();}
 
     @Mod.EventBusSubscriber
     private static class EventHandler {

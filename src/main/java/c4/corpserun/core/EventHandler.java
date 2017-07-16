@@ -2,23 +2,23 @@ package c4.corpserun.core;
 
 import c4.corpserun.capability.DeathInventoryProvider;
 import c4.corpserun.capability.IDeathInventory;
-import c4.corpserun.config.ConfigEffectsHelper;
+import c4.corpserun.config.ConfigHandler;
 import c4.corpserun.config.values.ConfigBool;
-import c4.corpserun.config.values.ConfigFloat;
-import c4.corpserun.config.values.ConfigInt;
 import c4.corpserun.config.values.compatibility.ConfigCompatBool;
 import c4.corpserun.core.compatibility.CompatTAN;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.util.ArrayList;
+import toughasnails.api.temperature.TemperatureHelper;
+import toughasnails.api.thirst.ThirstHelper;
+import toughasnails.handler.thirst.ThirstOverlayHandler;
+import toughasnails.handler.thirst.ThirstStatHandler;
+import toughasnails.thirst.ThirstHandler;
+import toughasnails.thirst.ThirstStorage;
 
 public class EventHandler {
 
@@ -30,10 +30,11 @@ public class EventHandler {
         if (!(e.getEntityLiving() instanceof EntityPlayer)
                 || e.getEntity().getEntityWorld().getGameRules().getBoolean("keepInventory")) { return;}
 
-        EntityPlayer player = (EntityPlayer) e.getEntityLiving();
-
-        DeathInventoryHandler deathInventoryHandler = new DeathInventoryHandler(player);
-        deathInventoryHandler.iterateInventory();
+        InventoryHandler inventoryHandler = new InventoryHandler((EntityPlayer) e.getEntityLiving());
+        if (ConfigHandler.isInventoryModuleEnabled()) {
+            inventoryHandler.initStorage();
+        }
+        inventoryHandler.iterateInventory();
     }
 
     /*Set priority to low here so we hopefully give the
@@ -43,7 +44,7 @@ public class EventHandler {
     @SubscribeEvent (priority = EventPriority.LOWEST)
     public void onPlayerDrop (PlayerDropsEvent e) {
 
-        if (ConfigBool.ENABLE_INVENTORY.getValue()) {
+        if (ConfigHandler.isInventoryModuleEnabled()) {
 
             if (ConfigBool.DESTROY_DROPPED_ITEMS.getValue()) {
                 e.getDrops().clear();
@@ -53,63 +54,48 @@ public class EventHandler {
 
             if (player.getEntityWorld().getGameRules().getBoolean("keepInventory")) {return;}
 
-            IDeathInventory deathStorage = player.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null);
-            DeathInventoryHandler.addStorageToInventory(deathStorage.getDeathInventory(), player.inventory);
+            InventoryHandler.retrieveStorage(player, player.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null));
         }
     }
 
     @SubscribeEvent
     public void onPlayerXPDrop(LivingExperienceDropEvent e) {
 
-        if (!(e.getEntityLiving() instanceof EntityPlayer)) { return;}
+        if (!(e.getEntityLiving() instanceof EntityPlayer) || !ConfigHandler.isExperienceModuleEnabled()) { return;}
 
-        if (ConfigBool.ENABLE_XP.getValue()) {
-
-            EntityPlayer player = (EntityPlayer) e.getEntityLiving();
-
-            if (ConfigBool.KEEP_XP.getValue()) {
-                e.setCanceled(true);
-            } else {
-                int dropXP = Math.round(player.experienceTotal * (ConfigFloat.XP_LOSS_PERCENT.getValue()) * (ConfigFloat.XP_RECOVER_PERCENT.getValue()));
-                int keptXP = Math.round(player.experienceTotal * (1 - ConfigFloat.XP_LOSS_PERCENT.getValue()));
-                e.setDroppedExperience(dropXP);
-                player.experienceLevel = 0;
-                player.experience = 0.0F;
-                player.experienceTotal = 0;
-                ExperienceHandler.addExperience(player, keptXP);
-            }
+        if (ConfigBool.KEEP_XP.getValue()) {
+            e.setCanceled(true);
+        } else {
+            ExperienceHelper.setExperiencesValues(e);
         }
     }
 
     @SubscribeEvent
     public void onPlayerRespawnBegin(PlayerEvent.Clone e) {
 
+        if (!e.isWasDeath() || e.getEntityPlayer().world.isRemote) { return;}
+
         EntityPlayer player = e.getEntityPlayer();
         EntityPlayer oldPlayer = e.getOriginal();
 
-        if (!e.isWasDeath()) { return;}
-
-        if (ConfigBool.ENABLE_INVENTORY.getValue()) {
+        if (ConfigHandler.isInventoryModuleEnabled()) {
             if (!player.world.getGameRules().getBoolean("keepInventory")) {
-                IDeathInventory oldDeathStorage = oldPlayer.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null);
-                DeathInventoryHandler.addStorageToInventory(oldDeathStorage.getDeathInventory(), player.inventory);
+                InventoryHandler.retrieveStorage(player, oldPlayer.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null));
             }
         }
 
-        if (ConfigBool.ENABLE_HUNGER.getValue()) {
-            if (ConfigBool.KEEP_FOOD.getValue()) {
-                player.getFoodStats().setFoodLevel(Math.max(ConfigInt.MIN_FOOD.getValue(), (Math.min(ConfigInt.MAX_FOOD.getValue(), oldPlayer.getFoodStats().getFoodLevel()))));
-            } else {
-                player.getFoodStats().setFoodLevel(Math.max(ConfigInt.MIN_FOOD.getValue(), (Math.min(ConfigInt.MAX_FOOD.getValue(), 20))));
-            }
+        if (ConfigHandler.isHungerModuleEnabled()) {
+            RespawnHelper.restoreHunger(player, oldPlayer);
         }
 
-        if (ConfigBool.ENABLE_XP.getValue()) {  player.addExperience(oldPlayer.experienceTotal);}
+        if (ConfigHandler.isExperienceModuleEnabled()) {
+            ExperienceHelper.restoreXP(player, oldPlayer);
+        }
 
         if (CompatTAN.isLoaded() && ConfigCompatBool.ENABLE_TAN.getValue()){
-            if (ConfigCompatBool.KEEP_THIRST.getValue()) { CompatTAN.keepThirst(oldPlayer, player); }
-            if (ConfigCompatBool.KEEP_HYDRATION.getValue()) { CompatTAN.keepHydration(oldPlayer, player); }
-            if (ConfigCompatBool.KEEP_TEMPERATURE.getValue()) { CompatTAN.keepTemperature(oldPlayer, player); }
+            CompatTAN.restoreThirst(player, oldPlayer);
+            if (ConfigCompatBool.KEEP_HYDRATION.getValue()) { CompatTAN.keepHydration(player, oldPlayer); }
+            if (ConfigCompatBool.KEEP_TEMPERATURE.getValue()) { CompatTAN.keepTemperature(player, oldPlayer); }
         }
     }
 
@@ -117,21 +103,7 @@ public class EventHandler {
     public void onPlayerRespawnFinish(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent e) {
 
         if (ConfigBool.ENABLE_EFFECTS.getValue()) {
-            ArrayList<String[]> effectsToApply = ConfigEffectsHelper.getEffectsList();
-            if (effectsToApply.isEmpty()) {
-                return;
-            }
-
-            for (String[] s : effectsToApply) {
-                PotionEffect potionEffect = new PotionEffect(
-                        Potion.getPotionFromResourceLocation(s[0]),
-                        Integer.parseInt(s[1]) * 20,
-                        Integer.parseInt(s[2]) - 1);
-                if (!ConfigBool.ENABLE_CURE.getValue()) {
-                    potionEffect.setCurativeItems(new ArrayList<>(0));
-                }
-                e.player.addPotionEffect(potionEffect);
-            }
+            RespawnHelper.addPotionEffects(e.player);
         }
     }
 }

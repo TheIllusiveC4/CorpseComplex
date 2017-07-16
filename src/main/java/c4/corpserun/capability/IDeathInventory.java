@@ -1,15 +1,18 @@
 package c4.corpserun.capability;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
+import java.util.ArrayList;
+
 public interface IDeathInventory {
 
-    void changeSize(int size);
+    NonNullList<ItemStack> assignStorage(String name, int size);
 
-    void storeDeathItem(InventoryPlayer inventoryPlayer, int index, ItemStack itemStack);
+    NonNullList<ItemStack> getStorage(String name);
 
-    NonNullList<ItemStack> getDeathInventory();
+    ArrayList<DeathList> getDeathInventory();
 
 }

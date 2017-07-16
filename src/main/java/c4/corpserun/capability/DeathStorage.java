@@ -14,24 +14,23 @@ public class DeathStorage implements Capability.IStorage<IDeathInventory> {
     @Override
     public NBTBase writeNBT(Capability<IDeathInventory> capability, IDeathInventory instance, EnumFacing side) {
 
-        NBTTagList nbttaglist = new NBTTagList();
+        for (DeathList deathList : instance.getDeathInventory()) {
+            String modid = deathList.getModid();
+            NBTTagList nbttaglist = new NBTTagList();
+            for (int i = 0; i < instance.getStorage(modid).size(); ++i) {
+                ItemStack itemstack = instance.getStorage(modid).get(i);
 
-        for (int i = 0; i < instance.getDeathInventory().size(); ++i)
-        {
-            ItemStack itemstack = instance.getDeathInventory().get(i);
-
-            if (!itemstack.isEmpty())
-            {
-                NBTTagCompound nbttagcompound = new NBTTagCompound();
-                nbttagcompound.setByte("Slot", (byte)i);
-                itemstack.writeToNBT(nbttagcompound);
-                nbttaglist.appendTag(nbttagcompound);
+                if (!itemstack.isEmpty()) {
+                    NBTTagCompound nbttagcompound = new NBTTagCompound();
+                    nbttagcompound.setByte("Slot", (byte) i);
+                    itemstack.writeToNBT(nbttagcompound);
+                    nbttaglist.appendTag(nbttagcompound);
+                }
             }
-        }
 
-        if (!nbttaglist.hasNoTags())
-        {
-            tag.setTag("Death Inventory", nbttaglist);
+            if (!nbttaglist.hasNoTags()) {
+                tag.setTag(modid, nbttaglist);
+            }
         }
 
         return tag;
@@ -40,19 +39,18 @@ public class DeathStorage implements Capability.IStorage<IDeathInventory> {
     @Override
     public void readNBT(Capability<IDeathInventory> capability, IDeathInventory instance, EnumFacing side, NBTBase nbt) {
 
-        NBTTagList nbttaglist = tag.getTagList("Death Inventory", 10);
+        for (DeathList deathList : instance.getDeathInventory()) {
+            String modid = deathList.getModid();
+            NBTTagList nbttaglist = tag.getTagList(modid, 10);
 
-        for (int i = 0; i < nbttaglist.tagCount(); ++i)
-        {
-            NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
-            int j = nbttagcompound.getByte("Slot") & 255;
+            for (int i = 0; i < nbttaglist.tagCount(); ++i) {
+                NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
+                int j = nbttagcompound.getByte("Slot") & 255;
 
-            if (j >= 0 && j < instance.getDeathInventory().size())
-            {
-                instance.getDeathInventory().set(j, new ItemStack(nbttagcompound));
+                if (j >= 0 && j < instance.getStorage(modid).size()) {
+                    instance.getStorage(modid).set(j, new ItemStack(nbttagcompound));
+                }
             }
         }
-
     }
-
 }
