@@ -3,8 +3,10 @@ package c4.corpserun.capability;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class DeathStorage implements Capability.IStorage<IDeathInventory> {
@@ -16,9 +18,11 @@ public class DeathStorage implements Capability.IStorage<IDeathInventory> {
 
         for (DeathList deathList : instance.getDeathInventory()) {
             String modid = deathList.getModid();
+            NonNullList<ItemStack> storage = deathList.getList();
             NBTTagList nbttaglist = new NBTTagList();
-            for (int i = 0; i < instance.getStorage(modid).size(); ++i) {
-                ItemStack itemstack = instance.getStorage(modid).get(i);
+            NBTTagCompound compound = new NBTTagCompound();
+            for (int i = 0; i < storage.size(); ++i) {
+                ItemStack itemstack = storage.get(i);
 
                 if (!itemstack.isEmpty()) {
                     NBTTagCompound nbttagcompound = new NBTTagCompound();
@@ -29,7 +33,9 @@ public class DeathStorage implements Capability.IStorage<IDeathInventory> {
             }
 
             if (!nbttaglist.hasNoTags()) {
-                tag.setTag(modid, nbttaglist);
+                compound.setTag("Inventory", nbttaglist);
+                compound.setInteger("Size", storage.size());
+                tag.setTag(modid, compound);
             }
         }
 
@@ -39,16 +45,18 @@ public class DeathStorage implements Capability.IStorage<IDeathInventory> {
     @Override
     public void readNBT(Capability<IDeathInventory> capability, IDeathInventory instance, EnumFacing side, NBTBase nbt) {
 
-        for (DeathList deathList : instance.getDeathInventory()) {
-            String modid = deathList.getModid();
-            NBTTagList nbttaglist = tag.getTagList(modid, 10);
+        for (String modid : tag.getKeySet()) {
 
-            for (int i = 0; i < nbttaglist.tagCount(); ++i) {
-                NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
-                int j = nbttagcompound.getByte("Slot") & 255;
+            NBTTagCompound compound = tag.getCompoundTag(modid);
+            NBTTagList nbttaglist = compound.getTagList("Inventory", 10);
+            NonNullList<ItemStack> storage = instance.assignStorage(modid, compound.getInteger("Size"));
 
-                if (j >= 0 && j < instance.getStorage(modid).size()) {
-                    instance.getStorage(modid).set(j, new ItemStack(nbttagcompound));
+            for (int j = 0; j < nbttaglist.tagCount(); ++j) {
+                NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(j);
+                int k = nbttagcompound.getByte("Slot") & 255;
+
+                if (k >= 0 && k < storage.size()) {
+                    storage.set(j, new ItemStack(nbttagcompound));
                 }
             }
         }
