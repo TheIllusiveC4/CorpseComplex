@@ -1,5 +1,6 @@
 package c4.corpserun.proxy;
 
+import c4.corpserun.CorpseRun;
 import c4.corpserun.capability.DeathInventory;
 import c4.corpserun.capability.DeathStorage;
 import c4.corpserun.config.ConfigHandler;
@@ -17,6 +18,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 import java.io.File;
 
@@ -37,7 +40,6 @@ public class CommonProxy {
         MinecraftForge.EVENT_BUS.register(new EventHandler());
         MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
         CapabilityManager.INSTANCE.register(IDeathInventory.class, new DeathStorage(), DeathInventory.class);
-
     }
 
     public void postInit(FMLPostInitializationEvent e) {

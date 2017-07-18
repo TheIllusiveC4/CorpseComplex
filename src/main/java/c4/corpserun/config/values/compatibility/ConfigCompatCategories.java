@@ -1,10 +1,10 @@
 package c4.corpserun.config.values.compatibility;
 
-import c4.corpserun.core.compatibility.CompatTAN;
+import c4.corpserun.core.compatibility.TANModule;
 
 public enum ConfigCompatCategories {
 
-    TAN ("tough as nails", "Tough as Nails Management", CompatTAN.isLoaded());
+    TAN ("tough as nails", "Tough as Nails Management", TANModule.isLoaded());
 
     public final String name;
     public final String comment;

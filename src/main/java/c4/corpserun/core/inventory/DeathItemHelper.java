@@ -1,4 +1,4 @@
-package c4.corpserun.core;
+package c4.corpserun.core.inventory;
 
 import c4.corpserun.config.values.ConfigBool;
 import c4.corpserun.config.values.ConfigFloat;
@@ -7,14 +7,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public final class DeathItemHelper {
+final class DeathItemHelper {
 
     private DeathItemHelper() {}
 
-    public static void loseDurability (EntityPlayer player, ItemStack itemStack, boolean toKeep) {
+    static void loseDurability (EntityPlayer player, ItemStack itemStack, boolean toKeep) {
 
         if (!itemStack.isItemStackDamageable()) { return;}
 
@@ -25,11 +26,12 @@ public final class DeathItemHelper {
         }
     }
 
-    public static void loseEnergy (ItemStack itemStack, boolean toKeep) {
-
-        if (!itemStack.hasCapability(CapabilityEnergy.ENERGY, null)) { return;}
+    static void loseEnergy (ItemStack itemStack, boolean toKeep) {
 
         IEnergyStorage energy = itemStack.getCapability(CapabilityEnergy.ENERGY, null);
+
+        if (energy == null) { return;}
+
         int energyToLose = 0;
 
         if (toKeep) {
@@ -43,20 +45,30 @@ public final class DeathItemHelper {
         }
     }
 
-    public static boolean isEssential(ItemStack itemStack) {
+    static boolean isEssential(ItemStack itemStack) {
 
         for (String s : ConfigStringList.ESSENTIAL_ITEMS.getValue()) {
-            if (s.equals(itemStack.getItem().getRegistryName().toString())) {
+
+            ResourceLocation name = itemStack.getItem().getRegistryName();
+
+            if (name == null) { continue;}
+
+            if (s.equals(name.toString())) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isCursed(ItemStack itemStack) {
+    static boolean isCursed(ItemStack itemStack) {
 
         for (String s : ConfigStringList.CURSED_ITEMS.getValue()) {
-            if (s.equals(itemStack.getItem().getRegistryName().toString())) {
+
+            ResourceLocation name = itemStack.getItem().getRegistryName();
+
+            if (name == null) { continue;}
+
+            if (s.equals(name.toString())) {
                 return true;
             }
         }

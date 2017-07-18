@@ -1,4 +1,4 @@
-package c4.corpserun.core;
+package c4.corpserun.core.inventory;
 
 import c4.corpserun.capability.DeathInventoryProvider;
 import c4.corpserun.capability.IDeathInventory;
@@ -22,7 +22,7 @@ abstract class DeathInventoryHandler {
         deathInventory = player.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null);
     }
 
-    protected void initStorage() {
+    public void initStorage() {
         storage = deathInventory.assignStorage(modid, getSizeInventory());
     }
 
@@ -30,7 +30,7 @@ abstract class DeathInventoryHandler {
         return storage;
     }
 
-    protected void iterateInventory() {
+    public void iterateInventory() {
 
         boolean storeStack = false;
 
@@ -58,7 +58,10 @@ abstract class DeathInventoryHandler {
             }
 
             if (ConfigHandler.isInventoryModuleEnabled() && storeStack) {
-                if (Math.random() >= ConfigFloat.RANDOM_DROP_CHANCE.getValue()) {
+                if (ConfigFloat.RANDOM_DROP_CHANCE.getValue() == 0.0F) {
+                    storeStackFromInventory(index, itemStack);
+                }
+                else if (Math.random() >= ConfigFloat.RANDOM_DROP_CHANCE.getValue()) {
                     storeStackFromInventory(index, itemStack);
                 }
             }

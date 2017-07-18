@@ -9,7 +9,6 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 public class DeathInventoryProvider implements ICapabilitySerializable<NBTBase> {
 
     @CapabilityInject(IDeathInventory.class)
-
     public static final Capability<IDeathInventory> DEATH_INV_CAP = null;
 
     private IDeathInventory instance = DEATH_INV_CAP.getDefaultInstance();

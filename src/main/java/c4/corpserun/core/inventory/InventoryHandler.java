@@ -1,13 +1,9 @@
-package c4.corpserun.core;
+package c4.corpserun.core.inventory;
 
-import c4.corpserun.capability.DeathInventoryProvider;
 import c4.corpserun.capability.IDeathInventory;
-import c4.corpserun.config.ConfigHandler;
 import c4.corpserun.config.values.ConfigBool;
-import c4.corpserun.config.values.ConfigFloat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 

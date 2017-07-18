@@ -8,6 +8,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = CorpseRun.MODID, name = CorpseRun.MODNAME, version = CorpseRun.MODVER,
@@ -18,7 +20,7 @@ public class CorpseRun {
 
     public static final String MODID = "corpserun";
     public static final String MODNAME = "Corpse Run";
-    public static final String MODVER = "0.4.1b";
+    public static final String MODVER = "0.5b";
 
     @SidedProxy(clientSide = "c4.corpserun.proxy.ClientProxy", serverSide = "c4.corpserun.proxy.ServerProxy")
     public static CommonProxy proxy;
@@ -44,9 +46,9 @@ public class CorpseRun {
         proxy.postInit(e);
     }
 
-//    @Mod.EventHandler
-//    public void serverLoad(FMLServerStartingEvent event) {
-//        event.registerServerCommand(new DebugCommand());
-//    }
+    @Mod.EventHandler
+    public void serverLoad(FMLServerStartingEvent event) {
+        event.registerServerCommand(new DebugCommand());
+    }
 
 }
