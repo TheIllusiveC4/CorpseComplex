@@ -1,13 +1,13 @@
 package c4.corpserun.core.inventory;
 
-import c4.corpserun.capability.DeathInventoryProvider;
+import c4.corpserun.capability.DeathInventory;
 import c4.corpserun.capability.IDeathInventory;
-import c4.corpserun.config.ConfigHandler;
-import c4.corpserun.config.values.ConfigBool;
-import c4.corpserun.config.values.ConfigFloat;
+import c4.corpserun.core.modules.InventoryModule;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+
+import java.util.Random;
 
 abstract class DeathInventoryHandler {
 
@@ -19,7 +19,7 @@ abstract class DeathInventoryHandler {
     public DeathInventoryHandler (EntityPlayer player, String modid) {
         this.player = player;
         this.modid = modid;
-        deathInventory = player.getCapability(DeathInventoryProvider.DEATH_INV_CAP, null);
+        deathInventory = player.getCapability(DeathInventory.Provider.DEATH_INV_CAP, null);
     }
 
     public void initStorage() {
@@ -32,7 +32,10 @@ abstract class DeathInventoryHandler {
 
     public void iterateInventory() {
 
-        boolean storeStack = false;
+        boolean storeStack;
+        boolean isCursed;
+        boolean isEssential;
+        Random generator = new Random();
 
         for (int index = 0; index < getSizeInventory(); index++) {
             ItemStack itemStack = getStackInSlot(index);
@@ -41,30 +44,49 @@ abstract class DeathInventoryHandler {
                 continue;
             }
 
-            if (ConfigHandler.isInventoryModuleEnabled()) {
-                storeStack = toStoreStack(index, itemStack);
-                if (DeathItemHelper.isCursed(itemStack) && ConfigBool.DESTROY_CURSED.getValue()){
-                    removeStackFromSlot(index);
-                    continue;
-                }
+            int itemCount = itemStack.getCount();
+            isCursed = DeathItemHelper.isCursed(itemStack);
+            isEssential = DeathItemHelper.isEssential(itemStack);
+            storeStack = ((toStoreStack(index, itemStack) && !isCursed) || isEssential);
+
+            if (isCursed && InventoryModule.destroyCursed){
+                removeStackFromSlot(index);
+                continue;
             }
 
-            if (ConfigHandler.isDurabilityModuleEnabled()) {
+            if (InventoryModule.enableDurability) {
                 DeathItemHelper.loseDurability(player, itemStack, storeStack);
             }
 
-            if (ConfigHandler.isEnergyModuleEnabled()) {
+            if (InventoryModule.enableEnergy) {
                 DeathItemHelper.loseEnergy(itemStack, storeStack);
             }
 
-            if (ConfigHandler.isInventoryModuleEnabled() && storeStack) {
-                if (ConfigFloat.RANDOM_DROP_CHANCE.getValue() == 0.0F) {
-                    storeStackFromInventory(index, itemStack);
+            if (storeStack) {
+                int keptAmount = itemCount;
+                if (!isEssential && InventoryModule.randomDrop != 0) {
+                    for (int i = 0; i < itemCount; i++) {
+                        if (generator.nextDouble() < InventoryModule.randomDrop) {
+                            keptAmount--;
+                        }
+                    }
                 }
-                else if (Math.random() >= ConfigFloat.RANDOM_DROP_CHANCE.getValue()) {
-                    storeStackFromInventory(index, itemStack);
+                storeStackFromInventory(index, itemStack.splitStack(keptAmount));
+                if (itemStack.isEmpty()) {
+                    continue;
+                }
+                itemCount = itemStack.getCount();
+            }
+
+            if (isEssential || InventoryModule.randomDestroy == 0) { continue;}
+            int destroyAmount = 0;
+            for (int i = 0; i < itemCount; i++) {
+                if (generator.nextDouble() < InventoryModule.randomDestroy) {
+                    destroyAmount++;
                 }
             }
+
+            itemStack.shrink(destroyAmount);
         }
     }
 

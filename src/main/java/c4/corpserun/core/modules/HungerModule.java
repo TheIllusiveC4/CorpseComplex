@@ -1,24 +1,61 @@
 package c4.corpserun.core.modules;
 
-import c4.corpserun.config.ConfigHandler;
-import c4.corpserun.config.values.ConfigBool;
-import c4.corpserun.config.values.ConfigInt;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public final class HungerModule {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
-    private static boolean isEnabled = ConfigHandler.isHungerModuleEnabled();
+public class HungerModule extends Module {
 
-    public static void restoreHunger(EntityPlayer player, EntityPlayer oldPlayer) {
+    private static boolean keepFood;
+    private static int minFood;
+    private static int maxFood;
+    private static boolean cfgEnabled;
 
-        if (!isEnabled) { return;}
+    @SubscribeEvent
+    public void onPlayerRespawnBegin(PlayerEvent.Clone e) {
+
+        if (!e.isWasDeath() || e.getEntityPlayer().world.isRemote) { return;}
+
+        restoreHunger(e.getEntityPlayer(), e.getOriginal());
+    }
+
+    public HungerModule() {
+        configName = "Hunger";
+        configDescription = "Hunger Management";
+        configCategory = new ConfigCategory(configName);
+        configCategory.setComment(configDescription);
+        prevEnabled = false;
+    }
+
+    public void loadModuleConfig() {
+        setCategoryComment();
+        cfgEnabled = getBool("Enable Hunger Module", false, "Set to true to enable hunger module");
+        keepFood = getBool("Keep Food Level", false, "Set to true to retain food level on death");
+        minFood = getInt("Minimum Food Level", 6, 0, 20, "Lowest amount of food level you can respawn with");
+        maxFood = getInt("Maximum Food Level", 20, minFood, 20, "Highest amount of food level you can respawn with");
+    }
+
+    public void initPropOrder() {
+        propOrder = new ArrayList<>(Collections.singletonList("Enable Hunger Module"));
+    }
+
+    public void setEnabled() {
+        enabled = cfgEnabled;
+    }
+
+    private static void restoreHunger(EntityPlayer player, EntityPlayer oldPlayer) {
 
         int oldFood = oldPlayer.getFoodStats().getFoodLevel();
 
-        if (ConfigBool.KEEP_FOOD.getValue()) {
-            player.getFoodStats().setFoodLevel(Math.max(ConfigInt.MIN_FOOD.getValue(), (Math.min(ConfigInt.MAX_FOOD.getValue(), oldFood))));
+        if (keepFood) {
+            player.getFoodStats().setFoodLevel(Math.max(minFood, (Math.min(maxFood, oldFood))));
         } else {
-            player.getFoodStats().setFoodLevel(Math.max(ConfigInt.MIN_FOOD.getValue(), (Math.min(ConfigInt.MAX_FOOD.getValue(), 20))));
+            player.getFoodStats().setFoodLevel(Math.max(minFood, (Math.min(maxFood, 20))));
         }
     }
 }

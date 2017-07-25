@@ -1,12 +1,8 @@
 package c4.corpserun.core.inventory;
 
-import c4.corpserun.config.values.ConfigBool;
-import c4.corpserun.config.values.ConfigFloat;
-import c4.corpserun.config.values.ConfigStringList;
+import c4.corpserun.core.modules.InventoryModule;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -20,9 +16,9 @@ final class DeathItemHelper {
         if (!itemStack.isItemStackDamageable()) { return;}
 
         if (toKeep) {
-            itemStack.damageItem(Math.round(itemStack.getMaxDamage()*ConfigFloat.KEEP_DURABILITY_LOSS.getValue()), player);
+            itemStack.damageItem((int) Math.round(itemStack.getMaxDamage()* InventoryModule.keptLoss), player);
         } else {
-            itemStack.damageItem(Math.round(itemStack.getMaxDamage()*ConfigFloat.DROP_DURABILITY_LOSS.getValue()), player);
+            itemStack.damageItem((int) Math.round(itemStack.getMaxDamage()* InventoryModule.dropLoss), player);
         }
     }
 
@@ -35,9 +31,9 @@ final class DeathItemHelper {
         int energyToLose = 0;
 
         if (toKeep) {
-            energyToLose = Math.round(energy.getMaxEnergyStored() * ConfigFloat.KEEP_ENERGY_DRAIN.getValue());
+            energyToLose = (int) Math.round(energy.getMaxEnergyStored() * InventoryModule.keptDrain);
         } else {
-            energyToLose = Math.round(energy.getMaxEnergyStored() * ConfigFloat.DROP_ENERGY_DRAIN.getValue());
+            energyToLose = (int) Math.round(energy.getMaxEnergyStored() * InventoryModule.dropDrain);
         }
 
         while (energyToLose > 0 && energy.getEnergyStored() > 0) {
@@ -47,7 +43,7 @@ final class DeathItemHelper {
 
     static boolean isEssential(ItemStack itemStack) {
 
-        for (String s : ConfigStringList.ESSENTIAL_ITEMS.getValue()) {
+        for (String s : InventoryModule.essentialItems) {
 
             ResourceLocation name = itemStack.getItem().getRegistryName();
 
@@ -62,7 +58,7 @@ final class DeathItemHelper {
 
     static boolean isCursed(ItemStack itemStack) {
 
-        for (String s : ConfigStringList.CURSED_ITEMS.getValue()) {
+        for (String s : InventoryModule.cursedItems) {
 
             ResourceLocation name = itemStack.getItem().getRegistryName();
 

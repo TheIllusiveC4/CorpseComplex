@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -15,6 +16,7 @@ public class TANMessage implements IMessage {
 
     private int thirst;
     private int temp;
+    private static final String MOD_ID = "toughasnails";
 
     public TANMessage(){}
 
@@ -40,21 +42,18 @@ public class TANMessage implements IMessage {
     public static class TANMessageHandler implements IMessageHandler<TANMessage, IMessage> {
 
         @Override
+        @Optional.Method(modid = MOD_ID)
         public IMessage onMessage(TANMessage message, MessageContext ctx) {
             IThreadListener mainThread = Minecraft.getMinecraft();
-            mainThread.addScheduledTask(new Runnable() {
-                @Override
-                public void run() {
-                    // This is the player the packet was sent to the server from
-                    EntityPlayer player = Minecraft.getMinecraft().player;
-                    // The value that was sent
-                    ThirstHelper.getThirstData(player).setThirst(message.thirst);
-                    TemperatureHelper.getTemperatureData(player).setTemperature(new Temperature(message.temp));
-                }
+            mainThread.addScheduledTask(() -> {
+                // This is the player the packet was sent to the server from
+                EntityPlayer player = Minecraft.getMinecraft().player;
+                // The value that was sent
+                ThirstHelper.getThirstData(player).setThirst(message.thirst);
+                TemperatureHelper.getTemperatureData(player).setTemperature(new Temperature(message.temp));
             });
             // No response packet
             return null;
         }
-
     }
 }

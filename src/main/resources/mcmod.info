@@ -1,7 +1,7 @@
 [{
   "modid": "corpserun",
   "name": "Corpse Run",
-  "description": "Configure what you keep when you die, plus many additional post-death options.",
+  "description": "Configure what you keep when you die, plus many additional options on death.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
@@ -10,6 +10,6 @@
   "credits": "",
   "logoFile": "",
   "screenshots": [],
-  "dependencies": ["toughasnails","thut_wearables"],
+  "dependencies": ["toughasnails"],
   "useDependencyInformation": true
 }]

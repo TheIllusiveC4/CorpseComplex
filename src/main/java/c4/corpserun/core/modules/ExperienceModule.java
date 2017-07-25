@@ -1,32 +1,74 @@
 package c4.corpserun.core.modules;
 
-import c4.corpserun.config.ConfigHandler;
-import c4.corpserun.config.values.ConfigBool;
-import c4.corpserun.config.values.ConfigFloat;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public final class ExperienceModule {
+import java.util.ArrayList;
+import java.util.Collections;
 
-    private static boolean isEnabled = ConfigHandler.isExperienceModuleEnabled();
+public class ExperienceModule extends Module {
 
-    public static void restoreXP(EntityPlayer player, EntityPlayer oldPlayer) {
+    private static boolean keepXP;
+    private static double xpLoss;
+    private static double xpRecover;
+    private static boolean cfgEnabled;
 
-        if (!isEnabled) { return;}
+    @SubscribeEvent
+    public void onPlayerXPDrop(LivingExperienceDropEvent e) {
+
+        if (!(e.getEntityLiving() instanceof EntityPlayer)) { return;}
+
+        setExperiencesValues(e);
+    }
+
+    @SubscribeEvent
+    public void onPlayerRespawnBegin(PlayerEvent.Clone e) {
+
+        if (!e.isWasDeath() || e.getEntityPlayer().world.isRemote) { return;}
+
+        restoreXP(e.getEntityPlayer(), e.getOriginal());
+    }
+
+    public ExperienceModule() {
+        configName = "Experience";
+        configDescription = "Experience Management";
+        configCategory = new ConfigCategory(configName);
+        configCategory.setComment(configDescription);
+        prevEnabled = false;
+    }
+
+    public void loadModuleConfig() {
+        setCategoryComment();
+        cfgEnabled = getBool("Enable Experience Module", false, "Set to true to enable experience module");
+        keepXP = getBool("Keep All XP", false, "Set to true to keep all XP on death");
+        xpLoss = getFloat("Lost XP Percent", 1, 0, 1, "Percent of experience lost on death");
+        xpRecover = getFloat("Recoverable XP Percent", 0.2F, 0, 1, "Percent of lost experience that can be recovered");
+    }
+
+    public void initPropOrder() {
+        propOrder = new ArrayList<>(Collections.singletonList("Enable Experience Module"));
+    }
+
+    public void setEnabled() {
+        enabled = cfgEnabled;
+    }
+
+    private static void restoreXP(EntityPlayer player, EntityPlayer oldPlayer) {
 
         player.addExperience(oldPlayer.experienceTotal);
     }
 
-    public static void setExperiencesValues(LivingExperienceDropEvent e) {
+    private static void setExperiencesValues(LivingExperienceDropEvent e) {
 
-        if (!isEnabled) { return;}
-
-        if (ConfigBool.KEEP_XP.getValue()) {
+        if (keepXP) {
             e.setCanceled(true);
         } else {
             EntityPlayer player = (EntityPlayer) e.getEntityLiving();
-            int dropXP = Math.round(player.experienceTotal * (ConfigFloat.XP_LOSS_PERCENT.getValue()) * (ConfigFloat.XP_RECOVER_PERCENT.getValue()));
-            int keptXP = Math.round(player.experienceTotal * (1 - ConfigFloat.XP_LOSS_PERCENT.getValue()));
+            int dropXP = (int) Math.round(player.experienceTotal * xpLoss * xpRecover);
+            int keptXP = (int) Math.round(player.experienceTotal * (1 - xpLoss));
             e.setDroppedExperience(dropXP);
             player.experienceLevel = 0;
             player.experience = 0.0F;

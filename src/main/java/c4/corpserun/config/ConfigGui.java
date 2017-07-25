@@ -1,11 +1,12 @@
 package c4.corpserun.config;
 
 import c4.corpserun.CorpseRun;
-import c4.corpserun.config.values.ConfigCategories;
+import c4.corpserun.core.modules.ModuleHandler;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
+import net.minecraftforge.fml.common.Loader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +20,12 @@ public class ConfigGui extends GuiConfig{
     private static List<IConfigElement> getConfigElements() {
         List<IConfigElement> list = new ArrayList<IConfigElement>();
 
-        for (ConfigCategories categories : ConfigCategories.values()) {
-            list.add(new ConfigElement(ConfigHandler.cfg.getCategory(categories.name)));
-        }
-
-        if (ConfigHandler.compat) {
-            list.add(new ConfigElement(ConfigHandler.cfg.getCategory("compatibility")));
+        list.add(new ConfigElement(ModuleHandler.cfg.getCategory("Inventory")));
+        list.add(new ConfigElement(ModuleHandler.cfg.getCategory("Experience")));
+        list.add(new ConfigElement(ModuleHandler.cfg.getCategory("Effects")));
+        list.add(new ConfigElement(ModuleHandler.cfg.getCategory("Hunger")));
+        if (Loader.isModLoaded("toughasnails")) {
+            list.add(new ConfigElement(ModuleHandler.cfg.getCategory("Tough as Nails")));
         }
 
         return list;

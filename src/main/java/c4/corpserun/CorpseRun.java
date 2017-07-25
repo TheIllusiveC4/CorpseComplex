@@ -22,7 +22,7 @@ public class CorpseRun {
     public static final String MODNAME = "Corpse Run";
     public static final String MODVER = "0.5b";
 
-    @SidedProxy(clientSide = "c4.corpserun.proxy.ClientProxy", serverSide = "c4.corpserun.proxy.ServerProxy")
+    @SidedProxy(clientSide = "c4.corpserun.proxy.ClientProxy", serverSide = "c4.corpserun.proxy.CommonProxy")
     public static CommonProxy proxy;
 
     @Mod.Instance
@@ -30,10 +30,10 @@ public class CorpseRun {
     public static Logger logger;
 
     @Mod.EventHandler
-    public void PreInit(FMLPreInitializationEvent event) {
+    public void PreInit(FMLPreInitializationEvent e) {
 
-        logger = event.getModLog();
-        proxy.preInit(event);
+        logger = e.getModLog();
+        proxy.preInit(e);
     }
 
     @Mod.EventHandler
@@ -41,14 +41,9 @@ public class CorpseRun {
         proxy.init(e);
     }
 
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent e) {
-        proxy.postInit(e);
-    }
-
-    @Mod.EventHandler
-    public void serverLoad(FMLServerStartingEvent event) {
-        event.registerServerCommand(new DebugCommand());
-    }
+//    @Mod.EventHandler
+//    public void serverLoad(FMLServerStartingEvent event) {
+//        event.registerServerCommand(new DebugCommand());
+//    }
 
 }

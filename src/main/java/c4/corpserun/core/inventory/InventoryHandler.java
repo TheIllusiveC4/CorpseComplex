@@ -1,7 +1,7 @@
 package c4.corpserun.core.inventory;
 
 import c4.corpserun.capability.IDeathInventory;
-import c4.corpserun.config.values.ConfigBool;
+import c4.corpserun.core.modules.InventoryModule;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -18,7 +18,6 @@ public class InventoryHandler extends DeathInventoryHandler {
 
     protected void storeStackFromInventory(int index, ItemStack itemStack) {
         getStorage().set(index, itemStack);
-        removeStackFromSlot(index);
     }
 
     protected int getSizeInventory() {
@@ -37,26 +36,20 @@ public class InventoryHandler extends DeathInventoryHandler {
 
     protected boolean toStoreStack(int index, ItemStack itemStack) {
 
-        if (DeathItemHelper.isEssential(itemStack)) {
-            return true;
-        }
-        if (DeathItemHelper.isCursed(itemStack)) {
-            return false;
-        }
         if (index == inventoryPlayer.currentItem) {
-            return ConfigBool.KEEP_MAINHAND.getValue();
+            return InventoryModule.keepMainhand;
         }
         else if (index < 9) {
-            return ConfigBool.KEEP_HOTBAR.getValue();
+            return InventoryModule.keepHotbar;
         }
         else if (index >= 9 && index < 36) {
-            return ConfigBool.KEEP_MAIN_INVENTORY.getValue();
+            return InventoryModule.keepMainInventory;
         }
         else if (index >= 36 && index < 40) {
-            return ConfigBool.KEEP_ARMOR.getValue();
+            return InventoryModule.keepArmor;
         }
         else if (index == 40) {
-            return ConfigBool.KEEP_OFFHAND.getValue();
+            return InventoryModule.keepOffhand;
         }
         return false;
     }
