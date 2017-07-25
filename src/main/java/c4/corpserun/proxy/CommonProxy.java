@@ -4,7 +4,6 @@ import c4.corpserun.capability.DeathInventory;
 import c4.corpserun.capability.CapabilityHandler;
 import c4.corpserun.capability.IDeathInventory;
 import c4.corpserun.core.modules.ModuleHandler;
-import c4.corpserun.network.NetworkHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;

@@ -1,6 +1,5 @@
 package c4.corpserun.proxy;
 
-import c4.corpserun.core.modules.ModuleHandler;
 import c4.corpserun.network.NetworkHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;

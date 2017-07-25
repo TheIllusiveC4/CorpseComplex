@@ -1,6 +1,5 @@
 package c4.corpserun.capability;
 
-import jdk.internal.dynalink.linker.LinkerServices;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,7 +12,6 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
 
 public class DeathInventory implements IDeathInventory {
 

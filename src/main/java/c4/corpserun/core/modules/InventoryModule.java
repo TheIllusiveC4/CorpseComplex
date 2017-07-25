@@ -1,10 +1,8 @@
 package c4.corpserun.core.modules;
 
 import c4.corpserun.capability.DeathInventory;
-import c4.corpserun.config.ConfigHelper;
 import c4.corpserun.core.inventory.InventoryHandler;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
@@ -14,7 +12,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class InventoryModule extends Module {
 

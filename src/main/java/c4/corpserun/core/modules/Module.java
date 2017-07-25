@@ -2,12 +2,7 @@ package c4.corpserun.core.modules;
 
 import c4.corpserun.config.ConfigHelper;
 import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class Module {

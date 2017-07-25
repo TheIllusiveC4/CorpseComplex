@@ -8,7 +8,6 @@ import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Level;
-import scala.collection.immutable.List;
 
 import java.util.ArrayList;
 import java.util.Collections;
