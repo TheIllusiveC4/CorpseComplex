@@ -2,6 +2,7 @@ package c4.corpserun.core.modules;
 
 import c4.corpserun.CorpseRun;
 import c4.corpserun.core.modules.compatibility.TANModule;
+import c4.corpserun.core.modules.compatibility.WBModule;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -34,6 +35,7 @@ public final class ModuleHandler {
     public static void preInit(FMLPreInitializationEvent e) {
 
         addCompatibilityModule("toughasnails", TANModule.class);
+        addCompatibilityModule("wearablebackpacks", WBModule.class);
 
         moduleClasses.forEach(module -> {
             try {

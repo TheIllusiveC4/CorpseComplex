@@ -1,16 +1,21 @@
 package c4.corpserun.capability;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.ArrayList;
 
 public interface IDeathInventory {
 
-    NonNullList<ItemStack> assignStorage(String name, int size);
+    NBTTagCompound getStorage(String name);
 
-    NonNullList<ItemStack> getStorage(String name);
+    void addStorage(String modid, NBTTagCompound storage);
 
-    ArrayList<DeathList> getDeathInventory();
+    void setDeathInventory(NBTTagCompound nbt);
+
+    NBTTagCompound getDeathInventory();
 
 }

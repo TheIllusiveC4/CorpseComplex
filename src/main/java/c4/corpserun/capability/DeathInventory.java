@@ -9,31 +9,35 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 public class DeathInventory implements IDeathInventory {
 
-    private ArrayList<DeathList> deathInventory = new ArrayList<>();
+    private NBTTagCompound deathInventory = new NBTTagCompound();
 
-    public NonNullList<ItemStack> assignStorage(String name, int size) {
-        DeathList deathList = new DeathList(name, NonNullList.withSize(size, ItemStack.EMPTY));
-        deathInventory.add(deathList);
-        return deathList.getList();
+//    public NBTTagCompound assignStorage(String name, int size) {
+//        DeathList deathList = new DeathList(name, new ItemStackHandler(size));
+//        deathInventory.add(deathList);
+//        return deathList.getStorage();
+//    }
+
+    public void addStorage(String modid, NBTTagCompound storage) {
+        deathInventory.setTag(modid, storage);
     }
 
-    public NonNullList<ItemStack> getStorage(String modid) {
-        for (DeathList deathList : deathInventory) {
-            if (deathList.getModid().equals(modid)) {
-                return deathList.getList();
-            }
-        }
-        return null;
+    public NBTTagCompound getStorage(String modid) {
+        return (NBTTagCompound) deathInventory.getTag(modid);
     }
 
-    public ArrayList<DeathList> getDeathInventory() {
+    public NBTTagCompound getDeathInventory() {
         return deathInventory;
+    }
+
+    public void setDeathInventory(NBTTagCompound nbt) {
+        deathInventory = nbt;
     }
 
     public static class Provider implements ICapabilitySerializable<NBTBase> {
@@ -44,13 +48,12 @@ public class DeathInventory implements IDeathInventory {
         private IDeathInventory instance = DEATH_INV_CAP.getDefaultInstance();
 
         @Override
-        @SuppressWarnings("")
-        public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
+        public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
             return capability == DEATH_INV_CAP;
         }
 
         @Override
-        public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+        public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
             return capability == DEATH_INV_CAP ? DEATH_INV_CAP.<T> cast(this.instance) : null;
         }
 
@@ -68,55 +71,16 @@ public class DeathInventory implements IDeathInventory {
 
     public static class Storage implements Capability.IStorage<IDeathInventory> {
 
-        private NBTTagCompound tag = new NBTTagCompound();
-
         @Override
         public NBTBase writeNBT(Capability<IDeathInventory> capability, IDeathInventory instance, EnumFacing side) {
 
-            for (DeathList deathList : instance.getDeathInventory()) {
-                String modid = deathList.getModid();
-                NonNullList<ItemStack> storage = deathList.getList();
-                NBTTagList nbttaglist = new NBTTagList();
-                NBTTagCompound compound = new NBTTagCompound();
-                for (int i = 0; i < storage.size(); ++i) {
-                    ItemStack itemstack = storage.get(i);
-
-                    if (!itemstack.isEmpty()) {
-                        NBTTagCompound nbttagcompound = new NBTTagCompound();
-                        nbttagcompound.setByte("Slot", (byte) i);
-                        itemstack.writeToNBT(nbttagcompound);
-                        nbttaglist.appendTag(nbttagcompound);
-                    }
-                }
-
-                if (!nbttaglist.hasNoTags()) {
-                    compound.setTag("Inventory", nbttaglist);
-                    compound.setInteger("Size", storage.size());
-                    tag.setTag(modid, compound);
-                }
-            }
-
-            return tag;
+            return instance.getDeathInventory();
         }
 
         @Override
         public void readNBT(Capability<IDeathInventory> capability, IDeathInventory instance, EnumFacing side, NBTBase nbt) {
 
-            for (String modid : tag.getKeySet()) {
-
-                NBTTagCompound compound = tag.getCompoundTag(modid);
-                NBTTagList nbttaglist = compound.getTagList("Inventory", 10);
-                NonNullList<ItemStack> storage = instance.assignStorage(modid, compound.getInteger("Size"));
-
-                for (int j = 0; j < nbttaglist.tagCount(); ++j) {
-                    NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(j);
-                    int k = nbttagcompound.getByte("Slot") & 255;
-
-                    if (k >= 0 && k < storage.size()) {
-                        storage.set(j, new ItemStack(nbttagcompound));
-                    }
-                }
-            }
+            instance.setDeathInventory((NBTTagCompound) nbt);
         }
     }
 }

@@ -5,24 +5,22 @@ import c4.corpserun.core.modules.InventoryModule;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.items.ItemStackHandler;
 
-public class InventoryHandler extends DeathInventoryHandler {
+public class InventoryHandler extends DeathStackHandler {
+
+    private static final String MOD_ID = "vanilla";
 
     private InventoryPlayer inventoryPlayer;
 
     public InventoryHandler(EntityPlayer player) {
-        super(player, "vanilla");
+        super(player, MOD_ID, player.inventory.getSizeInventory());
         inventoryPlayer = player.inventory;
     }
 
     protected void storeStackFromInventory(int index, ItemStack itemStack) {
-        getStorage().set(index, itemStack);
-    }
-
-    protected int getSizeInventory() {
-
-        return player.inventory.getSizeInventory();
+        storage.insertItem(index, itemStack, false);
     }
 
     protected ItemStack getStackInSlot(int index) {
@@ -54,19 +52,21 @@ public class InventoryHandler extends DeathInventoryHandler {
         return false;
     }
 
-    public static void retrieveStorage(EntityPlayer player, IDeathInventory deathInventory) {
+    public static void retrieve(EntityPlayer player, IDeathInventory deathInventory) {
 
-        NonNullList<ItemStack> storage = deathInventory.getStorage("vanilla");
+        NBTTagCompound nbt = deathInventory.getStorage(MOD_ID);
+        ItemStackHandler storage = new ItemStackHandler();
+        storage.deserializeNBT(nbt);
         InventoryPlayer inventoryPlayer = player.inventory;
 
-        for (int index = 0; index < storage.size(); index++) {
-            ItemStack itemStack = storage.get(index);
+        for (int index = 0; index < storage.getSlots(); index++) {
+            ItemStack itemStack = storage.getStackInSlot(index);
             if (itemStack.isEmpty()) { continue;}
 
             if (!inventoryPlayer.getStackInSlot(index).isEmpty()) {
-                inventoryPlayer.addItemStackToInventory(storage.get(index));
+                inventoryPlayer.addItemStackToInventory(itemStack);
             } else {
-                inventoryPlayer.setInventorySlotContents(index, storage.get(index));
+                inventoryPlayer.setInventorySlotContents(index, itemStack);
             }
         }
     }

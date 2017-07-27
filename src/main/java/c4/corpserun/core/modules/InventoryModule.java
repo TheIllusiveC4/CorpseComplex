@@ -2,6 +2,7 @@ package c4.corpserun.core.modules;
 
 import c4.corpserun.capability.DeathInventory;
 import c4.corpserun.core.inventory.InventoryHandler;
+import c4.corpserun.core.inventory.WBHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -37,11 +38,15 @@ public class InventoryModule extends Module {
     public void storeDeathInventory (LivingDeathEvent e) {
 
         if (!(e.getEntityLiving() instanceof EntityPlayer)
-                || e.getEntity().getEntityWorld().getGameRules().getBoolean("keepInventory")) { return;}
+                || e.getEntity().getEntityWorld().getGameRules().getBoolean("keepInventory")
+                || e.getEntity().getEntityWorld().isRemote) { return;}
 
-        InventoryHandler inventoryHandler = new InventoryHandler((EntityPlayer) e.getEntityLiving());
-        inventoryHandler.initStorage();
-        inventoryHandler.iterateInventory();
+        EntityPlayer player = (EntityPlayer) e.getEntityLiving();
+
+        WBHandler wbHandler = new WBHandler(player);
+        InventoryHandler inventoryHandler = new InventoryHandler(player);
+        wbHandler.store();
+        inventoryHandler.store();
     }
 
     @SubscribeEvent (priority = EventPriority.LOWEST)
@@ -50,7 +55,7 @@ public class InventoryModule extends Module {
         EntityPlayer player = e.getEntityPlayer();
 
         if (!player.world.getGameRules().getBoolean("keepInventory")) {
-            retrieveStorage(player);
+            retrieve(player);
         }
     }
 
@@ -63,7 +68,7 @@ public class InventoryModule extends Module {
         EntityPlayer oldPlayer = e.getOriginal();
 
         if (!player.world.getGameRules().getBoolean("keepInventory")) {
-            retrieveStorage(player, oldPlayer);
+            retrieve(player, oldPlayer);
         }
     }
 
@@ -110,13 +115,14 @@ public class InventoryModule extends Module {
         enableDurability = (keptLoss != 0 || dropLoss != 0);
     }
 
-    private static void retrieveStorage(EntityPlayer player) {
+    private static void retrieve(EntityPlayer player) {
 
-        InventoryHandler.retrieveStorage(player, player.getCapability(DeathInventory.Provider.DEATH_INV_CAP, null));
+        InventoryHandler.retrieve(player, player.getCapability(DeathInventory.Provider.DEATH_INV_CAP, null));
     }
 
-    private static void retrieveStorage(EntityPlayer player, EntityPlayer oldPlayer) {
+    private static void retrieve(EntityPlayer player, EntityPlayer oldPlayer) {
 
-        InventoryHandler.retrieveStorage(player, oldPlayer.getCapability(DeathInventory.Provider.DEATH_INV_CAP, null));
+        InventoryHandler.retrieve(player, oldPlayer.getCapability(DeathInventory.Provider.DEATH_INV_CAP, null));
+        WBHandler.retrieve(player, oldPlayer.getCapability(DeathInventory.Provider.DEATH_INV_CAP, null));
     }
 }
