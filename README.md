@@ -1,2 +1,2 @@
-# CorpseRun
-An extended post-death management and configuration system.
+# CorpseComplex
+Customize all aspects of player death, including drops, kept items, durability, experience, and more!
