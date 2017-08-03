@@ -1,5 +1,6 @@
-package c4.corpserun.proxy;
+package c4.corpsecomplex.proxy;
 
+import c4.corpsecomplex.network.NetworkHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -17,5 +18,6 @@ public class ClientProxy extends CommonProxy {
     public void init(FMLInitializationEvent e) {
 
         super.init(e);
+        NetworkHandler.init();
     }
 }

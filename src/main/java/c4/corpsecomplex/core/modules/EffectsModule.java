@@ -1,12 +1,11 @@
-package c4.corpserun.core.modules;
+package c4.corpsecomplex.core.modules;
 
-import c4.corpserun.CorpseRun;
+import c4.corpsecomplex.CorpseComplex;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Level;
@@ -46,19 +45,15 @@ public class EffectsModule extends Module {
     }
 
     public EffectsModule() {
-        configName = "Effects";
-        configDescription = "Effects on Respawn Management";
-        configCategory = new ConfigCategory(configName);
-        configCategory.setComment(configDescription);
-        prevEnabled = false;
+        super("Effects", "Effects on Respawn Management");
     }
 
     public void loadModuleConfig() {
         setCategoryComment();
         cfgEnabled = getBool("Enable Effects Module", false, "Set to true to enable effects module");
-        cfgCureList = getStringList("Curing Items", new String[]{}, "List of items that will be used by 'Limited Cure Respawn Effects'");
+        cfgCureList = getStringList("Curing Items", new String[]{"minecraft:milk_bucket"}, "List of items that will be used by 'Curable Respawn Effects'");
         cfgEffects = getStringList("Respawn Effects", new String[]{"minecraft:mining_fatigue 30 4"}, "List of effects to apply to player on respawn\n" +"Format: [effect] [duration(secs)] [power]");
-        cfgCustomCureEffects = getStringList("Custom Cure Respawn Effects", new String[]{}, "List of effects to apply to players on respawn that can only be cured with the cure list\n" + "Format: [effect] [duration(secs)] [power]");
+        cfgCustomCureEffects = getStringList("Curable Respawn Effects", new String[]{}, "List of effects to apply to players on respawn that can be cured by the curing items list\n" + "Format: [effect] [duration(secs)] [power]");
         effects = new ArrayList<>(initEffectsList(cfgEffects));
         customCureEffects = new ArrayList<>(initEffectsList(cfgCustomCureEffects));
         initCureList();
@@ -89,6 +84,8 @@ public class EffectsModule extends Module {
 
             if (useCureList) {
                 potionEffect.setCurativeItems(cureList);
+            } else {
+                potionEffect.setCurativeItems(new ArrayList<>(0));
             }
 
             player.addPotionEffect(potionEffect);
@@ -128,7 +125,7 @@ public class EffectsModule extends Module {
                 i = Integer.parseInt(elements[1]);
                 j = Integer.parseInt(elements[2]);
             } catch (Exception e1) {
-                CorpseRun.logger.log(Level.ERROR, "Problem parsing respawn effects list!", e1);
+                CorpseComplex.logger.log(Level.ERROR, "Problem parsing respawn effects list!", e1);
             } finally {
                 elements[1] = Integer.toString(Math.max(1,Math.min(i, 1600)));
                 elements[2] = Integer.toString(Math.max(1,Math.min(j, 4)));

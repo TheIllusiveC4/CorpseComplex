@@ -1,29 +1,32 @@
-package c4.corpserun;
+package c4.corpsecomplex;
 
-import c4.corpserun.debug.DebugCommand;
-import c4.corpserun.proxy.CommonProxy;
+import c4.corpsecomplex.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = CorpseRun.MODID, name = CorpseRun.MODNAME, version = CorpseRun.MODVER,
-        dependencies = "required-after:forge@[14.21.1.2387,)", useMetadata = true,
-        guiFactory = "c4."+CorpseRun.MODID+".config.GuiFactory", acceptableRemoteVersions = "*")
+@Mod(
+        modid = CorpseComplex.MODID,
+        name = CorpseComplex.MODNAME,
+        version = CorpseComplex.MODVER,
+        dependencies = "required-after:forge@[14.21.1.2387,)",
+        useMetadata = true,
+        guiFactory = "c4."+ CorpseComplex.MODID+".config.GuiFactory",
+        acceptableRemoteVersions = "*")
 
-public class CorpseRun {
+public class CorpseComplex {
 
-    public static final String MODID = "corpserun";
-    public static final String MODNAME = "Corpse Run";
+    public static final String MODID = "corpsecomplex";
+    public static final String MODNAME = "Corpse Complex";
     public static final String MODVER = "0.6b";
 
-    @SidedProxy(clientSide = "c4.corpserun.proxy.ClientProxy", serverSide = "c4.corpserun.proxy.CommonProxy")
+    @SidedProxy(clientSide = "c4.corpsecomplex.proxy.ClientProxy", serverSide = "c4.corpsecomplex.proxy.CommonProxy")
     public static CommonProxy proxy;
 
     @Mod.Instance
-    public static CorpseRun instance;
+    public static CorpseComplex instance;
     public static Logger logger;
 
     @Mod.EventHandler

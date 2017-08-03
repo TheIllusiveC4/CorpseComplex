@@ -1,24 +1,21 @@
-package c4.corpserun.core.inventory;
+package c4.corpsecomplex.core.inventory;
 
-import c4.corpserun.capability.DeathInventory;
-import c4.corpserun.capability.IDeathInventory;
-import c4.corpserun.core.modules.InventoryModule;
+import c4.corpsecomplex.capability.DeathInventory;
+import c4.corpsecomplex.capability.IDeathInventory;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.items.ItemStackHandler;
 
-import java.util.Random;
-
-public class DeathInventoryHandler {
+public abstract class DeathInventoryHandler {
 
     protected EntityPlayer player;
     protected String modid;
     protected IDeathInventory deathInventory;
+    protected boolean cfgStore;
 
     public DeathInventoryHandler (EntityPlayer player, String modid) {
         this.player = player;
         this.modid = modid;
         deathInventory = player.getCapability(DeathInventory.Provider.DEATH_INV_CAP, null);
     }
+
+    public abstract void storeInventory();
 }

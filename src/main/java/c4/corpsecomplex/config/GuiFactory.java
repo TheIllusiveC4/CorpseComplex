@@ -1,4 +1,4 @@
-package c4.corpserun.config;
+package c4.corpsecomplex.config;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;

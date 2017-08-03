@@ -1,12 +1,6 @@
-package c4.corpserun.capability;
+package c4.corpsecomplex.capability;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.items.ItemStackHandler;
-
-import java.util.ArrayList;
 
 public interface IDeathInventory {
 

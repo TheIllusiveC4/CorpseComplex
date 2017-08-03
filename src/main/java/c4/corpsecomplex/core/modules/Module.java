@@ -1,26 +1,78 @@
-package c4.corpserun.core.modules;
+package c4.corpsecomplex.core.modules;
 
-import c4.corpserun.config.ConfigHelper;
+import c4.corpsecomplex.CorpseComplex;
+import c4.corpsecomplex.config.ConfigHelper;
 import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraftforge.fml.common.Loader;
+import org.apache.logging.log4j.Level;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public abstract class Module {
 
-    protected String configName;
-    public ConfigCategory configCategory;
+    protected ConfigCategory configCategory;
     protected String configDescription;
     protected boolean enabled;
     protected boolean prevEnabled;
     protected List<String> propOrder;
+    protected ArrayList<Class<? extends Submodule>> submoduleClasses;
+    private Map<Class<? extends Submodule>, Submodule> subInstances = new HashMap<>();
+
+    public Module() {
+        prevEnabled = false;
+    }
+
+    public Module(String category, String description) {
+        configCategory = new ConfigCategory(category);
+        configDescription = description;
+        configCategory.setComment(configDescription);
+        prevEnabled = false;
+    }
+
+    void setPropOrder() {
+        initPropOrder();
+        ModuleHandler.cfg.getCategory(configCategory.getName()).setPropertyOrder(propOrder);
+    }
+
+    boolean hasEvents() {
+        return true;
+    }
 
     abstract public void loadModuleConfig();
     abstract public void initPropOrder();
     abstract public void setEnabled();
 
-    void setPropOrder() {
-        initPropOrder();
-        ModuleHandler.cfg.getCategory(configCategory.getName()).setPropertyOrder(propOrder);
+    void loadSubmodules() {
+
+        if (submoduleClasses == null || submoduleClasses.isEmpty()) { return; }
+
+        submoduleClasses.forEach(submodule -> {
+            try {
+                subInstances.put(submodule, submodule.getDeclaredConstructor(Module.class).newInstance(this));
+            } catch (Exception e1) {
+                CorpseComplex.logger.log(Level.ERROR, "Failed to initialize submodule " + submodule, e1);
+            }
+        });
+    }
+
+    protected void addSubmodule(Class<? extends Submodule> submodule) {
+        if (!submoduleClasses.contains(submodule)) {
+            submoduleClasses.add(submodule);
+        }
+    }
+
+    protected void addSubmodule(String modid, Class<? extends Submodule> submodule) {
+        if (Loader.isModLoaded(modid) && !submoduleClasses.contains(submodule)) {
+            submoduleClasses.add(submodule);
+        }
+    }
+
+    protected void forEachSubmodule(Consumer<Submodule> submodule) {
+        subInstances.values().forEach(submodule);
     }
 
     protected void setCategoryComment() {

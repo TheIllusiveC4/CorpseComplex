@@ -1,7 +1,6 @@
-package c4.corpserun.core.modules;
+package c4.corpsecomplex.core.modules;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -24,11 +23,7 @@ public class HungerModule extends Module {
     }
 
     public HungerModule() {
-        configName = "Hunger";
-        configDescription = "Hunger Management";
-        configCategory = new ConfigCategory(configName);
-        configCategory.setComment(configDescription);
-        prevEnabled = false;
+        super("Hunger", "Hunger Management");
     }
 
     public void loadModuleConfig() {

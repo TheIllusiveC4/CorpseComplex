@@ -1,6 +1,6 @@
-package c4.corpserun.config;
+package c4.corpsecomplex.config;
 
-import c4.corpserun.core.modules.ModuleHandler;
+import c4.corpsecomplex.core.modules.ModuleHandler;
 
 public class ConfigHelper {
 

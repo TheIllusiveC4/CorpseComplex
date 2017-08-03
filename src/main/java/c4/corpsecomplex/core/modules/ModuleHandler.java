@@ -1,9 +1,11 @@
-package c4.corpserun.core.modules;
+package c4.corpsecomplex.core.modules;
 
-import c4.corpserun.CorpseRun;
+import c4.corpsecomplex.CorpseComplex;
+import c4.corpsecomplex.compatibility.toughasnails.TANModule;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -27,6 +29,7 @@ public final class ModuleHandler {
         addModule(ExperienceModule.class);
         addModule(InventoryModule.class);
         addModule(HungerModule.class);
+        addModule("toughasnails", TANModule.class);
     }
 
     public static void preInit(FMLPreInitializationEvent e) {
@@ -35,29 +38,34 @@ public final class ModuleHandler {
             try {
                 instances.put(module, module.newInstance());
             } catch (Exception e1) {
-                CorpseRun.logger.log(Level.ERROR, "Failed to initialize module " + module, e1);
+                CorpseComplex.logger.log(Level.ERROR, "Failed to initialize module " + module, e1);
             }
         });
 
+        forEachModule(Module::loadSubmodules);
         initConfig(e);
     }
 
     public static void init() {
 
-        forEachModule(ModuleHandler::registerEvents);
+        forEachModule(module -> {
+            registerModuleEvents(module);
+            module.forEachSubmodule(ModuleHandler::registerSubmoduleEvents);
+        });
     }
 
     private static void initConfig(FMLPreInitializationEvent e) {
         File directory = e.getModConfigurationDirectory();
-        cfg = new Configuration(new File(directory.getPath(),"corpserun.cfg"));
+        cfg = new Configuration(new File(directory.getPath(),"corpsecomplex.cfg"));
         try {
             cfg.load();
             forEachModule(module -> {
                 module.loadModuleConfig();
+                module.forEachSubmodule(Submodule::loadModuleConfig);
                 module.setPropOrder();
             });
         } catch (Exception e1) {
-            CorpseRun.logger.log(Level.ERROR, "Problem loading config file!", e1);
+            CorpseComplex.logger.log(Level.ERROR, "Problem loading config file!", e1);
         } finally {
             if(cfg.hasChanged()) {
                 cfg.save();
@@ -65,28 +73,44 @@ public final class ModuleHandler {
         }
     }
 
-    private static void registerEvents(Module module) {
+    private static void reloadConfigs() {
+
+        forEachModule(module -> {
+            module.loadModuleConfig();
+            registerModuleEvents(module);
+            module.forEachSubmodule(submodule -> {
+                submodule.loadModuleConfig();
+                registerSubmoduleEvents(submodule);
+            });
+        });
+
+        if(cfg.hasChanged()) {
+            cfg.save();
+        }
+    }
+
+    private static void registerModuleEvents(Module module) {
         module.setEnabled();
 
-        if (!module.enabled && module.prevEnabled) {
+        if (!module.enabled && module.prevEnabled && module.hasEvents()) {
             MinecraftForge.EVENT_BUS.unregister(module);
-        } else if (module.enabled && !module.prevEnabled) {
+        } else if (module.enabled && !module.prevEnabled && module.hasEvents()) {
             MinecraftForge.EVENT_BUS.register(module);
         }
 
         module.prevEnabled = module.enabled;
     }
 
-    private static void reloadConfigs() {
+    private static void registerSubmoduleEvents(Submodule submodule) {
+        submodule.setEnabled();
 
-        forEachModule(module -> {
-            module.loadModuleConfig();
-            registerEvents(module);
-        });
-
-        if(cfg.hasChanged()) {
-            cfg.save();
+        if (!submodule.enabled && submodule.prevEnabled && submodule.hasEvents()) {
+            MinecraftForge.EVENT_BUS.unregister(submodule);
+        } else if (submodule.enabled && !submodule.prevEnabled && submodule.hasEvents()) {
+            MinecraftForge.EVENT_BUS.register(submodule);
         }
+
+        submodule.prevEnabled = submodule.enabled;
     }
 
     private static void addModule(Class<? extends Module> module) {
@@ -95,7 +119,13 @@ public final class ModuleHandler {
         }
     }
 
-    public static void forEachModule(Consumer<Module> module) {
+    private static void addModule(String modid, Class<? extends Module> module) {
+        if (Loader.isModLoaded(modid) && !moduleClasses.contains(module)) {
+            moduleClasses.add(module);
+        }
+    }
+
+    private static void forEachModule(Consumer<Module> module) {
         instances.values().forEach(module);
     }
 
@@ -104,7 +134,7 @@ public final class ModuleHandler {
 
         @SubscribeEvent
         public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent e) {
-            if (e.getModID().equals(CorpseRun.MODID)) {
+            if (e.getModID().equals(CorpseComplex.MODID)) {
                 reloadConfigs();
             }
         }

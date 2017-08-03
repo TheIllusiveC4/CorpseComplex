@@ -1,7 +1,7 @@
-package c4.corpserun.config;
+package c4.corpsecomplex.config;
 
-import c4.corpserun.CorpseRun;
-import c4.corpserun.core.modules.ModuleHandler;
+import c4.corpsecomplex.CorpseComplex;
+import c4.corpsecomplex.core.modules.ModuleHandler;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.fml.client.config.GuiConfig;
@@ -14,7 +14,7 @@ import java.util.List;
 public class ConfigGui extends GuiConfig{
 
     public ConfigGui(GuiScreen parentScreen) {
-        super(parentScreen, getConfigElements(), CorpseRun.MODID, false, false, CorpseRun.MODNAME);
+        super(parentScreen, getConfigElements(), CorpseComplex.MODID, false, false, CorpseComplex.MODNAME);
     }
 
     private static List<IConfigElement> getConfigElements() {
@@ -24,6 +24,10 @@ public class ConfigGui extends GuiConfig{
         list.add(new ConfigElement(ModuleHandler.cfg.getCategory("Experience")));
         list.add(new ConfigElement(ModuleHandler.cfg.getCategory("Effects")));
         list.add(new ConfigElement(ModuleHandler.cfg.getCategory("Hunger")));
+
+        if (Loader.isModLoaded("toughasnails")) {
+            list.add(new ConfigElement(ModuleHandler.cfg.getCategory("Tough as Nails")));
+        }
 
         return list;
     }

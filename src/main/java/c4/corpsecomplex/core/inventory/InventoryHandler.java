@@ -1,7 +1,7 @@
-package c4.corpserun.core.inventory;
+package c4.corpsecomplex.core.inventory;
 
-import c4.corpserun.capability.IDeathInventory;
-import c4.corpserun.core.modules.InventoryModule;
+import c4.corpsecomplex.capability.IDeathInventory;
+import c4.corpsecomplex.core.modules.InventoryModule;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,24 +15,17 @@ public class InventoryHandler extends DeathStackHandler {
     private InventoryPlayer inventoryPlayer;
 
     public InventoryHandler(EntityPlayer player) {
-        super(player, MOD_ID, player.inventory.getSizeInventory());
+        super(player, MOD_ID);
         inventoryPlayer = player.inventory;
+        setSize(inventoryPlayer.getSizeInventory());
     }
 
-    protected void storeStackFromInventory(int index, ItemStack itemStack) {
-        storage.insertItem(index, itemStack, false);
-    }
-
-    protected ItemStack getStackInSlot(int index) {
+    public ItemStack getStackInSlot(int index) {
 
         return player.inventory.getStackInSlot(index);
     }
 
-    protected void removeStackFromSlot(int index) {
-        player.inventory.removeStackFromSlot(index);
-    }
-
-    protected boolean toStoreStack(int index, ItemStack itemStack) {
+    public boolean checkConfig(int index) {
 
         if (index == inventoryPlayer.currentItem) {
             return InventoryModule.keepMainhand;
@@ -52,9 +45,9 @@ public class InventoryHandler extends DeathStackHandler {
         return false;
     }
 
-    public static void retrieve(EntityPlayer player, IDeathInventory deathInventory) {
+    public static void retrieveInventory(EntityPlayer player, IDeathInventory oldInventory) {
 
-        NBTTagCompound nbt = deathInventory.getStorage(MOD_ID);
+        NBTTagCompound nbt = oldInventory.getStorage(MOD_ID);
         if (nbt == null) { return; }
 
         ItemStackHandler storage = new ItemStackHandler();
@@ -62,13 +55,13 @@ public class InventoryHandler extends DeathStackHandler {
         InventoryPlayer inventoryPlayer = player.inventory;
 
         for (int index = 0; index < storage.getSlots(); index++) {
-            ItemStack itemStack = storage.getStackInSlot(index);
-            if (itemStack.isEmpty()) { continue;}
+            ItemStack stack = storage.getStackInSlot(index);
+            if (stack.isEmpty()) { continue;}
 
             if (!inventoryPlayer.getStackInSlot(index).isEmpty()) {
-                inventoryPlayer.addItemStackToInventory(itemStack);
+                inventoryPlayer.addItemStackToInventory(stack);
             } else {
-                inventoryPlayer.setInventorySlotContents(index, itemStack);
+                inventoryPlayer.setInventorySlotContents(index, stack);
             }
         }
     }

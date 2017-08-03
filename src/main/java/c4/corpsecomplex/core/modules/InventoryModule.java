@@ -1,13 +1,23 @@
-package c4.corpserun.core.modules;
+package c4.corpsecomplex.core.modules;
 
-import c4.corpserun.capability.DeathInventory;
-import c4.corpserun.capability.IDeathInventory;
-import c4.corpserun.core.inventory.InventoryHandler;
+import c4.corpsecomplex.capability.DeathInventory;
+import c4.corpsecomplex.capability.IDeathInventory;
+import c4.corpsecomplex.compatibility.baubles.BaublesHandler;
+import c4.corpsecomplex.compatibility.baubles.BaublesModule;
+import c4.corpsecomplex.compatibility.powerinventory.OPHandler;
+import c4.corpsecomplex.compatibility.powerinventory.OPModule;
+import c4.corpsecomplex.compatibility.rpginventory.RPGHandler;
+import c4.corpsecomplex.compatibility.rpginventory.RPGModule;
+import c4.corpsecomplex.compatibility.thut_wearables.ThutHandler;
+import c4.corpsecomplex.compatibility.thut_wearables.ThutModule;
+import c4.corpsecomplex.compatibility.wearablebackpacks.WBHandler;
+import c4.corpsecomplex.compatibility.wearablebackpacks.WBModule;
+import c4.corpsecomplex.core.inventory.InventoryHandler;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -30,9 +40,17 @@ public class InventoryModule extends Module {
     public static double keptLoss;
     public static double dropDrain;
     public static double keptDrain;
-    public static boolean enableEnergy;
-    public static boolean enableDurability;
     private static boolean cfgEnabled;
+
+    {
+        submoduleClasses = new ArrayList<>();
+
+        addSubmodule("wearablebackpacks", WBModule.class);
+        addSubmodule("thut_wearables", ThutModule.class);
+        addSubmodule("rpginventory", RPGModule.class);
+        addSubmodule("powerinventory", OPModule.class);
+        addSubmodule("baubles", BaublesModule.class);
+    }
 
     @SubscribeEvent (priority = EventPriority.HIGHEST)
     public void storeDeathInventory (LivingDeathEvent e) {
@@ -42,9 +60,7 @@ public class InventoryModule extends Module {
                 || e.getEntity().getEntityWorld().isRemote) { return;}
 
         EntityPlayer player = (EntityPlayer) e.getEntityLiving();
-
-        InventoryHandler inventoryHandler = new InventoryHandler(player);
-        inventoryHandler.store();
+        storeInventory(player);
     }
 
     @SubscribeEvent (priority = EventPriority.LOWEST)
@@ -71,11 +87,7 @@ public class InventoryModule extends Module {
     }
 
     public InventoryModule() {
-        configName = "Inventory";
-        configDescription = "Inventory Management";
-        configCategory = new ConfigCategory(configName);
-        configCategory.setComment(configDescription);
-        prevEnabled = false;
+        super("Inventory","Inventory Management");
     }
 
     public void loadModuleConfig() {
@@ -95,7 +107,6 @@ public class InventoryModule extends Module {
         keptLoss = getFloat("Durability Loss on Kept Items", 0, 0, 1, "Percent of durability lost on death for kept items");
         dropDrain = getFloat("Energy Drain on Drops",0, 0, 1,"Percent of energy drained on death for drops");
         keptDrain = getFloat("Energy Drain on Kept Items", 0, 0, 1, "Percent of energy drained on death for kept items");
-        setDurabilityAndEnergy();
     }
 
     public void initPropOrder() {
@@ -108,20 +119,66 @@ public class InventoryModule extends Module {
         enabled = cfgEnabled;
     }
 
-    private static void setDurabilityAndEnergy() {
-        enableEnergy = (keptDrain != 0 || dropDrain != 0);
-        enableDurability = (keptLoss != 0 || dropLoss != 0);
+    public void storeInventory(EntityPlayer player) {
+
+        if (Loader.isModLoaded("wearablebackpacks")) {
+            WBHandler wbHandler = new WBHandler(player);
+            wbHandler.storeInventory();
+        }
+        if (Loader.isModLoaded("thut_wearables")) {
+            ThutHandler thutHandler = new ThutHandler(player);
+            thutHandler.storeInventory();
+        }
+        if (Loader.isModLoaded("rpginventory")) {
+            RPGHandler rpgHandler = new RPGHandler(player);
+            rpgHandler.storeInventory();
+        }
+        if (Loader.isModLoaded("powerinventory")) {
+            OPHandler opHandler = new OPHandler(player);
+            opHandler.storeInventory();
+        }
+        if (Loader.isModLoaded("baubles")) {
+            BaublesHandler baublesHandler = new BaublesHandler(player);
+            baublesHandler.storeInventory();
+        }
+
+        InventoryHandler handler = new InventoryHandler(player);
+        handler.storeInventory();
     }
 
     private static void retrieve(EntityPlayer player) {
 
         IDeathInventory deathInventory = player.getCapability(DeathInventory.Provider.DEATH_INV_CAP, null);
-        InventoryHandler.retrieve(player, deathInventory);
+        if (Loader.isModLoaded("wearablebackpacks")) {
+            WBHandler.retrieveInventory(player, deathInventory);
+        }
+        if (Loader.isModLoaded("thut_wearables")) {
+            ThutHandler.retrieveInventory(player, deathInventory);
+        }
+        if (Loader.isModLoaded("rpginventory")) {
+            RPGHandler.retrieveInventory(player, deathInventory);
+        }
+        if (Loader.isModLoaded("baubles")) {
+            BaublesHandler.retrieveInventory(player, deathInventory);
+        }
+        InventoryHandler.retrieveInventory(player, deathInventory);
     }
 
     private static void retrieve(EntityPlayer player, EntityPlayer oldPlayer) {
 
         IDeathInventory deathInventory = oldPlayer.getCapability(DeathInventory.Provider.DEATH_INV_CAP, null);
-        InventoryHandler.retrieve(player, deathInventory);
+        if (Loader.isModLoaded("wearablebackpacks")) {
+            WBHandler.retrieveInventory(player, deathInventory);
+        }
+        if (Loader.isModLoaded("thut_wearables")) {
+            ThutHandler.retrieveInventory(player, deathInventory);
+        }
+        if (Loader.isModLoaded("rpginventory")) {
+            RPGHandler.retrieveInventory(player, deathInventory);
+        }
+        if (Loader.isModLoaded("baubles")) {
+            BaublesHandler.retrieveInventory(player, deathInventory);
+        }
+        InventoryHandler.retrieveInventory(player, deathInventory);
     }
 }

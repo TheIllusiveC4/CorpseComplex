@@ -1,7 +1,6 @@
-package c4.corpserun.core.modules;
+package c4.corpsecomplex.core.modules;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -33,11 +32,7 @@ public class ExperienceModule extends Module {
     }
 
     public ExperienceModule() {
-        configName = "Experience";
-        configDescription = "Experience Management";
-        configCategory = new ConfigCategory(configName);
-        configCategory.setComment(configDescription);
-        prevEnabled = false;
+        super("Experience", "Experience Management");
     }
 
     public void loadModuleConfig() {

@@ -1,14 +1,27 @@
-package c4.corpserun.core.modules;
+package c4.corpsecomplex.core.modules;
 
-import c4.corpserun.config.ConfigHelper;
-import net.minecraftforge.common.config.ConfigCategory;
+import java.util.function.Consumer;
 
 public abstract class Submodule extends Module {
 
-    protected String configParent;
+    private Module parentModule;
+
+    public Submodule(Module parentModule) {
+        super();
+        this.parentModule = parentModule;
+        configCategory = parentModule.configCategory;
+    }
+
+    public void setEnabled() {
+        enabled = parentModule.enabled;
+    }
 
     abstract public void loadModuleConfig();
-    abstract public void setEnabled();
+
+    @Override
+    public boolean hasEvents() {
+        return false;
+    }
 
     @Override
     public void initPropOrder() {
@@ -21,32 +34,22 @@ public abstract class Submodule extends Module {
     }
 
     @Override
-    public boolean hasEvents() {
-        return true;
-    }
-
-    private ConfigCategory getConfigParent() {
-        return ModuleHandler.cfg.getCategory(configParent);
+    void loadSubmodules() {
+        //NO-OP
     }
 
     @Override
-    protected int getInt(String name, int defaultInt, int min, int max, String comment) {
-        return ConfigHelper.getInt(name, getConfigParent().getName(), defaultInt, min, max, comment);
+    protected void addSubmodule(Class<? extends Submodule> submodule) {
+        //NO-OP
     }
 
     @Override
-    protected double getFloat(String name, float defaultFloat, float min, float max, String comment) {
-        return ConfigHelper.getFloat(name, getConfigParent().getName(), defaultFloat, min, max, comment);
+    protected void addSubmodule(String modid, Class<? extends Submodule> submodule) {
+        //NO-OP
     }
 
     @Override
-    protected boolean getBool(String name, boolean defaultBool, String comment) {
-        return ConfigHelper.getBool(name, getConfigParent().getName(), defaultBool, comment);
+    protected void forEachSubmodule(Consumer<Submodule> submodule) {
+        //NO-OP
     }
-
-    @Override
-    protected String[] getStringList(String name, String[] defaultStringList, String comment) {
-        return ConfigHelper.getStringList(name, getConfigParent().getName(), defaultStringList, comment);
-    }
-
 }
