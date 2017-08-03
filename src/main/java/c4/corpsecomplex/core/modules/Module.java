@@ -23,10 +23,6 @@ public abstract class Module {
         ModuleHandler.cfg.getCategory(configCategory.getName()).setPropertyOrder(propOrder);
     }
 
-    boolean hasEvents() {
-        return true;
-    }
-
     protected void setCategoryComment() {
         ModuleHandler.cfg.addCustomCategoryComment(configCategory.getName(), configCategory.getComment());
     }

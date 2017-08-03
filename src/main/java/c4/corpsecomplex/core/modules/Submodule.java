@@ -8,8 +8,17 @@ public abstract class Submodule extends Module {
     protected String configParent;
 
     abstract public void loadModuleConfig();
-    abstract public void initPropOrder();
     abstract public void setEnabled();
+
+    @Override
+    public void initPropOrder() {
+        //NO-OP
+    }
+
+    @Override
+    void setPropOrder() {
+        //NO-OP
+    }
 
     @Override
     public boolean hasEvents() {

@@ -1,8 +1,8 @@
 package c4.corpserun.core.modules;
 
 import c4.corpserun.capability.DeathInventory;
+import c4.corpserun.capability.IDeathInventory;
 import c4.corpserun.core.inventory.InventoryHandler;
-import c4.corpserun.core.inventory.WBHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -43,9 +43,7 @@ public class InventoryModule extends Module {
 
         EntityPlayer player = (EntityPlayer) e.getEntityLiving();
 
-        WBHandler wbHandler = new WBHandler(player);
         InventoryHandler inventoryHandler = new InventoryHandler(player);
-        wbHandler.store();
         inventoryHandler.store();
     }
 
@@ -117,12 +115,13 @@ public class InventoryModule extends Module {
 
     private static void retrieve(EntityPlayer player) {
 
-        InventoryHandler.retrieve(player, player.getCapability(DeathInventory.Provider.DEATH_INV_CAP, null));
+        IDeathInventory deathInventory = player.getCapability(DeathInventory.Provider.DEATH_INV_CAP, null);
+        InventoryHandler.retrieve(player, deathInventory);
     }
 
     private static void retrieve(EntityPlayer player, EntityPlayer oldPlayer) {
 
-        InventoryHandler.retrieve(player, oldPlayer.getCapability(DeathInventory.Provider.DEATH_INV_CAP, null));
-        WBHandler.retrieve(player, oldPlayer.getCapability(DeathInventory.Provider.DEATH_INV_CAP, null));
+        IDeathInventory deathInventory = oldPlayer.getCapability(DeathInventory.Provider.DEATH_INV_CAP, null);
+        InventoryHandler.retrieve(player, deathInventory);
     }
 }

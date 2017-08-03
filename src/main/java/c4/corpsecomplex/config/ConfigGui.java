@@ -24,9 +24,6 @@ public class ConfigGui extends GuiConfig{
         list.add(new ConfigElement(ModuleHandler.cfg.getCategory("Experience")));
         list.add(new ConfigElement(ModuleHandler.cfg.getCategory("Effects")));
         list.add(new ConfigElement(ModuleHandler.cfg.getCategory("Hunger")));
-        if (Loader.isModLoaded("toughasnails")) {
-            list.add(new ConfigElement(ModuleHandler.cfg.getCategory("Tough as Nails")));
-        }
 
         return list;
     }

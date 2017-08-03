@@ -18,12 +18,6 @@ public class DeathInventory implements IDeathInventory {
 
     private NBTTagCompound deathInventory = new NBTTagCompound();
 
-//    public NBTTagCompound assignStorage(String name, int size) {
-//        DeathList deathList = new DeathList(name, new ItemStackHandler(size));
-//        deathInventory.add(deathList);
-//        return deathList.getStorage();
-//    }
-
     public void addStorage(String modid, NBTTagCompound storage) {
         deathInventory.setTag(modid, storage);
     }

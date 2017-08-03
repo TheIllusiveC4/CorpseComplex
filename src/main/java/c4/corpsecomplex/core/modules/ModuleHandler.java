@@ -1,12 +1,9 @@
 package c4.corpserun.core.modules;
 
 import c4.corpserun.CorpseRun;
-import c4.corpserun.core.modules.compatibility.TANModule;
-import c4.corpserun.core.modules.compatibility.WBModule;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -33,9 +30,6 @@ public final class ModuleHandler {
     }
 
     public static void preInit(FMLPreInitializationEvent e) {
-
-        addCompatibilityModule("toughasnails", TANModule.class);
-        addCompatibilityModule("wearablebackpacks", WBModule.class);
 
         moduleClasses.forEach(module -> {
             try {
@@ -74,9 +68,9 @@ public final class ModuleHandler {
     private static void registerEvents(Module module) {
         module.setEnabled();
 
-        if (!module.enabled && module.prevEnabled && module.hasEvents()) {
+        if (!module.enabled && module.prevEnabled) {
             MinecraftForge.EVENT_BUS.unregister(module);
-        } else if (module.enabled && !module.prevEnabled && module.hasEvents()) {
+        } else if (module.enabled && !module.prevEnabled) {
             MinecraftForge.EVENT_BUS.register(module);
         }
 
@@ -97,12 +91,6 @@ public final class ModuleHandler {
 
     private static void addModule(Class<? extends Module> module) {
         if (!moduleClasses.contains(module)) {
-            moduleClasses.add(module);
-        }
-    }
-
-    private static void addCompatibilityModule(String modid, Class<? extends Module> module) {
-        if (Loader.isModLoaded(modid) && !moduleClasses.contains(module)) {
             moduleClasses.add(module);
         }
     }

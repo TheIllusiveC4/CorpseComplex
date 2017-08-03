@@ -55,6 +55,8 @@ public class InventoryHandler extends DeathStackHandler {
     public static void retrieve(EntityPlayer player, IDeathInventory deathInventory) {
 
         NBTTagCompound nbt = deathInventory.getStorage(MOD_ID);
+        if (nbt == null) { return; }
+
         ItemStackHandler storage = new ItemStackHandler();
         storage.deserializeNBT(nbt);
         InventoryPlayer inventoryPlayer = player.inventory;
