@@ -98,10 +98,8 @@ public class EffectsModule extends Module {
 
         for (String s : cfgCureList) {
             Item item = Item.getByNameOrId(s);
-            ItemStack stack;
             if (item != null) {
-                stack = item.getDefaultInstance();
-                cureList.add(stack);
+                cureList.add(new ItemStack(item));
             }
         }
     }
