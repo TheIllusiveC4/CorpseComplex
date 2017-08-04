@@ -5,7 +5,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 
 public class HungerModule extends Module {
 
@@ -13,6 +13,7 @@ public class HungerModule extends Module {
     private static int minFood;
     private static int maxFood;
     private static boolean cfgEnabled;
+    private static boolean keepSaturation;
 
     @SubscribeEvent
     public void onPlayerRespawnBegin(PlayerEvent.Clone e) {
@@ -32,10 +33,11 @@ public class HungerModule extends Module {
         keepFood = getBool("Keep Food Level", false, "Set to true to retain food level on death");
         minFood = getInt("Minimum Food Level", 6, 0, 20, "Lowest amount of food level you can respawn with");
         maxFood = getInt("Maximum Food Level", 20, minFood, 20, "Highest amount of food level you can respawn with");
+        keepSaturation = getBool("Keep Saturation", false, "Set to true to retain saturation on death");
     }
 
     public void initPropOrder() {
-        propOrder = new ArrayList<>(Collections.singletonList("Enable Hunger Module"));
+        propOrder = new ArrayList<>(Arrays.asList("Enable Hunger Module", "Keep Food Level", "Maximum Food Level", "Minimum Food Level"));
     }
 
     public void setEnabled() {
@@ -50,6 +52,10 @@ public class HungerModule extends Module {
             player.getFoodStats().setFoodLevel(Math.max(minFood, (Math.min(maxFood, oldFood))));
         } else {
             player.getFoodStats().setFoodLevel(Math.max(minFood, (Math.min(maxFood, 20))));
+        }
+        
+        if (keepSaturation) {
+            player.getFoodStats().setFoodSaturationLevel(oldPlayer.getFoodStats().getSaturationLevel());
         }
     }
 }
