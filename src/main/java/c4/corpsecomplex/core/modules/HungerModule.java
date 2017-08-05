@@ -53,7 +53,7 @@ public class HungerModule extends Module {
         } else {
             player.getFoodStats().setFoodLevel(Math.max(minFood, (Math.min(maxFood, 20))));
         }
-        
+
         if (keepSaturation) {
             player.getFoodStats().setFoodSaturationLevel(oldPlayer.getFoodStats().getSaturationLevel());
         }
