@@ -61,8 +61,8 @@ public final class ModuleHandler {
             cfg.load();
             forEachModule(module -> {
                 module.loadModuleConfig();
-                module.forEachSubmodule(Submodule::loadModuleConfig);
                 module.setPropOrder();
+                module.forEachSubmodule(Submodule::loadModuleConfig);
             });
         } catch (Exception e1) {
             CorpseComplex.logger.log(Level.ERROR, "Problem loading config file!", e1);

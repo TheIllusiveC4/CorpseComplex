@@ -8,7 +8,7 @@ public class OPModule extends Submodule {
     public static boolean keepOP;
 
     public OPModule(Module parentModule) {
-        super(parentModule);
+        super(parentModule, null);
     }
 
     public void loadModuleConfig() {

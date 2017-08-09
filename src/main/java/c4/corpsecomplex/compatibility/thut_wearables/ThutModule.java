@@ -15,7 +15,7 @@ public class ThutModule extends Submodule {
     public static boolean keepThut;
 
     public ThutModule(Module parentModule) {
-        super(parentModule);
+        super(parentModule, null);
     }
 
     public void loadModuleConfig() {

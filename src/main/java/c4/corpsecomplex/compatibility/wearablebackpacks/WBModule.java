@@ -8,7 +8,7 @@ public class WBModule extends Submodule {
     public static boolean keepBackpack;
 
     public WBModule(Module parentModule) {
-        super(parentModule);
+        super(parentModule, null);
     }
 
     public void loadModuleConfig() {

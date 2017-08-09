@@ -15,7 +15,7 @@ public class RPGModule extends Submodule {
     public static boolean keepRPG;
 
     public RPGModule(Module parentModule) {
-        super(parentModule);
+        super(parentModule, null);
     }
 
     public void loadModuleConfig() {

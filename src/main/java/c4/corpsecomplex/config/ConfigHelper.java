@@ -8,7 +8,7 @@ public class ConfigHelper {
         return ModuleHandler.cfg.getInt(name, category, defaultInt, min, max, comment);
     }
 
-    public static double getFloat(String name, String category, float defaultFloat, float min, float max, String comment) {
+    public static float getFloat(String name, String category, float defaultFloat, float min, float max, String comment) {
         return ModuleHandler.cfg.getFloat(name, category, defaultFloat, min, max, comment);
     }
 

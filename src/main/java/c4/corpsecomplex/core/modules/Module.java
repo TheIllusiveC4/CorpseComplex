@@ -20,7 +20,7 @@ public abstract class Module {
     protected boolean prevEnabled;
     protected List<String> propOrder;
     protected ArrayList<Class<? extends Submodule>> submoduleClasses;
-    private Map<Class<? extends Submodule>, Submodule> subInstances = new HashMap<>();
+    protected Map<Class<? extends Submodule>, Submodule> subInstances = new HashMap<>();
 
     public Module() {
         prevEnabled = false;
@@ -35,7 +35,10 @@ public abstract class Module {
 
     void setPropOrder() {
         initPropOrder();
-        ModuleHandler.cfg.getCategory(configCategory.getName()).setPropertyOrder(propOrder);
+        if (propOrder != null) {
+            ModuleHandler.cfg.getCategory(configCategory.getQualifiedName()).setPropertyOrder(propOrder);
+        }
+        forEachSubmodule(Submodule::setPropOrder);
     }
 
     boolean hasEvents() {
@@ -76,22 +79,22 @@ public abstract class Module {
     }
 
     protected void setCategoryComment() {
-        ModuleHandler.cfg.addCustomCategoryComment(configCategory.getName(), configCategory.getComment());
+        ModuleHandler.cfg.addCustomCategoryComment(configCategory.getQualifiedName(), configCategory.getComment());
     }
 
     protected int getInt(String name, int defaultInt, int min, int max, String comment) {
-        return ConfigHelper.getInt(name, configCategory.getName(), defaultInt, min, max, comment);
+        return ConfigHelper.getInt(name, configCategory.getQualifiedName(), defaultInt, min, max, comment);
     }
 
-    protected double getFloat(String name, float defaultFloat, float min, float max, String comment) {
-        return ConfigHelper.getFloat(name, configCategory.getName(), defaultFloat, min, max, comment);
+    protected float getFloat(String name, float defaultFloat, float min, float max, String comment) {
+        return ConfigHelper.getFloat(name, configCategory.getQualifiedName(), defaultFloat, min, max, comment);
     }
 
     protected boolean getBool(String name, boolean defaultBool, String comment) {
-        return ConfigHelper.getBool(name, configCategory.getName(), defaultBool, comment);
+        return ConfigHelper.getBool(name, configCategory.getQualifiedName(), defaultBool, comment);
     }
 
     protected String[] getStringList(String name, String[] defaultStringList, String comment) {
-        return ConfigHelper.getStringList(name, configCategory.getName(), defaultStringList, comment);
+        return ConfigHelper.getStringList(name, configCategory.getQualifiedName(), defaultStringList, comment);
     }
 }

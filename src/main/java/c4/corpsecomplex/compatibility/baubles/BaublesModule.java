@@ -8,7 +8,7 @@ public class BaublesModule extends Submodule {
     public static boolean keepBaubles;
 
     public BaublesModule(Module parentModule) {
-        super(parentModule);
+        super(parentModule, null);
     }
 
     public void loadModuleConfig() {

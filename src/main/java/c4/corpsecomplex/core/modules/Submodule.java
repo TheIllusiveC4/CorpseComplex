@@ -1,15 +1,21 @@
 package c4.corpsecomplex.core.modules;
 
+import net.minecraftforge.common.config.ConfigCategory;
+
 import java.util.function.Consumer;
 
 public abstract class Submodule extends Module {
 
     private Module parentModule;
 
-    public Submodule(Module parentModule) {
+    public Submodule(Module parentModule, String childCategory) {
         super();
         this.parentModule = parentModule;
-        configCategory = parentModule.configCategory;
+        if (childCategory != null) {
+            configCategory = new ConfigCategory(childCategory, parentModule.configCategory);
+        } else {
+            configCategory = parentModule.configCategory;
+        }
     }
 
     public void setEnabled() {
@@ -24,17 +30,12 @@ public abstract class Submodule extends Module {
     }
 
     @Override
-    public void initPropOrder() {
-        //NO-OP
-    }
-
-    @Override
-    void setPropOrder() {
-        //NO-OP
-    }
-
-    @Override
     void loadSubmodules() {
+        //NO-OP
+    }
+
+    @Override
+    public void initPropOrder() {
         //NO-OP
     }
 

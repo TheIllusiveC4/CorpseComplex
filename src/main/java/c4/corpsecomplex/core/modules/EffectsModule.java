@@ -36,6 +36,12 @@ public class EffectsModule extends Module {
         }
     }
 
+    {
+        submoduleClasses = new ArrayList<>();
+
+        addSubmodule(ReposeModule.class);
+    }
+
     @SubscribeEvent
     public void onPlayerRespawnFinish(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent e) {
 
