@@ -4,6 +4,8 @@ import c4.corpsecomplex.capability.DeathInventory;
 import c4.corpsecomplex.capability.IDeathInventory;
 import c4.corpsecomplex.compatibility.baubles.BaublesHandler;
 import c4.corpsecomplex.compatibility.baubles.BaublesModule;
+import c4.corpsecomplex.compatibility.cosmeticarmorreworked.CosmeticHandler;
+import c4.corpsecomplex.compatibility.cosmeticarmorreworked.CosmeticModule;
 import c4.corpsecomplex.compatibility.powerinventory.OPHandler;
 import c4.corpsecomplex.compatibility.powerinventory.OPModule;
 import c4.corpsecomplex.compatibility.rpginventory.RPGHandler;
@@ -50,6 +52,7 @@ public class InventoryModule extends Module {
         addSubmodule("rpginventory", RPGModule.class);
         addSubmodule("powerinventory", OPModule.class);
         addSubmodule("baubles", BaublesModule.class);
+        addSubmodule("cosmeticarmorreworked", CosmeticModule.class);
     }
 
     @SubscribeEvent (priority = EventPriority.HIGHEST)
@@ -141,6 +144,10 @@ public class InventoryModule extends Module {
             BaublesHandler baublesHandler = new BaublesHandler(player);
             baublesHandler.storeInventory();
         }
+        if (Loader.isModLoaded("cosmeticarmorreworked")) {
+            CosmeticHandler cosmeticHandler = new CosmeticHandler(player);
+            cosmeticHandler.storeInventory();
+        }
 
         InventoryHandler handler = new InventoryHandler(player);
         handler.storeInventory();
@@ -161,6 +168,9 @@ public class InventoryModule extends Module {
         if (Loader.isModLoaded("baubles")) {
             BaublesHandler.retrieveInventory(player, deathInventory);
         }
+        if (Loader.isModLoaded("cosmeticarmorreworked")) {
+            CosmeticHandler.retrieveInventory(player, deathInventory);
+        }
         InventoryHandler.retrieveInventory(player, deathInventory);
     }
 
@@ -178,6 +188,9 @@ public class InventoryModule extends Module {
         }
         if (Loader.isModLoaded("baubles")) {
             BaublesHandler.retrieveInventory(player, deathInventory);
+        }
+        if (Loader.isModLoaded("cosmeticarmorreworked")) {
+            CosmeticHandler.retrieveInventory(player, deathInventory);
         }
         InventoryHandler.retrieveInventory(player, deathInventory);
     }
