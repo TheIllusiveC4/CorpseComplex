@@ -2,74 +2,97 @@ package c4.corpsecomplex.core.modules;
 
 import c4.corpsecomplex.CorpseComplex;
 import com.google.common.collect.Maps;
-import com.sun.org.apache.regexp.internal.RE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.resources.LanguageManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.*;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.config.Config;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.UUID;
 
-public class ReposePotion extends Potion {
+public class MoriPotion extends Potion {
 
     private Map<IAttribute, Double> changeAmountMap = Maps.newHashMap();
+    private static final String name = "Memento Mori";
     private static final double intIncrement = 1.0;
     private static final double percentIncrement = 0.05;
     private ResourceLocation icon;
     private Map<IAttribute, AttributeModifier> attributeModifierMap = Maps.newHashMap();
     private double tickHealth;
     private double tickArmor;
+    private double tickTough;
+    private double tickMove;
+    private double tickSpeed;
+    private double tickDamage;
 
-    public ReposePotion() {
+    public MoriPotion() {
         super(true, 1);
-        this.setRegistryName("repose");
-        this.setPotionName("effect." + CorpseComplex.MODID + ".repose");
-        icon = new ResourceLocation(CorpseComplex.MODID, "textures/icons/repose.png");
+        this.setRegistryName("mori");
+        this.setPotionName("effect." + CorpseComplex.MODID + ".mori");
+        icon = new ResourceLocation(CorpseComplex.MODID, "textures/icons/mori.png");
     }
 
     @Override
     public boolean isReady(int duration, int amplifier) {
-        return (duration < (ReposeModule.duration * 20)) && (ReposeModule.gradRecover) && (isChangeTick(duration));
+        return (duration < (MoriModule.duration * 20)) && (MoriModule.doRecover) && (isChangeTick(duration));
     }
 
     public boolean isChangeTick(int duration) {
-        return (duration % tickHealth == 0) || (duration % tickArmor == 0);
+        return (duration % tickHealth == 0) || (duration % tickArmor == 0) || (duration % tickTough == 0) || (duration % tickMove == 0) ||
+                (duration % tickSpeed == 0) || (duration % tickDamage == 0);
     }
 
     public void setModifiers() {
-        attributeModifierMap.put(SharedMonsterAttributes.MAX_HEALTH, new AttributeModifier(UUID.fromString("ca572ca7-d11e-4054-b225-f4c797cdf69b"), SharedMonsterAttributes.MAX_HEALTH.getName(), ReposeModule.maxHealth, 0));
-        attributeModifierMap.put(SharedMonsterAttributes.ARMOR, new AttributeModifier(UUID.fromString("b3bd0150-1953-4971-a822-8445953c4195"), SharedMonsterAttributes.ARMOR.getName(), ReposeModule.modArmor, 0));
-//        attributeModifierMap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS, new AttributeModifier(UUID.fromString("5113ef1e-5200-4d6a-a898-946f0e4b5d26"), SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), ReposeModule.bonusToughness, 0));
-//        attributeModifierMap.put(SharedMonsterAttributes.MOVEMENT_SPEED, new AttributeModifier(UUID.fromString("f9a9495d-89b5-4676-8345-bc2e92936821"), SharedMonsterAttributes.MOVEMENT_SPEED.getName(), ReposeModule.movSpeedMod, 2));
-//        attributeModifierMap.put(SharedMonsterAttributes.ATTACK_SPEED, new AttributeModifier(UUID.fromString("9fe627b8-3477-4ccf-9587-87776259172f"), SharedMonsterAttributes.ATTACK_SPEED.getName(), ReposeModule.atkSpdMod, 2));
-//        attributeModifierMap.put(SharedMonsterAttributes.ATTACK_DAMAGE, new AttributeModifier(UUID.fromString("ae5b003a-65f3-41f2-b104-4c71a2261d5b"), SharedMonsterAttributes.ATTACK_DAMAGE.getName(), ReposeModule.atkDmgMod, 0));
-        tickHealth = setIncrement(SharedMonsterAttributes.MAX_HEALTH, ReposeModule.maxHealth, false);
-        tickArmor = setIncrement(SharedMonsterAttributes.ARMOR, ReposeModule.modArmor, false);
+        attributeModifierMap.put(SharedMonsterAttributes.MAX_HEALTH, new AttributeModifier(UUID.fromString("ca572ca7-d11e-4054-b225-f4c797cdf69b"), name, MoriModule.modHealth, 0));
+        attributeModifierMap.put(SharedMonsterAttributes.ARMOR, new AttributeModifier(UUID.fromString("b3bd0150-1953-4971-a822-8445953c4195"), name, MoriModule.modArmor, 0));
+        attributeModifierMap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS, new AttributeModifier(UUID.fromString("5113ef1e-5200-4d6a-a898-946f0e4b5d26"), name, MoriModule.modToughness, 0));
+        attributeModifierMap.put(SharedMonsterAttributes.MOVEMENT_SPEED, new AttributeModifier(UUID.fromString("f9a9495d-89b5-4676-8345-bc2e92936821"), name, MoriModule.modMove, 2));
+        attributeModifierMap.put(SharedMonsterAttributes.ATTACK_SPEED, new AttributeModifier(UUID.fromString("9fe627b8-3477-4ccf-9587-87776259172f"), name, MoriModule.modSpeed, 2));
+        attributeModifierMap.put(SharedMonsterAttributes.ATTACK_DAMAGE, new AttributeModifier(UUID.fromString("ae5b003a-65f3-41f2-b104-4c71a2261d5b"), name, MoriModule.modDamage, 0));
+        tickHealth = setIncrement(SharedMonsterAttributes.MAX_HEALTH, MoriModule.modHealth, false);
+        tickArmor = setIncrement(SharedMonsterAttributes.ARMOR, MoriModule.modArmor, false);
+        tickTough = setIncrement(SharedMonsterAttributes.ARMOR_TOUGHNESS, MoriModule.modToughness, false);
+        tickMove = setIncrement(SharedMonsterAttributes.MOVEMENT_SPEED, MoriModule.modMove, true);
+        tickSpeed = setIncrement(SharedMonsterAttributes.ATTACK_SPEED, MoriModule.modSpeed, true);
+        tickDamage = setIncrement(SharedMonsterAttributes.ATTACK_DAMAGE, MoriModule.modDamage, false);
     }
 
     @Override
     public void performEffect(@Nonnull EntityLivingBase entityLivingBaseIn, int amplifier) {
-        int duration = entityLivingBaseIn.getActivePotionEffect(ReposeModule.reposePotion).getDuration();
+        int duration = entityLivingBaseIn.getActivePotionEffect(MoriModule.moriPotion).getDuration();
 
-        if (ReposeModule.maxHealth != 0 && duration % tickHealth == 0) {
+        if (MoriModule.modHealth != 0 && duration % tickHealth == 0) {
             incrementRecover(entityLivingBaseIn, SharedMonsterAttributes.MAX_HEALTH);
+            if (entityLivingBaseIn.getHealth() > entityLivingBaseIn.getMaxHealth()) {
+                entityLivingBaseIn.setHealth(entityLivingBaseIn.getMaxHealth());
+            }
         }
 
-        if (ReposeModule.modArmor != 0 && duration % tickArmor == 0) {
+        if (MoriModule.modArmor != 0 && duration % tickArmor == 0) {
             incrementRecover(entityLivingBaseIn, SharedMonsterAttributes.ARMOR);
+        }
+
+        if (MoriModule.modToughness != 0 && duration % tickTough == 0) {
+            incrementRecover(entityLivingBaseIn, SharedMonsterAttributes.ARMOR_TOUGHNESS);
+        }
+
+        if (MoriModule.modMove != 0 && duration % tickMove == 0) {
+            incrementRecover(entityLivingBaseIn, SharedMonsterAttributes.MOVEMENT_SPEED);
+        }
+
+        if (MoriModule.modSpeed != 0 && duration % tickSpeed == 0) {
+            incrementRecover(entityLivingBaseIn, SharedMonsterAttributes.ATTACK_SPEED);
+        }
+
+        if (MoriModule.modDamage != 0 && duration % tickDamage == 0) {
+            incrementRecover(entityLivingBaseIn, SharedMonsterAttributes.ATTACK_DAMAGE);
         }
     }
 
@@ -82,14 +105,15 @@ public class ReposePotion extends Potion {
         iAttributeInstance.removeModifier(attributeModifier);
         double changeAmount = changeAmountMap.get(attribute);
         iAttributeInstance.applyModifier(new AttributeModifier(attributeModifier.getID(), attributeModifier.getName(), attributeModifier.getAmount() + changeAmount, attributeModifier.getOperation()));
-        entityIn.setHealth(entityIn.getMaxHealth());
     }
 
     private double setIncrement(IAttribute attribute, double amount, boolean isPercent) {
 
+        if (amount == 0) { return 0; }
+
         double changeAmount;
-        double sign = -Math.signum(amount);
-        double changeTick = (ReposeModule.duration / amount) * 20;
+        double sign = Math.signum(amount) * -1;
+        double changeTick = Math.abs(MoriModule.duration / amount) * 20;
 
         if (isPercent) {
             changeAmount = sign * percentIncrement;
@@ -102,11 +126,11 @@ public class ReposePotion extends Potion {
         if (changeTick >= 1) {
             changeTick = Math.floor(changeTick);
         } else if (isPercent) {
+            changeAmount = sign * (1 / changeTick);
             changeTick = 1;
-            changeAmount = (1 / changeTick);
         } else {
+            changeAmount = sign * Math.floor(1 / changeTick);
             changeTick = 1;
-            changeAmount = Math.floor(1 / changeTick);
         }
 
         changeAmountMap.put(attribute, changeAmount);

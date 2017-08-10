@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 
 public abstract class Submodule extends Module {
 
-    private Module parentModule;
+    protected Module parentModule;
 
     public Submodule(Module parentModule, String childCategory) {
         super();
