@@ -1,7 +1,7 @@
 [{
   "modid": "corpsecomplex",
   "name": "Corpse Complex",
-  "description": "Customize player death consequences, including drops, keeping items, hunger, experience, buffs/debuffs and more!",
+  "description": "Customize player death consequences, including selective keep inventory, soulbound enchantment, experience loss, respawn potion effects and more!",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
@@ -10,6 +10,6 @@
   "credits": "",
   "logoFile": "",
   "screenshots": [],
-  "dependencies": ["toughasnails","wearablebackpacks","powerinventory","thut_wearables","baubles","rpginventory","cosmeticarmorreworked"],
+  "dependencies": ["toughasnails","wearablebackpacks","powerinventory","thut_wearables","baubles","rpginventory","cosmeticarmorreworked","tombstone","advinv"],
   "useDependencyInformation": true
 }]

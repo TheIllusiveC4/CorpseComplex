@@ -13,14 +13,14 @@ import org.apache.logging.log4j.Logger;
         version = CorpseComplex.MODVER,
         dependencies = "required-after:forge@[14.21.1.2387,)",
         useMetadata = true,
-        guiFactory = "c4."+ CorpseComplex.MODID+".config.GuiFactory",
-        acceptableRemoteVersions = "*")
+        guiFactory = "c4."+ CorpseComplex.MODID+".client.gui.GuiFactory",
+        acceptedMinecraftVersions = "[1.12, 1.13)")
 
 public class CorpseComplex {
 
     public static final String MODID = "corpsecomplex";
     public static final String MODNAME = "Corpse Complex";
-    public static final String MODVER = "0.8b";
+    public static final String MODVER = "0.9-rc";
 
     @SidedProxy(clientSide = "c4.corpsecomplex.proxy.ClientProxy", serverSide = "c4.corpsecomplex.proxy.CommonProxy")
     public static CommonProxy proxy;
@@ -30,7 +30,7 @@ public class CorpseComplex {
     public static Logger logger;
 
     @Mod.EventHandler
-    public void PreInit(FMLPreInitializationEvent e) {
+    public void preInit(FMLPreInitializationEvent e) {
 
         logger = e.getModLog();
         proxy.preInit(e);
@@ -40,9 +40,4 @@ public class CorpseComplex {
     public void init(FMLInitializationEvent e) {
         proxy.init(e);
     }
-
-//    @Mod.EventHandler
-//    public void serverLoad(FMLServerStartingEvent event) {
-//        event.registerServerCommand(new DebugCommand());
-//    }
 }

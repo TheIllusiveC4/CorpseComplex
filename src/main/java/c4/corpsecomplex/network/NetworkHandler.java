@@ -5,7 +5,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class NetworkHandler {
+public class NetworkHandler  {
 
     public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(CorpseComplex.MODID);
 
@@ -13,7 +13,6 @@ public class NetworkHandler {
 
     public static void init() {
         NetworkHandler.registerMessage(TANMessage.TANMessageHandler.class, TANMessage.class, Side.CLIENT);
-        NetworkHandler.registerMessage(ThutMessage.ThutMessageHandler.class, ThutMessage.class, Side.CLIENT);
     }
 
     private static void registerMessage(Class messageHandler, Class requestMessageType, Side side) {

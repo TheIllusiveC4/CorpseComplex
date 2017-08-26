@@ -18,7 +18,8 @@ public class TANMessage implements IMessage {
     private int temp;
     private static final String MOD_ID = "toughasnails";
 
-    public TANMessage(){}
+    public TANMessage() {
+    }
 
     public TANMessage(int thirst, int temp) {
         this.thirst = thirst;
