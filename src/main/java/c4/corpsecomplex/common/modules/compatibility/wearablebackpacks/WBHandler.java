@@ -1,13 +1,15 @@
 package c4.corpsecomplex.common.modules.compatibility.wearablebackpacks;
 
-import c4.corpsecomplex.api.DeathInventoryHandler;
-import c4.corpsecomplex.api.capability.IDeathInventory;
-import c4.corpsecomplex.api.DeathStackHelper;
+import c4.corpsecomplex.common.modules.inventory.helpers.DeathInventoryHandler;
+import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
+import c4.corpsecomplex.common.modules.inventory.helpers.DeathStackHelper;
 import c4.corpsecomplex.common.modules.inventory.InventoryModule;
+import c4.corpsecomplex.common.modules.inventory.enchantment.EnchantmentModule;
 import net.mcft.copy.backpacks.api.BackpackHelper;
 import net.mcft.copy.backpacks.api.IBackpack;
 import net.mcft.copy.backpacks.misc.BackpackCapability;
 import net.mcft.copy.backpacks.misc.util.NbtUtils;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -43,9 +45,17 @@ public class WBHandler extends DeathInventoryHandler {
         if (stack.isEmpty()) { return; }
 
         Random generator = new Random();
-        boolean cursed = DeathStackHelper.isCursed(stack);
-        boolean essential = !cursed && DeathStackHelper.isEssential(stack);
+        boolean essential = DeathStackHelper.isEssential(stack);
+        boolean cursed = !essential && DeathStackHelper.isCursed(stack);
         boolean store = ((checkToStore(0) && !cursed) || essential);
+
+        if (!store && EnchantmentModule.registerEnchant) {
+            int level = EnchantmentHelper.getEnchantmentLevel(EnchantmentModule.soulbound, stack);
+            if (level != 0) {
+                store = essential = DeathStackHelper.handleSoulbound(stack, level);
+                cursed = !essential && cursed;
+            }
+        }
 
         if (cursed && InventoryModule.destroyCursed) {
             BackpackHelper.setEquippedBackpack(player, ItemStack.EMPTY, null);

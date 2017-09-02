@@ -1,9 +1,9 @@
 package c4.corpsecomplex.proxy;
 
 import c4.corpsecomplex.common.modules.effects.MoriPotion;
-import c4.corpsecomplex.common.modules.inventory.CapabilityHandler;
-import c4.corpsecomplex.api.capability.DeathInventory;
-import c4.corpsecomplex.api.capability.IDeathInventory;
+import c4.corpsecomplex.common.modules.inventory.capability.CapabilityHandler;
+import c4.corpsecomplex.common.modules.inventory.capability.DeathInventory;
+import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
 import c4.corpsecomplex.common.helpers.ModuleHelper;
 import c4.corpsecomplex.common.modules.effects.MoriModule;
 import c4.corpsecomplex.common.modules.inventory.enchantment.EnchantmentModule;

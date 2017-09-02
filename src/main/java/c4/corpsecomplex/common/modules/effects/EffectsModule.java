@@ -56,11 +56,11 @@ public class EffectsModule extends Module {
 
     public void loadModuleConfig() {
         setCategoryComment();
-        cfgEnabled = getBool("Enable Effects Module", false, "Set to true to enable effects module");
-        cfgCureList = getStringList("Curative Items", new String[]{"minecraft:milk_bucket"}, "List of items that will be used by 'Curable Respawn Effects'");
+        cfgEnabled = getBool("Enable Effects Module", false, "Set to true to enable effects module", false);
+        cfgCureList = getStringList("Curative Items", new String[]{"minecraft:milk_bucket"}, "List of items that will be used by 'Curable Respawn Effects'", false);
 
-        String[] cfgEffects = getStringList("Uncurable Respawn Effects", new String[]{"minecraft:mining_fatigue 30 4"}, "List of effects to apply to player on respawn\n" +"Format: [effect] [duration(secs)] [power]");
-        String[] cfgCustomCureEffects = getStringList("Curable Respawn Effects", new String[]{}, "List of effects to apply to players on respawn that can be cured by the curing items list\n" + "Format: [effect] [duration(secs)] [power]");
+        String[] cfgEffects = getStringList("Uncurable Respawn Effects", new String[]{"minecraft:mining_fatigue 30 4"}, "List of effects to apply to player on respawn\n" +"Format: [effect] [duration(secs)] [power]", false);
+        String[] cfgCustomCureEffects = getStringList("Curable Respawn Effects", new String[]{}, "List of effects to apply to players on respawn that can be cured by the curing items list\n" + "Format: [effect] [duration(secs)] [power]", false);
         effects = new ArrayList<>(initEffectsList(cfgEffects));
         customCureEffects = new ArrayList<>(initEffectsList(cfgCustomCureEffects));
         initCureList();

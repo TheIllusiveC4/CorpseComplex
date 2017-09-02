@@ -1,11 +1,13 @@
 package c4.corpsecomplex.common.modules.compatibility.powerinventory;
 
-import c4.corpsecomplex.api.DeathStackHandler;
-import c4.corpsecomplex.api.DeathStackHelper;
-import c4.corpsecomplex.api.capability.IDeathInventory;
+import c4.corpsecomplex.common.modules.inventory.helpers.DeathStackHandler;
+import c4.corpsecomplex.common.modules.inventory.helpers.DeathStackHelper;
+import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
 import c4.corpsecomplex.common.modules.inventory.InventoryModule;
+import c4.corpsecomplex.common.modules.inventory.enchantment.EnchantmentModule;
 import com.lothrazar.powerinventory.inventory.InventoryOverpowered;
 import com.lothrazar.powerinventory.util.UtilPlayerInventoryFilestorage;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -30,9 +32,17 @@ public class OPHandler extends DeathStackHandler {
 
             if (stack.isEmpty()) { continue; }
 
-            boolean cursed = DeathStackHelper.isCursed(stack);
-            boolean essential = !cursed && DeathStackHelper.isEssential(stack);
+            boolean essential = DeathStackHelper.isEssential(stack);
+            boolean cursed = !essential && DeathStackHelper.isCursed(stack);
             boolean store = ((checkToStore(index) && !cursed) || essential);
+
+            if (!store && EnchantmentModule.registerEnchant) {
+                int level = EnchantmentHelper.getEnchantmentLevel(EnchantmentModule.soulbound, stack);
+                if (level != 0) {
+                    store = essential = DeathStackHelper.handleSoulbound(stack, level);
+                    cursed = !essential && cursed;
+                }
+            }
 
             if (cursed && InventoryModule.destroyCursed) {
                 DeathStackHelper.destroyStack(stack);

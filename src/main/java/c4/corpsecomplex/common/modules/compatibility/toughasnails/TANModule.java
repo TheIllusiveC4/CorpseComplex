@@ -67,12 +67,12 @@ public class TANModule extends Module {
 
     public void loadModuleConfig() {
         setCategoryComment();
-        cfgEnabled = getBool("Enable TAN Module", false, "Set to true to enable Tough as Nails module");
-        keepThirst = getBool("Keep Thirst Level", false, "Set to true to retain thirst level on respawn");
-        keepHydration = getBool("Keep Hydration Level", false, "Set to true to retain hydration level on respawn");
-        keepTemperature = getBool("Keep Temperature Level", false, "Set to true to retain temperature level on respawn");
-        minThirst = getInt("Minimum Thirst Level", 6, 0, 20, "Lowest amount of thirst you can respawn with");
-        maxThirst = getInt("Maximum Thirst Level", 20, minThirst, 20, "Maximum amount of thirst you can respawn with");
+        cfgEnabled = getBool("Enable TAN Module", false, "Set to true to enable Tough as Nails module", false);
+        keepThirst = getBool("Keep Thirst Level", false, "Set to true to retain thirst level on respawn", false);
+        keepHydration = getBool("Keep Hydration Level", false, "Set to true to retain hydration level on respawn", false);
+        keepTemperature = getBool("Keep Temperature Level", false, "Set to true to retain temperature level on respawn", false);
+        minThirst = getInt("Minimum Thirst Level", 6, 0, 20, "Lowest amount of thirst you can respawn with", false);
+        maxThirst = getInt("Maximum Thirst Level", 20, minThirst, 20, "Maximum amount of thirst you can respawn with", false);
     }
 
     public void initPropOrder() {

@@ -3,7 +3,6 @@ package c4.corpsecomplex.common.helpers;
 import c4.corpsecomplex.CorpseComplex;
 import c4.corpsecomplex.common.Module;
 import c4.corpsecomplex.common.Submodule;
-import c4.corpsecomplex.common.modules.MiscModule;
 import c4.corpsecomplex.common.modules.effects.EffectsModule;
 import c4.corpsecomplex.common.modules.ExperienceModule;
 import c4.corpsecomplex.common.modules.HungerModule;
@@ -37,7 +36,6 @@ public final class ModuleHelper {
         addModule(ExperienceModule.class);
         addModule(InventoryModule.class);
         addModule(HungerModule.class);
-        addModule(MiscModule.class);
         addModule("toughasnails", TANModule.class);
     }
 

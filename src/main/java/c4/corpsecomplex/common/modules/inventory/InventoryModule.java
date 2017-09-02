@@ -1,9 +1,9 @@
 package c4.corpsecomplex.common.modules.inventory;
 
 import c4.corpsecomplex.CorpseComplex;
-import c4.corpsecomplex.api.DeathInventoryHandler;
-import c4.corpsecomplex.api.capability.DeathInventory;
-import c4.corpsecomplex.api.capability.IDeathInventory;
+import c4.corpsecomplex.common.modules.inventory.helpers.DeathInventoryHandler;
+import c4.corpsecomplex.common.modules.inventory.capability.DeathInventory;
+import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
 import c4.corpsecomplex.common.Module;
 import c4.corpsecomplex.common.Submodule;
 import c4.corpsecomplex.common.modules.compatibility.advinv.AdvHandler;
@@ -111,21 +111,21 @@ public class InventoryModule extends Module {
 
     public void loadModuleConfig() {
         setCategoryComment();
-        cfgEnabled = getBool("Enable Inventory Module", false, "Set to true to enable inventory module");
-        keepArmor = getBool("Keep Armor", false, "Set to true to keep equipped armor on death");
-        keepHotbar = getBool("Keep Hotbar", false, "Set to true to keep hotbar items on death");
-        keepMainhand = getBool("Keep Mainhand", false, "Set to true to keep mainhand item on death");
-        keepOffhand = getBool("Keep Offhand", false, "Set to true to keep offhand item on death");
-        keepMainInventory = getBool("Keep Main Inventory", false, "Set to true to keep main inventory (non-equipped non-hotbar) items on death");
-        destroyCursed = getBool("Destroy Cursed Items", false, "Set to true to destroy cursed items instead of dropping them");
-        randomDrop = getFloat("Random Drop Chance", 0,0,1,"Percent chance that items that are kept will still drop");
-        randomDestroy = getFloat("Random Destroy Chance", 0, 0, 1, "Percent chance that dropped items will be destroyed");
-        essentialItems = getStringList("Essential Items", new String[]{}, "List of items that are always kept");
-        cursedItems = getStringList("Cursed Items", new String[]{}, "List of items that are always dropped");
-        dropLoss = getFloat("Durability Loss on Drops",0,0,1, "Percent of durability lost on death for drops");
-        keptLoss = getFloat("Durability Loss on Kept Items", 0, 0, 1, "Percent of durability lost on death for kept items");
-        dropDrain = getFloat("Energy Drain on Drops",0, 0, 1,"Percent of energy drained on death for drops");
-        keptDrain = getFloat("Energy Drain on Kept Items", 0, 0, 1, "Percent of energy drained on death for kept items");
+        cfgEnabled = getBool("Enable Inventory Module", false, "Set to true to enable inventory module", false);
+        keepArmor = getBool("Keep Armor", false, "Set to true to keep equipped armor on death", false);
+        keepHotbar = getBool("Keep Hotbar", false, "Set to true to keep hotbar items on death", false);
+        keepMainhand = getBool("Keep Mainhand", false, "Set to true to keep mainhand item on death", false);
+        keepOffhand = getBool("Keep Offhand", false, "Set to true to keep offhand item on death", false);
+        keepMainInventory = getBool("Keep Main Inventory", false, "Set to true to keep main inventory (non-equipped non-hotbar) items on death", false);
+        destroyCursed = getBool("Destroy Cursed Items", false, "Set to true to destroy cursed items instead of dropping them", false);
+        randomDrop = getDouble("Random Drop Chance", 0,0,1,"Percent chance that items that are kept will still drop", false);
+        randomDestroy = getDouble("Random Destroy Chance", 0, 0, 1, "Percent chance that dropped items will be destroyed", false);
+        essentialItems = getStringList("Essential Items", new String[]{}, "List of items that are always kept", false);
+        cursedItems = getStringList("Cursed Items", new String[]{}, "List of items that are always dropped", false);
+        dropLoss = getDouble("Durability Loss on Drops",0,0,1, "Percent of durability lost on death for drops", false);
+        keptLoss = getDouble("Durability Loss on Kept Items", 0, 0, 1, "Percent of durability lost on death for kept items", false);
+        dropDrain = getDouble("Energy Drain on Drops",0, 0, 1,"Percent of energy drained on death for drops", false);
+        keptDrain = getDouble("Energy Drain on Kept Items", 0, 0, 1, "Percent of energy drained on death for kept items", false);
     }
 
     public void initPropOrder() {

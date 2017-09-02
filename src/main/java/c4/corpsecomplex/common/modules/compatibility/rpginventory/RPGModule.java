@@ -27,7 +27,7 @@ public class RPGModule extends Submodule {
     }
 
     public void loadModuleConfig() {
-        keepRPG = getBool("Keep RPG Inventory", false, "Set to true to keep RPG Inventory on death");
+        keepRPG = getBool("Keep RPG Inventory", false, "Set to true to keep RPG Inventory on death", false);
     }
 
     @Override

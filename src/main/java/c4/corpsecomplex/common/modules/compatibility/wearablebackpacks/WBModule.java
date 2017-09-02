@@ -12,6 +12,6 @@ public class WBModule extends Submodule {
     }
 
     public void loadModuleConfig() {
-        keepBackpack = getBool("Keep Wearable Backpack", false, "Set to true to keep Wearable Backpack on death");
+        keepBackpack = getBool("Keep Wearable Backpack", false, "Set to true to keep Wearable Backpack on death", false);
     }
 }

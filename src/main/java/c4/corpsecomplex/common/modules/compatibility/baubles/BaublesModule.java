@@ -12,6 +12,6 @@ public class BaublesModule extends Submodule {
     }
 
     public void loadModuleConfig() {
-        keepBaubles = getBool("Keep Baubles", false, "Set to true to keep Baubles on death");
+        keepBaubles = getBool("Keep Baubles", false, "Set to true to keep Baubles on death", false);
     }
 }

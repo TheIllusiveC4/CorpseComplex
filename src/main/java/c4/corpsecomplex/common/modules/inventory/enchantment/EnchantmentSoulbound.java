@@ -5,6 +5,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 
 public class EnchantmentSoulbound extends Enchantment {
 
@@ -21,22 +22,24 @@ public class EnchantmentSoulbound extends Enchantment {
 
     public int getMinEnchantability(int enchantmentLevel)
     {
-        return super.getMinEnchantability(enchantmentLevel);
+        return 1 + 10 * (enchantmentLevel - 1);
     }
 
     public int getMaxEnchantability(int enchantmentLevel)
     {
-        return super.getMaxEnchantability(enchantmentLevel) + 30;
+        return super.getMinEnchantability(enchantmentLevel) + 50;
     }
 
     public int getMaxLevel()
     {
-        return 1;
+        return EnchantmentModule.maxLevel;
     }
 
     public boolean isTreasureEnchantment()
     {
         return !EnchantmentModule.canApplyEnchantingTable;
     }
+
+    public boolean isAllowedOnBooks() { return EnchantmentModule.allowedOnBooks; }
 
 }

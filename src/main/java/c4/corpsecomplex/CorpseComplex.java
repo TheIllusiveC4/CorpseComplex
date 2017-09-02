@@ -20,7 +20,7 @@ public class CorpseComplex {
 
     public static final String MODID = "corpsecomplex";
     public static final String MODNAME = "Corpse Complex";
-    public static final String MODVER = "0.9-rc";
+    public static final String MODVER = "0.10-rc2";
 
     @SidedProxy(clientSide = "c4.corpsecomplex.proxy.ClientProxy", serverSide = "c4.corpsecomplex.proxy.CommonProxy")
     public static CommonProxy proxy;

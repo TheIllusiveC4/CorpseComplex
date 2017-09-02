@@ -27,7 +27,7 @@ public class ThutModule extends Submodule {
     }
 
     public void loadModuleConfig() {
-        keepThut = getBool("Keep Thut Wearables", false, "Set to true to keep Thut Wearables on death");
+        keepThut = getBool("Keep Thut Wearables", false, "Set to true to keep Thut Wearables on death", false);
     }
 
     @Override

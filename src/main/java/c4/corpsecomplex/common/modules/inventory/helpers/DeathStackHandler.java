@@ -1,7 +1,6 @@
-package c4.corpsecomplex.api;
+package c4.corpsecomplex.common.modules.inventory.helpers;
 
-import c4.corpsecomplex.api.capability.DeathInventory;
-import c4.corpsecomplex.api.capability.IDeathInventory;
+import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
 import c4.corpsecomplex.common.modules.inventory.InventoryModule;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

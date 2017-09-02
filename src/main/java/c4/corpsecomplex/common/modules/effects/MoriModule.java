@@ -102,19 +102,18 @@ public class MoriModule extends Submodule {
 
     public void loadModuleConfig() {
         setCategoryComment();
-        cfgEnabled = getBool("Enable Custom Respawn Effect", false, "Set to true to enable custom effect applied on respawn");
-        modHealth = getFloat("Maximum Health Modifier", 0, -1024, 1024, "Set maximum health modifier");
-        modArmor = getFloat("Armor Modifier", 0, -30, 30, "Set armor modifier");
-        modToughness = getFloat("Armor Toughness Modifier", 0, -20, 20, "Set armor toughness modifier");
-        modMove = getFloat("Movement Speed Percent Modifier", 0.0f, -1.0f, 1.0f, "Set movement speed percent modifier");
-        modDamage = getFloat("Attack Damage Modifier", 0.0f, -2048.0f, 2048.0f, "Set attack damage modifier");
-        modSpeed = getFloat("Attack Speed Percent Modifier", 0.0f, -1.0f, 1.0f, "Set attack speed percent modifier");
-        doRecover = getBool("Gradual Recovery", false, "Set to true to enable gradual recovery (modifiers will diminish gradually as the effect goes on)");
-        duration = getInt("Duration", 0, 0, 1600, "Set duration (seconds) for the effect");
-        noFood = getBool("Cannot Eat Food", false, "Set to true to disable eating food while effect is active");
-        noXP = getBool("Cannot Gain XP", false, "Set to true to disable gaining experience while effect is active");
-        curativeItems = getStringList("Curative Items", new String[]{"minecraft:milk_bucket"}, "List of items that can cure the effect");
-        ModuleHelper.cfg.get(configCategory.getQualifiedName(), "Enable Custom Respawn Effect", false).setRequiresMcRestart(true);
+        cfgEnabled = getBool("Enable Custom Respawn Effect", false, "Set to true to enable custom effect applied on respawn", true);
+        modHealth = getDouble("Maximum Health Modifier", 0, -1024, 1024, "Set maximum health modifier", false);
+        modArmor = getDouble("Armor Modifier", 0, -30, 30, "Set armor modifier", false);
+        modToughness = getDouble("Armor Toughness Modifier", 0, -20, 20, "Set armor toughness modifier", false);
+        modMove = getDouble("Movement Speed Percent Modifier", 0.0f, -1.0f, 1.0f, "Set movement speed percent modifier", false);
+        modDamage = getDouble("Attack Damage Modifier", 0.0f, -2048.0f, 2048.0f, "Set attack damage modifier", false);
+        modSpeed = getDouble("Attack Speed Percent Modifier", 0.0f, -1.0f, 1.0f, "Set attack speed percent modifier", false);
+        doRecover = getBool("Gradual Recovery", false, "Set to true to enable gradual recovery (modifiers will diminish gradually as the effect goes on)", false);
+        duration = getInt("Duration", 0, 0, 1600, "Set duration (seconds) for the effect", false);
+        noFood = getBool("Cannot Eat Food", false, "Set to true to disable eating food while effect is active", false);
+        noXP = getBool("Cannot Gain XP", false, "Set to true to disable gaining experience while effect is active", false);
+        curativeItems = getStringList("Curative Items", new String[]{"minecraft:milk_bucket"}, "List of items that can cure the effect", false);
         if (moriPotion != null) {
             moriPotion.setModifiers();
         }

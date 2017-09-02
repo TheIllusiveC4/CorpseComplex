@@ -39,10 +39,10 @@ public class ExperienceModule extends Module {
 
     public void loadModuleConfig() {
         setCategoryComment();
-        cfgEnabled = getBool("Enable Experience Module", false, "Set to true to enable experience module");
-        keepXP = getBool("Keep All XP", false, "Set to true to keep all XP on death");
-        xpLoss = getFloat("Lost XP Percent", 1, 0, 1, "Percent of experience lost on death");
-        xpRecover = getFloat("Recoverable XP Percent", 0.2F, 0, 1, "Percent of lost experience that can be recovered");
+        cfgEnabled = getBool("Enable Experience Module", false, "Set to true to enable experience module", false);
+        keepXP = getBool("Keep All XP", false, "Set to true to keep all XP on death", false);
+        xpLoss = getDouble("Lost XP Percent", 1, 0, 1, "Percent of experience lost on death", false);
+        xpRecover = getDouble("Recoverable XP Percent", 0.2F, 0, 1, "Percent of lost experience that can be recovered", false);
     }
 
     public void initPropOrder() {

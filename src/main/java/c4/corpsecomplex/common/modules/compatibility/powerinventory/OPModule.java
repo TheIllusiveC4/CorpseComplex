@@ -12,6 +12,6 @@ public class OPModule extends Submodule {
     }
 
     public void loadModuleConfig() {
-        keepOP = getBool("Keep Overpowered Inventory", true, "Set to true to keep Overpowered Inventory on death");
+        keepOP = getBool("Keep Overpowered Inventory", true, "Set to true to keep Overpowered Inventory on death", false);
     }
 }

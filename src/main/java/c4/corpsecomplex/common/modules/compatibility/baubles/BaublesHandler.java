@@ -2,16 +2,11 @@ package c4.corpsecomplex.common.modules.compatibility.baubles;
 
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
-import c4.corpsecomplex.CorpseComplex;
-import c4.corpsecomplex.api.DeathStackHelper;
-import c4.corpsecomplex.api.capability.IDeathInventory;
-import c4.corpsecomplex.api.DeathStackHandler;
-import c4.corpsecomplex.common.modules.inventory.InventoryModule;
+import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
+import c4.corpsecomplex.common.modules.inventory.helpers.DeathStackHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.items.ItemStackHandler;
-import org.apache.logging.log4j.Level;
 
 public class BaublesHandler extends DeathStackHandler {
 

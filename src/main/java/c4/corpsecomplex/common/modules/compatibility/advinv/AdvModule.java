@@ -12,6 +12,6 @@ public class AdvModule extends Submodule {
     }
 
     public void loadModuleConfig() {
-        keepAdv = getBool("Keep Advanced Inventory", false, "Set to true to keep Advanced Inventory on death");
+        keepAdv = getBool("Keep Advanced Inventory", false, "Set to true to keep Advanced Inventory on death", false);
     }
 }

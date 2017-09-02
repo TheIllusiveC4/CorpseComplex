@@ -29,8 +29,6 @@ public class ConfigGui extends GuiConfig{
             list.add(new ConfigElement(ModuleHelper.cfg.getCategory("Tough as Nails")));
         }
 
-        list.add(new ConfigElement(ModuleHelper.cfg.getCategory("Miscellaneous")));
-
         return list;
     }
 }

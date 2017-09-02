@@ -1,11 +1,10 @@
 package c4.corpsecomplex.common.modules.compatibility.rpginventory;
 
-import c4.corpsecomplex.api.capability.IDeathInventory;
-import c4.corpsecomplex.api.DeathStackHandler;
+import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
+import c4.corpsecomplex.common.modules.inventory.helpers.DeathStackHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.items.ItemStackHandler;
 import subaraki.rpginventory.capability.playerinventory.RpgInventoryData;
 import subaraki.rpginventory.capability.playerinventory.RpgStackHandler;
 

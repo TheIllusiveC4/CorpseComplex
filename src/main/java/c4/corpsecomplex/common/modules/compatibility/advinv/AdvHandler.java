@@ -1,7 +1,7 @@
 package c4.corpsecomplex.common.modules.compatibility.advinv;
 
-import c4.corpsecomplex.api.DeathStackHandler;
-import c4.corpsecomplex.api.capability.IDeathInventory;
+import c4.corpsecomplex.common.modules.inventory.helpers.DeathStackHandler;
+import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
 import cubex2.advInv.api.AdvInvAPI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

@@ -1,13 +1,12 @@
 package c4.corpsecomplex.common.modules.compatibility.cosmeticarmorreworked;
 
-import c4.corpsecomplex.api.capability.IDeathInventory;
-import c4.corpsecomplex.api.DeathStackHandler;
+import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
+import c4.corpsecomplex.common.modules.inventory.helpers.DeathStackHandler;
 import lain.mods.cos.CosmeticArmorReworked;
 import lain.mods.cos.inventory.InventoryCosArmor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class CosmeticHandler extends DeathStackHandler {
 

@@ -83,23 +83,23 @@ public abstract class Module {
         ModuleHelper.cfg.addCustomCategoryComment(configCategory.getQualifiedName(), configCategory.getComment());
     }
 
-    protected int getInt(String name, int defaultInt, int min, int max, String comment) {
-        return ConfigHelper.getInt(name, configCategory.getQualifiedName(), defaultInt, min, max, comment);
+    protected int getInt(String name, int defaultInt, int min, int max, String comment, boolean requiresRestart) {
+        return ConfigHelper.getInt(name, configCategory.getQualifiedName(), defaultInt, min, max, comment, requiresRestart);
     }
 
-    protected float getFloat(String name, float defaultFloat, float min, float max, String comment) {
-        return ConfigHelper.getFloat(name, configCategory.getQualifiedName(), defaultFloat, min, max, comment);
+    protected double getDouble(String name, double defaultDouble, float min, float max, String comment, boolean requiresRestart) {
+        return ConfigHelper.getDouble(name, configCategory.getQualifiedName(), defaultDouble, min, max, comment, requiresRestart);
     }
 
-    protected boolean getBool(String name, boolean defaultBool, String comment) {
-        return ConfigHelper.getBool(name, configCategory.getQualifiedName(), defaultBool, comment);
+    protected boolean getBool(String name, boolean defaultBool, String comment, boolean requiresRestart) {
+        return ConfigHelper.getBool(name, configCategory.getQualifiedName(), defaultBool, comment, requiresRestart);
     }
 
-    protected String getString(String name, String defaultString, String comment, String[] validValues) {
-        return ConfigHelper.getString(name, configCategory.getQualifiedName(), defaultString, comment, validValues);
+    protected String getString(String name, String defaultString, String comment, String[] validValues, boolean requiresRestart) {
+        return ConfigHelper.getString(name, configCategory.getQualifiedName(), defaultString, comment, validValues, requiresRestart);
     }
 
-    protected String[] getStringList(String name, String[] defaultStringList, String comment) {
-        return ConfigHelper.getStringList(name, configCategory.getQualifiedName(), defaultStringList, comment);
+    protected String[] getStringList(String name, String[] defaultStringList, String comment, boolean requiresRestart) {
+        return ConfigHelper.getStringList(name, configCategory.getQualifiedName(), defaultStringList, comment, requiresRestart);
     }
 }

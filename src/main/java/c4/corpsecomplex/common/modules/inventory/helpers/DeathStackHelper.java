@@ -1,7 +1,8 @@
-package c4.corpsecomplex.api;
+package c4.corpsecomplex.common.modules.inventory.helpers;
 
 import c4.corpsecomplex.common.modules.inventory.enchantment.EnchantmentModule;
 import c4.corpsecomplex.common.modules.inventory.InventoryModule;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -9,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
+import java.util.Map;
 import java.util.Random;
 
 public final class DeathStackHelper {
@@ -22,6 +24,14 @@ public final class DeathStackHelper {
         boolean essential = isEssential(stack);
         boolean cursed = !essential && isCursed(stack);
         boolean store = ((cfgStore && !cursed) || essential);
+
+        if (!store && EnchantmentModule.registerEnchant) {
+            int level = EnchantmentHelper.getEnchantmentLevel(EnchantmentModule.soulbound, stack);
+            if (level != 0) {
+                store = essential = handleSoulbound(stack, level);
+                cursed = !essential && cursed;
+            }
+        }
 
         if (cursed && InventoryModule.destroyCursed) {
             destroyStack(stack);
@@ -114,10 +124,6 @@ public final class DeathStackHelper {
 
     public static boolean isEssential(ItemStack stack) {
 
-        if (EnchantmentHelper.getEnchantmentLevel(EnchantmentModule.soulbound, stack) > 0) {
-            return true;
-        }
-
         for (String s : InventoryModule.essentialItems) {
 
             ResourceLocation name = stack.getItem().getRegistryName();
@@ -150,5 +156,32 @@ public final class DeathStackHelper {
         }
 
         return false;
+    }
+
+    public static boolean handleSoulbound(ItemStack stack, int level) {
+
+        double savePercent = EnchantmentModule.baseSave + EnchantmentModule.extraPerLevel * (level - 1);
+        boolean activated = false;
+
+        if (generator.nextDouble() < savePercent) {
+            activated = true;
+        }
+
+        if (EnchantmentModule.levelDrop != 0 && activated) {
+            if (generator.nextDouble() < EnchantmentModule.levelDrop) {
+                level = Math.max(0, level-1);
+            }
+
+            Map<Enchantment, Integer> enchMap = EnchantmentHelper.getEnchantments(stack);
+            enchMap.remove(EnchantmentModule.soulbound);
+
+            if (level > 0) {
+                enchMap.put(EnchantmentModule.soulbound, level);
+            }
+
+            EnchantmentHelper.setEnchantments(enchMap, stack);
+        }
+
+        return activated;
     }
 }

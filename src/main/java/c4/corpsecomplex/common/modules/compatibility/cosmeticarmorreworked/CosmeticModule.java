@@ -12,6 +12,6 @@ public class CosmeticModule extends Submodule {
     }
 
     public void loadModuleConfig() {
-        keepCosmetic = getBool("Keep Cosmetic Armor", false, "Set to true to keep Cosmetic Armor on death");
+        keepCosmetic = getBool("Keep Cosmetic Armor", false, "Set to true to keep Cosmetic Armor on death", false);
     }
 }

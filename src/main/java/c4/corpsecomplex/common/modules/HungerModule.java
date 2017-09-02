@@ -30,11 +30,11 @@ public class HungerModule extends Module {
 
     public void loadModuleConfig() {
         setCategoryComment();
-        cfgEnabled = getBool("Enable Hunger Module", false, "Set to true to enable hunger module");
-        keepFood = getBool("Keep Food Level", false, "Set to true to retain food level on death");
-        minFood = getInt("Minimum Food Level", 6, 0, 20, "Lowest amount of food level you can respawn with");
-        maxFood = getInt("Maximum Food Level", 20, minFood, 20, "Highest amount of food level you can respawn with");
-        keepSaturation = getBool("Keep Saturation", false, "Set to true to retain saturation on death");
+        cfgEnabled = getBool("Enable Hunger Module", false, "Set to true to enable hunger module", false);
+        keepFood = getBool("Keep Food Level", false, "Set to true to retain food level on death", false);
+        minFood = getInt("Minimum Food Level", 6, 0, 20, "Lowest amount of food level you can respawn with", false);
+        maxFood = getInt("Maximum Food Level", 20, minFood, 20, "Highest amount of food level you can respawn with", false);
+        keepSaturation = getBool("Keep Saturation", false, "Set to true to retain saturation on death", false);
     }
 
     public void initPropOrder() {

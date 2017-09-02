@@ -1,4 +1,4 @@
-package c4.corpsecomplex.api.capability;
+package c4.corpsecomplex.common.modules.inventory.capability;
 
 import net.minecraft.nbt.NBTTagCompound;
 
