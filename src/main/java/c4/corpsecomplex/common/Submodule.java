@@ -4,6 +4,11 @@ import net.minecraftforge.common.config.ConfigCategory;
 
 import java.util.function.Consumer;
 
+/**
+ * Java class created by C4 as part of the Corpse Complex mod for Minecraft.
+ * Source Code: https://github.com/TheIllusiveC4/CorpseComplex
+ * Corpse Complex is distributed under the MIT License: https://opensource.org/licenses/MIT
+ */
 public abstract class Submodule extends Module {
 
     public abstract void loadModuleConfig();

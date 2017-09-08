@@ -1,7 +1,10 @@
+/*
+ * Copyright (c) 2017. C4, MIT License
+ */
+
 package c4.corpsecomplex.common.modules.inventory.capability;
 
 import c4.corpsecomplex.CorpseComplex;
-import c4.corpsecomplex.common.modules.inventory.capability.DeathInventory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;

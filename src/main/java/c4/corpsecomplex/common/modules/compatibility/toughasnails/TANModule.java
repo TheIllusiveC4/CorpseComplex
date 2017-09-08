@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017. C4, MIT License
+ */
+
 package c4.corpsecomplex.common.modules.compatibility.toughasnails;
 
 import c4.corpsecomplex.common.Module;
@@ -7,12 +11,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import toughasnails.api.temperature.Temperature;
 import toughasnails.api.temperature.TemperatureHelper;
 import toughasnails.api.thirst.ThirstHelper;
-import toughasnails.handler.PacketHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;

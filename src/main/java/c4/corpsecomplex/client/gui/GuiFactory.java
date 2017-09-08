@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017. C4, MIT License
+ */
+
 package c4.corpsecomplex.client.gui;
 
 import net.minecraft.client.Minecraft;

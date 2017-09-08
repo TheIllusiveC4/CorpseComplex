@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017. C4, MIT License
+ */
+
 package c4.corpsecomplex.common.modules.inventory.capability;
 
 import net.minecraft.nbt.NBTBase;

@@ -1,23 +1,22 @@
+/*
+ * Copyright (c) 2017. C4, MIT License
+ */
+
 package c4.corpsecomplex.common.modules.effects;
 
 import c4.corpsecomplex.common.Module;
 import c4.corpsecomplex.common.Submodule;
-import c4.corpsecomplex.common.helpers.ModuleHelper;
 import com.pam.harvestcraft.blocks.blocks.BlockPamCake;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import org.omg.CORBA.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.Arrays;

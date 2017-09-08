@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017. C4, MIT License
+ */
+
 package c4.corpsecomplex.common.modules.effects;
 
 import c4.corpsecomplex.CorpseComplex;
@@ -11,7 +15,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Level;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
 
