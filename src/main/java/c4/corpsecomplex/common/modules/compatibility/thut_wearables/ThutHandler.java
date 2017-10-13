@@ -4,6 +4,7 @@
 
 package c4.corpsecomplex.common.modules.compatibility.thut_wearables;
 
+import c4.corpsecomplex.CorpseComplex;
 import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
 import c4.corpsecomplex.common.modules.inventory.helpers.DeathStackHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,7 +41,7 @@ public class ThutHandler extends DeathStackHandler {
 
         for (int slot = 0; slot < storage.getSlots(); slot++) {
             ItemStack stack = storage.getStackInSlot(slot);
-            if (stack.isEmpty()) { continue;}
+            if (CorpseComplex.isStackEmpty(stack)) { continue;}
 
             playerWearables.setInventorySlotContents(slot, stack);
         }

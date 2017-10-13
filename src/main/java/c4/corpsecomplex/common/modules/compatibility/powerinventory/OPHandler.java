@@ -4,6 +4,7 @@
 
 package c4.corpsecomplex.common.modules.compatibility.powerinventory;
 
+import c4.corpsecomplex.CorpseComplex;
 import c4.corpsecomplex.common.modules.inventory.helpers.DeathStackHandler;
 import c4.corpsecomplex.common.modules.inventory.helpers.DeathStackHelper;
 import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
@@ -24,7 +25,7 @@ public class OPHandler extends DeathStackHandler {
     public OPHandler (EntityPlayer player) {
         super(player, MOD_ID);
         playerInventory = UtilPlayerInventoryFilestorage.getPlayerInventory(player);
-        setSize(playerInventory.func_70302_i_());
+        setSize(playerInventory.getSizeInventory());
     }
 
     @Override
@@ -34,7 +35,7 @@ public class OPHandler extends DeathStackHandler {
 
             ItemStack stack = getStackInSlot(index);
 
-            if (stack.isEmpty()) { continue; }
+            if ( CorpseComplex.isStackEmpty(stack)) { continue; }
 
             boolean essential = DeathStackHelper.isEssential(stack);
             boolean cursed = !essential && DeathStackHelper.isCursed(stack);
@@ -61,7 +62,7 @@ public class OPHandler extends DeathStackHandler {
                 DeathStackHelper.loseEnergy(stack, store);
             }
 
-            if (stack.isEmpty()) { continue; }
+            if (CorpseComplex.isStackEmpty(stack)) { continue; }
 
             if (store) {
                 if (!essential && InventoryModule.randomDrop > 0) {
@@ -73,10 +74,10 @@ public class OPHandler extends DeathStackHandler {
                 }
             } else {
                 playerInventory.dropStackInSlot(player, index);
-                playerInventory.func_70299_a(index, ItemStack.EMPTY);
+                playerInventory.setInventorySlotContents(index, null);
             }
 
-            if (!stack.isEmpty() && InventoryModule.randomDestroy > 0) {
+            if (!CorpseComplex.isStackEmpty(stack) && InventoryModule.randomDestroy > 0) {
                 DeathStackHelper.randomlyDestroy(stack);
             }
         }
@@ -86,7 +87,7 @@ public class OPHandler extends DeathStackHandler {
         return OPModule.keepOP;
     }
     public ItemStack getStackInSlot(int slot) {
-        return playerInventory.func_70301_a(slot);
+        return playerInventory.getStackInSlot(slot);
     }
 
     public void retrieveInventory(IDeathInventory oldDeathInventory) {

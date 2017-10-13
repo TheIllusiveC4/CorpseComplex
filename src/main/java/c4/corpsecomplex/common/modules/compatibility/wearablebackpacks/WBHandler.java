@@ -4,6 +4,7 @@
 
 package c4.corpsecomplex.common.modules.compatibility.wearablebackpacks;
 
+import c4.corpsecomplex.CorpseComplex;
 import c4.corpsecomplex.common.modules.inventory.helpers.DeathInventoryHandler;
 import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
 import c4.corpsecomplex.common.modules.inventory.helpers.DeathStackHelper;
@@ -46,7 +47,7 @@ public class WBHandler extends DeathInventoryHandler {
             stack = playerBackpack.getStack();
         }
 
-        if (stack.isEmpty()) { return; }
+        if (CorpseComplex.isStackEmpty(stack)) { return; }
 
         Random generator = new Random();
         boolean essential = DeathStackHelper.isEssential(stack);
@@ -62,7 +63,7 @@ public class WBHandler extends DeathInventoryHandler {
         }
 
         if (cursed && InventoryModule.destroyCursed) {
-            BackpackHelper.setEquippedBackpack(player, ItemStack.EMPTY, null);
+            BackpackHelper.setEquippedBackpack(player, null, null);
             return;
         }
 
@@ -70,12 +71,12 @@ public class WBHandler extends DeathInventoryHandler {
             DeathStackHelper.loseDurability(player, stack, store);
         }
 
-        if (stack.isEmpty()) { return; }
+        if (CorpseComplex.isStackEmpty(stack)) { return; }
 
         if (store) {
             if (!essential && generator.nextDouble() < InventoryModule.randomDrop) {
                 if (generator.nextDouble() < InventoryModule.randomDestroy) {
-                    BackpackHelper.setEquippedBackpack(player, ItemStack.EMPTY, null);
+                    BackpackHelper.setEquippedBackpack(player, null, null);
                     return;
                 }
                 return;
@@ -89,7 +90,7 @@ public class WBHandler extends DeathInventoryHandler {
             }
 
             deathInventory.addStorage(modid, storage);
-            BackpackHelper.setEquippedBackpack(player, ItemStack.EMPTY, null);
+            BackpackHelper.setEquippedBackpack(player, null, null);
         }
     }
 

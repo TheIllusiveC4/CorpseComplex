@@ -46,6 +46,7 @@ public class TANMessage implements IMessage {
 
     public static class TANMessageHandler implements IMessageHandler<TANMessage, IMessage> {
 
+        @SuppressWarnings("MethodCallSideOnly")
         @Override
         @Optional.Method(modid = MOD_ID)
         public IMessage onMessage(TANMessage message, MessageContext ctx) {
