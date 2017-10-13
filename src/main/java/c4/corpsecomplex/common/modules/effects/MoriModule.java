@@ -26,7 +26,7 @@ public class MoriModule extends Submodule {
     public static boolean registerPotion;
 
     @GameRegistry.ObjectHolder("corpsecomplex:mori")
-    static MoriPotion moriPotion;
+    public static MoriPotion moriPotion;
 
     static double modHealth;
     static double modArmor;

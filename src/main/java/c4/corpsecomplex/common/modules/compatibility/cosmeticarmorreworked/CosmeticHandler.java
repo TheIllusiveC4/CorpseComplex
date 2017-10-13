@@ -4,6 +4,7 @@
 
 package c4.corpsecomplex.common.modules.compatibility.cosmeticarmorreworked;
 
+import c4.corpsecomplex.CorpseComplex;
 import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
 import c4.corpsecomplex.common.modules.inventory.helpers.DeathStackHandler;
 import lain.mods.cos.CosmeticArmorReworked;
@@ -20,7 +21,7 @@ public class CosmeticHandler extends DeathStackHandler {
     public CosmeticHandler (EntityPlayer player) {
         super(player, MOD_ID);
         playerCosmetics = CosmeticArmorReworked.invMan.getCosArmorInventory(player.getUniqueID());
-        setSize(playerCosmetics.func_70302_i_());
+        setSize(playerCosmetics.getSizeInventory());
     }
 
     public boolean checkToStore(int slot) {
@@ -28,7 +29,7 @@ public class CosmeticHandler extends DeathStackHandler {
     }
 
     public ItemStack getStackInSlot(int slot) {
-        return playerCosmetics.func_70301_a(slot);
+        return playerCosmetics.getStackInSlot(slot);
     }
 
     public void retrieveInventory(IDeathInventory oldDeathInventory) {
@@ -40,9 +41,9 @@ public class CosmeticHandler extends DeathStackHandler {
 
         for (int slot = 0; slot < storage.getSlots(); slot++) {
             ItemStack stack = storage.getStackInSlot(slot);
-            if (stack.isEmpty()) { continue;}
+            if ( CorpseComplex.isStackEmpty(stack)) { continue;}
 
-            playerCosmetics.func_70299_a(slot, stack);
+            playerCosmetics.setInventorySlotContents(slot, stack);
         }
     }
 }

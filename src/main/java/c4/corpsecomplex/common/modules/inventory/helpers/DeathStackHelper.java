@@ -4,6 +4,7 @@
 
 package c4.corpsecomplex.common.modules.inventory.helpers;
 
+import c4.corpsecomplex.CorpseComplex;
 import c4.corpsecomplex.common.modules.inventory.enchantment.EnchantmentModule;
 import c4.corpsecomplex.common.modules.inventory.InventoryModule;
 import net.minecraft.enchantment.Enchantment;
@@ -50,32 +51,32 @@ public final class DeathStackHelper {
             loseEnergy(stack, store);
         }
 
-        if (stack.isEmpty()) { return ItemStack.EMPTY; }
+        if ( CorpseComplex.isStackEmpty(stack)) { return null; }
 
         if (store) {
             if (!essential && InventoryModule.randomDrop > 0) {
-                int keepAmount = stack.getCount();
+                int keepAmount = stack.stackSize;
                 keepAmount -= randomlyDrop(stack);
                 return stack.splitStack(keepAmount);
             } else {
                 ItemStack stack1 = stack.copy();
-                stack.setCount(0);
+                stack.stackSize = 0;
                 return stack1;
             }
         } else {
-            return ItemStack.EMPTY;
+            return null;
         }
     }
 
     public static void destroyStack(ItemStack stack) {
 
-        stack.setCount(0);
+        stack.stackSize = 0;
     }
 
     public static int randomlyDrop(ItemStack stack) {
 
         int dropAmount = 0;
-        for (int i = 0; i < stack.getCount(); i++) {
+        for (int i = 0; i < stack.stackSize; i++) {
             if (generator.nextDouble() < InventoryModule.randomDrop) {
                 dropAmount++;
             }
@@ -87,13 +88,13 @@ public final class DeathStackHelper {
     public static void randomlyDestroy(ItemStack stack) {
 
         int destroyAmount = 0;
-        for (int i = 0; i < stack.getCount(); i++) {
+        for (int i = 0; i < stack.stackSize; i++) {
             if (generator.nextDouble() < InventoryModule.randomDestroy) {
                 destroyAmount++;
             }
         }
 
-        stack.shrink(destroyAmount);
+        stack.stackSize -= destroyAmount;
     }
 
     public static void loseDurability (EntityPlayer player, ItemStack stack, boolean store) {
@@ -143,11 +144,6 @@ public final class DeathStackHelper {
     }
 
     public static boolean isCursed(ItemStack stack) {
-
-        if (EnchantmentHelper.hasVanishingCurse(stack)) {
-            return true;
-        }
-
         for (String s : InventoryModule.cursedItems) {
 
             ResourceLocation name = stack.getItem().getRegistryName();

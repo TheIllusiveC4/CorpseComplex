@@ -4,6 +4,7 @@
 
 package c4.corpsecomplex.common.modules.inventory.helpers;
 
+import c4.corpsecomplex.CorpseComplex;
 import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
 import c4.corpsecomplex.common.modules.inventory.InventoryModule;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,11 +34,11 @@ public abstract class DeathStackHandler extends DeathInventoryHandler {
 
             ItemStack stack = getStackInSlot(index);
 
-            if (!stack.isEmpty()) {
+            if (!CorpseComplex.isStackEmpty(stack)) {
                 storeStack(index, DeathStackHelper.stackToStore(player, stack, checkToStore(index)));
             }
 
-            if (!stack.isEmpty() && InventoryModule.randomDestroy > 0) {
+            if (!CorpseComplex.isStackEmpty(stack) && InventoryModule.randomDestroy > 0) {
                 DeathStackHelper.randomlyDestroy(stack);
             }
         }
@@ -47,7 +48,7 @@ public abstract class DeathStackHandler extends DeathInventoryHandler {
 
     public void storeStack(int index, ItemStack stack) {
 
-        if (!stack.isEmpty()) {
+        if (!CorpseComplex.isStackEmpty(stack)) {
             storage.insertItem(index, stack, false);
         }
     }

@@ -5,6 +5,9 @@
 package c4.corpsecomplex;
 
 import c4.corpsecomplex.proxy.CommonProxy;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -15,10 +18,10 @@ import org.apache.logging.log4j.Logger;
         modid = CorpseComplex.MODID,
         name = CorpseComplex.MODNAME,
         version = CorpseComplex.MODVER,
-        dependencies = "required-after:forge@[14.21.1.2387,)",
+        dependencies = "required-after:forge@[12.18.3.2511,)",
         useMetadata = true,
         guiFactory = "c4."+ CorpseComplex.MODID+".client.gui.GuiFactory",
-        acceptedMinecraftVersions = "[1.12, 1.13)")
+        acceptedMinecraftVersions = "[1.10, 1.11)")
 
 public class CorpseComplex {
 
@@ -43,5 +46,9 @@ public class CorpseComplex {
     @Mod.EventHandler
     public void init(FMLInitializationEvent e) {
         proxy.init(e);
+    }
+
+    public static boolean isStackEmpty(ItemStack stack) {
+        return stack == null || stack.stackSize < 1 || stack.getItem() == Item.getItemFromBlock(Blocks.AIR);
     }
 }

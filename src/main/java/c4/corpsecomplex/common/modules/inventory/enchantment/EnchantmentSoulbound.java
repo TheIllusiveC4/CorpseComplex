@@ -18,9 +18,9 @@ public class EnchantmentSoulbound extends Enchantment {
         this.setRegistryName("soulbound");
     }
 
-    protected boolean canApplyTogether(Enchantment ench)
+    public boolean canApplyTogether(Enchantment ench)
     {
-        return this != ench && ench != Enchantments.VANISHING_CURSE;
+        return this != ench;
     }
 
     public int getMinEnchantability(int enchantmentLevel)

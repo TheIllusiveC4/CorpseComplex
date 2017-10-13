@@ -4,6 +4,7 @@
 
 package c4.corpsecomplex.common.modules.compatibility.advinv;
 
+import c4.corpsecomplex.CorpseComplex;
 import c4.corpsecomplex.common.modules.inventory.helpers.DeathStackHandler;
 import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
 import cubex2.advInv.api.AdvInvAPI;
@@ -40,7 +41,7 @@ public class AdvHandler extends DeathStackHandler {
 
         for (int slot = 0; slot < storage.getSlots(); slot++) {
             ItemStack stack = storage.getStackInSlot(slot);
-            if (stack.isEmpty()) { continue;}
+            if (CorpseComplex.isStackEmpty(stack)) { continue;}
 
             playerAdv.setInventorySlotContents(slot, stack);
         }
