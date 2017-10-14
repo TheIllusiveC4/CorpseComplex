@@ -40,7 +40,7 @@ public final class ModuleHelper {
         addModule(ExperienceModule.class);
         addModule(InventoryModule.class);
         addModule(HungerModule.class);
-        addModule("toughasnails", TANModule.class);
+        addModule("ToughAsNails", TANModule.class);
     }
 
     public static void preInit(FMLPreInitializationEvent e) {

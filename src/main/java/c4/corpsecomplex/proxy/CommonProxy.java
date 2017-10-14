@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod.EventBusSubscriber
 public class CommonProxy {
@@ -28,25 +29,17 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent e) {
 
         ModuleHelper.preInit(e);
+        if (MoriModule.registerPotion) {
+            GameRegistry.register(MoriModule.moriPotion);
+        }
+        if (EnchantmentModule.registerEnchant) {
+            GameRegistry.register(new EnchantmentSoulbound(Enchantment.Rarity.valueOf(EnchantmentModule.rarity)));
+        }
     }
 
     public void init(FMLInitializationEvent e) {
 
         MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
         CapabilityManager.INSTANCE.register(IDeathInventory.class, new DeathInventory.Storage(), DeathInventory.class);
-    }
-
-    @SubscribeEvent
-    public static void registerPotions(RegistryEvent.Register<Potion> e) {
-        if (MoriModule.registerPotion) {
-            e.getRegistry().register(new MoriPotion());
-        }
-    }
-
-    @SubscribeEvent
-    public static void registerEnchantments(RegistryEvent.Register<Enchantment> e) {
-        if (EnchantmentModule.registerEnchant) {
-            e.getRegistry().register(new EnchantmentSoulbound(Enchantment.Rarity.valueOf(EnchantmentModule.rarity)));
-        }
     }
 }

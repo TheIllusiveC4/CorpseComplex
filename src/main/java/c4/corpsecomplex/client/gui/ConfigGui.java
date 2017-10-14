@@ -29,7 +29,7 @@ public class ConfigGui extends GuiConfig{
         list.add(new ConfigElement(ModuleHelper.cfg.getCategory("Effects")).listCategoriesFirst(false));
         list.add(new ConfigElement(ModuleHelper.cfg.getCategory("Hunger")));
 
-        if (Loader.isModLoaded("toughasnails")) {
+        if (Loader.isModLoaded("ToughAsNails")) {
             list.add(new ConfigElement(ModuleHelper.cfg.getCategory("Tough as Nails")));
         }
 

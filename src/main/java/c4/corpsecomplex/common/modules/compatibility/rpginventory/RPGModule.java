@@ -11,7 +11,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import subaraki.rpginventory.network.PacketHandler;
-import subaraki.rpginventory.network.PacketInventoryToClient;
+import subaraki.rpginventory.network.PacketSyncOwnInventory;
 
 public class RPGModule extends Submodule {
 
@@ -42,6 +42,6 @@ public class RPGModule extends Submodule {
     @Optional.Method(modid = MOD_ID)
     private static void updateClientRPG (EntityPlayer player) {
 
-        PacketHandler.NETWORK.sendTo(new PacketInventoryToClient(player), (EntityPlayerMP) player);
+        PacketHandler.NETWORK.sendTo(new PacketSyncOwnInventory(player), (EntityPlayerMP) player);
     }
 }

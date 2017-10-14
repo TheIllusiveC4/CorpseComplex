@@ -18,16 +18,16 @@ import org.apache.logging.log4j.Logger;
         modid = CorpseComplex.MODID,
         name = CorpseComplex.MODNAME,
         version = CorpseComplex.MODVER,
-        dependencies = "required-after:forge@[12.18.3.2511,)",
+        dependencies = "required-after:Forge@[12.18.3.2185,);after:ToughAsNails;after:wearablebackpacks;after:powerinventory;after:thut_wearables;after:Baubles;after:rpginventory;after:cosmeticarmorreworked;after:tombstone;after:advInv",
         useMetadata = true,
         guiFactory = "c4."+ CorpseComplex.MODID+".client.gui.GuiFactory",
-        acceptedMinecraftVersions = "[1.10, 1.11)")
+        acceptedMinecraftVersions = "[1.10.2]")
 
 public class CorpseComplex {
 
     public static final String MODID = "corpsecomplex";
     public static final String MODNAME = "Corpse Complex";
-    public static final String MODVER = "1.0.0";
+    public static final String MODVER = "1.0.0-bp1";
 
     @SidedProxy(clientSide = "c4.corpsecomplex.proxy.ClientProxy", serverSide = "c4.corpsecomplex.proxy.CommonProxy")
     public static CommonProxy proxy;

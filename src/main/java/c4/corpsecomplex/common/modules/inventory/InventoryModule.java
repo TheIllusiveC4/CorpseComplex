@@ -67,9 +67,9 @@ public class InventoryModule extends Module {
         addSubmodule("thut_wearables", ThutModule.class, ThutHandler.class);
         addSubmodule("rpginventory", RPGModule.class, RPGHandler.class);
         addSubmodule("powerinventory", OPModule.class, OPHandler.class);
-        addSubmodule("baubles", BaublesModule.class, BaublesHandler.class);
+        addSubmodule("Baubles", BaublesModule.class, BaublesHandler.class);
         addSubmodule("cosmeticarmorreworked", CosmeticModule.class, CosmeticHandler.class);
-        addSubmodule("advinv", AdvModule.class, AdvHandler.class);
+        addSubmodule("advInv", AdvModule.class, AdvHandler.class);
 
         handlerClasses.add(InventoryHandler.class);
     }

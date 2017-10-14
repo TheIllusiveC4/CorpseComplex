@@ -10,7 +10,9 @@ import c4.corpsecomplex.common.modules.inventory.helpers.DeathStackHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import subaraki.rpginventory.capability.playerinventory.RpgInventoryData;
+import net.minecraft.util.EnumFacing;
+import subaraki.rpginventory.capability.playerinventory.RpgInventoryCapability;
+import subaraki.rpginventory.capability.playerinventory.RpgPlayerInventory;
 import subaraki.rpginventory.capability.playerinventory.RpgStackHandler;
 
 public class RPGHandler extends DeathStackHandler {
@@ -20,7 +22,8 @@ public class RPGHandler extends DeathStackHandler {
 
     public RPGHandler (EntityPlayer player) {
         super(player, MOD_ID);
-        rpgItems = RpgInventoryData.get(player).getInventory();
+        RpgPlayerInventory inventory = player.getCapability(RpgInventoryCapability.CAPABILITY, null);
+        rpgItems = inventory.getTheRpgInventory();
         setSize(rpgItems.getSlots());
     }
     public boolean checkToStore(int slot) {

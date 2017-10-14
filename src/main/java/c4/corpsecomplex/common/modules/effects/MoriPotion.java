@@ -16,6 +16,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -31,8 +32,6 @@ public class MoriPotion extends Potion {
     private Map<IAttribute, Double> changeAmountMap = Maps.newHashMap();
     private Map<IAttribute, AttributeModifier> attributeModifierMap = Maps.newHashMap();
     private double tickHealth;
-    private double tickArmor;
-    private double tickTough;
     private double tickMove;
     private double tickSpeed;
     private double tickDamage;
@@ -60,14 +59,6 @@ public class MoriPotion extends Potion {
             }
         }
 
-        if (MoriModule.modArmor != 0 && duration % tickArmor == 0) {
-            incrementRecover(entityLivingBaseIn, SharedMonsterAttributes.ARMOR);
-        }
-
-        if (MoriModule.modToughness != 0 && duration % tickTough == 0) {
-            incrementRecover(entityLivingBaseIn, SharedMonsterAttributes.ARMOR_TOUGHNESS);
-        }
-
         if (MoriModule.modMove != 0 && duration % tickMove == 0) {
             incrementRecover(entityLivingBaseIn, SharedMonsterAttributes.MOVEMENT_SPEED);
         }
@@ -83,22 +74,17 @@ public class MoriPotion extends Potion {
 
     void setModifiers() {
         attributeModifierMap.put(SharedMonsterAttributes.MAX_HEALTH, new AttributeModifier(UUID.fromString("ca572ca7-d11e-4054-b225-f4c797cdf69b"), name, MoriModule.modHealth, 0));
-        attributeModifierMap.put(SharedMonsterAttributes.ARMOR, new AttributeModifier(UUID.fromString("b3bd0150-1953-4971-a822-8445953c4195"), name, MoriModule.modArmor, 0));
-        attributeModifierMap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS, new AttributeModifier(UUID.fromString("5113ef1e-5200-4d6a-a898-946f0e4b5d26"), name, MoriModule.modToughness, 0));
         attributeModifierMap.put(SharedMonsterAttributes.MOVEMENT_SPEED, new AttributeModifier(UUID.fromString("f9a9495d-89b5-4676-8345-bc2e92936821"), name, MoriModule.modMove, 2));
         attributeModifierMap.put(SharedMonsterAttributes.ATTACK_SPEED, new AttributeModifier(UUID.fromString("9fe627b8-3477-4ccf-9587-87776259172f"), name, MoriModule.modSpeed, 2));
         attributeModifierMap.put(SharedMonsterAttributes.ATTACK_DAMAGE, new AttributeModifier(UUID.fromString("ae5b003a-65f3-41f2-b104-4c71a2261d5b"), name, MoriModule.modDamage, 0));
         tickHealth = setIncrement(SharedMonsterAttributes.MAX_HEALTH, MoriModule.modHealth, false);
-        tickArmor = setIncrement(SharedMonsterAttributes.ARMOR, MoriModule.modArmor, false);
-        tickTough = setIncrement(SharedMonsterAttributes.ARMOR_TOUGHNESS, MoriModule.modToughness, false);
         tickMove = setIncrement(SharedMonsterAttributes.MOVEMENT_SPEED, MoriModule.modMove, true);
         tickSpeed = setIncrement(SharedMonsterAttributes.ATTACK_SPEED, MoriModule.modSpeed, true);
         tickDamage = setIncrement(SharedMonsterAttributes.ATTACK_DAMAGE, MoriModule.modDamage, false);
     }
 
     private boolean isChangeTick(int duration) {
-        return (duration % tickHealth == 0) || (duration % tickArmor == 0) || (duration % tickTough == 0) || (duration % tickMove == 0) ||
-                (duration % tickSpeed == 0) || (duration % tickDamage == 0);
+        return (duration % tickHealth == 0) || (duration % tickMove == 0) || (duration % tickSpeed == 0) || (duration % tickDamage == 0);
     }
 
     private void incrementRecover(EntityLivingBase entityIn, IAttribute attribute) {

@@ -4,6 +4,7 @@
 
 package c4.corpsecomplex.common.modules.compatibility.toughasnails;
 
+import c4.corpsecomplex.CorpseComplex;
 import c4.corpsecomplex.common.Module;
 import c4.corpsecomplex.network.NetworkHandler;
 import c4.corpsecomplex.network.TANMessage;
@@ -12,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.logging.log4j.Level;
 import toughasnails.api.temperature.Temperature;
 import toughasnails.api.temperature.TemperatureHelper;
 import toughasnails.api.thirst.ThirstHelper;
@@ -21,7 +23,7 @@ import java.util.Collections;
 
 public class TANModule extends Module {
 
-    private final static String MOD_ID = "toughasnails";
+    private final static String MOD_ID = "ToughAsNails";
 
     private static boolean keepThirst;
     private static boolean keepHydration;

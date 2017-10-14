@@ -20,7 +20,7 @@ public class TANMessage implements IMessage {
 
     private int thirst;
     private int temp;
-    private static final String MOD_ID = "toughasnails";
+    private static final String MOD_ID = "ToughAsNails";
 
     public TANMessage() {
     }
