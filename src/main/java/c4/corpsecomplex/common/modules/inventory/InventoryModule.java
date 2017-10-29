@@ -1,5 +1,9 @@
 /*
- * Copyright (c) 2017. C4, MIT License
+ * Copyright (c) 2017. <C4>
+ *
+ * This Java class is distributed as a part of Corpse Complex.
+ * Corpse Complex is open source and licensed under the GNU General Public License v3.
+ * A copy of the license can be found here: https://www.gnu.org/licenses/gpl.text
  */
 
 package c4.corpsecomplex.common.modules.inventory;
@@ -117,7 +121,7 @@ public class InventoryModule extends Module {
         setCategoryComment();
         cfgEnabled = getBool("Enable Inventory Module", false, "Set to true to enable inventory module", true);
         keepArmor = getBool("Keep Armor", false, "Set to true to keep equipped armor on death", false);
-        keepHotbar = getBool("Keep Hotbar", false, "Set to true to keep hotbar items on death", false);
+        keepHotbar = getBool("Keep Hotbar", false, "Set to true to keep non-mainhand hotbar items on death", false);
         keepMainhand = getBool("Keep Mainhand", false, "Set to true to keep mainhand item on death", false);
         keepOffhand = getBool("Keep Offhand", false, "Set to true to keep offhand item on death", false);
         keepMainInventory = getBool("Keep Main Inventory", false, "Set to true to keep main inventory (non-equipped non-hotbar) items on death", false);
