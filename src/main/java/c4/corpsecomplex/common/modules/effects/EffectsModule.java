@@ -47,9 +47,11 @@ public class EffectsModule extends Module {
     @SubscribeEvent
     public void onPlayerRespawnFinish(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent e) {
 
-        EntityPlayer player = e.player;
-        addPotionEffects(player, effects, false);
-        addPotionEffects(player, customCureEffects, true);
+        if (!e.player.world.isRemote && !e.isEndConquered()) {
+            EntityPlayer player = e.player;
+            addPotionEffects(player, effects, false);
+            addPotionEffects(player, customCureEffects, true);
+        }
     }
 
     public EffectsModule() {
@@ -59,7 +61,7 @@ public class EffectsModule extends Module {
 
     public void loadModuleConfig() {
         setCategoryComment();
-        cfgEnabled = getBool("Enable Effects Module", false, "Set to true to enable effects module", false);
+        cfgEnabled = getBool("Enable Effects Module", false, "Set to true to enable effects module", true);
         cfgCureList = getStringList("Curative Items", new String[]{"minecraft:milk_bucket"}, "List of items that will be used by 'Curable Respawn Effects'", false);
 
         String[] cfgEffects = getStringList("Uncurable Respawn Effects", new String[]{"minecraft:mining_fatigue 30 4"}, "List of effects to apply to player on respawn\n" +"Format: [effect] [duration(secs)] [power]", false);

@@ -28,6 +28,7 @@ public class ConfigGui extends GuiConfig{
         list.add(new ConfigElement(ModuleHelper.cfg.getCategory("Experience")));
         list.add(new ConfigElement(ModuleHelper.cfg.getCategory("Effects")).listCategoriesFirst(false));
         list.add(new ConfigElement(ModuleHelper.cfg.getCategory("Hunger")));
+        list.add(new ConfigElement(ModuleHelper.cfg.getCategory("Respawning")));
 
         if (Loader.isModLoaded("toughasnails")) {
             list.add(new ConfigElement(ModuleHelper.cfg.getCategory("Tough as Nails")));

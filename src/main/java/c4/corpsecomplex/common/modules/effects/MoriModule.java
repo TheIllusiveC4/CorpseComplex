@@ -7,6 +7,7 @@ package c4.corpsecomplex.common.modules.effects;
 import c4.corpsecomplex.common.Module;
 import c4.corpsecomplex.common.Submodule;
 import com.pam.harvestcraft.blocks.blocks.BlockPamCake;
+import net.minecraft.block.BlockCake;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
@@ -46,11 +47,12 @@ public class MoriModule extends Submodule {
     @SubscribeEvent
     public void onPlayerRespawnFinish(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent e) {
 
-        if (e.player.world.isRemote) { return; }
+        if (!e.player.world.isRemote && !e.isEndConquered()) {
 
-        PotionEffect moriEffect = new PotionEffect(moriPotion, duration * 20, 0, false, true);
-        moriEffect.setCurativeItems(cureList);
-        e.player.addPotionEffect(moriEffect);
+            PotionEffect moriEffect = new PotionEffect(moriPotion, duration * 20, 0, false, true);
+            moriEffect.setCurativeItems(cureList);
+            e.player.addPotionEffect(moriEffect);
+        }
     }
 
     @SubscribeEvent
@@ -78,18 +80,7 @@ public class MoriModule extends Submodule {
 
         if (!noFood || !e.getEntityPlayer().isPotionActive(MoriModule.moriPotion)) { return; }
 
-        if (e.getWorld().getBlockState(e.getPos()).getBlock() == Blocks.CAKE) {
-            e.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent
-    @Optional.Method(modid = "harvestcraft")
-    public void onEatingPamCake(PlayerInteractEvent.RightClickBlock e) {
-
-        if (!noFood || !e.getEntityPlayer().isPotionActive(MoriModule.moriPotion)) { return; }
-
-        if (e.getWorld().getBlockState(e.getPos()).getBlock() instanceof BlockPamCake) {
+        if (e.getWorld().getBlockState(e.getPos()).getBlock() instanceof BlockCake) {
             e.setCanceled(true);
         }
     }

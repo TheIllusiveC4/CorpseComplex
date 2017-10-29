@@ -10,6 +10,5 @@
   "credits": "",
   "logoFile": "",
   "screenshots": [],
-  "dependencies": ["toughasnails","wearablebackpacks","powerinventory","thut_wearables","baubles","rpginventory","cosmeticarmorreworked","tombstone","advinv"],
-  "useDependencyInformation": true
+  "dependencies": []
 }]

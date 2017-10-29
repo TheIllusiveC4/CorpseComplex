@@ -9,12 +9,17 @@ import c4.corpsecomplex.network.NetworkHandler;
 import c4.corpsecomplex.network.TANMessage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import toughasnails.api.stat.PlayerStatRegistry;
+import toughasnails.api.stat.StatHandlerBase;
 import toughasnails.api.temperature.Temperature;
 import toughasnails.api.temperature.TemperatureHelper;
 import toughasnails.api.thirst.ThirstHelper;
+import toughasnails.handler.PacketHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +39,7 @@ public class TANModule extends Module {
     @Optional.Method(modid = MOD_ID)
     public void onPlayerRespawnBegin(PlayerEvent.Clone e) {
 
-        if (!e.isWasDeath() || e.getEntityPlayer().world.isRemote) { return;}
+        if (!e.isWasDeath() || e.getEntityPlayer().getEntityWorld().isRemote) { return;}
 
         EntityPlayer player = e.getEntityPlayer();
         EntityPlayer oldPlayer = e.getOriginal();
@@ -44,23 +49,11 @@ public class TANModule extends Module {
 
     @SubscribeEvent
     @Optional.Method(modid = MOD_ID)
-    public void onPlayerRespawnFinish(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent e) {
+    public void onPlayerRespawnFinish(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent evt) {
 
-        updateClientTAN(e.player);
-    }
-
-    @SubscribeEvent
-    @Optional.Method(modid = MOD_ID)
-    public void onPlayerJoin(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e) {
-
-        updateClientTAN(e.player);
-    }
-
-    @SubscribeEvent
-    @Optional.Method(modid = MOD_ID)
-    public void onPlayerDimensionChange(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent e) {
-
-        updateClientTAN(e.player);
+        if (!evt.player.world.isRemote) {
+            updateClientTAN(evt.player);
+        }
     }
 
     public TANModule() {

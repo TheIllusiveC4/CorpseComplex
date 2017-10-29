@@ -16,6 +16,8 @@ public class NetworkHandler  {
     private static int id = 0;
 
     public static void init() {
+        NetworkHandler.registerMessage(TeleportSoundMessage.TeleportSoundMessageHandler.class, TeleportSoundMessage.class, Side.CLIENT);
+        NetworkHandler.registerMessage(TeleportEffectMessage.TeleportEffectMessageHandler.class, TeleportEffectMessage.class, Side.CLIENT);
         NetworkHandler.registerMessage(TANMessage.TANMessageHandler.class, TANMessage.class, Side.CLIENT);
     }
 

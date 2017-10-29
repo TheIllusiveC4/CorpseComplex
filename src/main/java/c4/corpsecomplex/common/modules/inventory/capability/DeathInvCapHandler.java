@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class CapabilityHandler {
+public class DeathInvCapHandler {
 
     private static final ResourceLocation DEATH_INV_CAP = new ResourceLocation(CorpseComplex.MODID,"deathInventory");
 

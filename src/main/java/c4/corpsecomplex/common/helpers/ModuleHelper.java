@@ -12,6 +12,7 @@ import c4.corpsecomplex.common.modules.ExperienceModule;
 import c4.corpsecomplex.common.modules.HungerModule;
 import c4.corpsecomplex.common.modules.inventory.InventoryModule;
 import c4.corpsecomplex.common.modules.compatibility.toughasnails.TANModule;
+import c4.corpsecomplex.common.modules.spawning.SpawningModule;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -40,6 +41,7 @@ public final class ModuleHelper {
         addModule(ExperienceModule.class);
         addModule(InventoryModule.class);
         addModule(HungerModule.class);
+        addModule(SpawningModule.class);
         addModule("toughasnails", TANModule.class);
     }
 

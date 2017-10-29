@@ -19,6 +19,7 @@ public class ExperienceModule extends Module {
     private static boolean keepXP;
     private static double xpLoss;
     private static double xpRecover;
+    private static int maxXPRecover;
     private static boolean cfgEnabled;
 
     @SubscribeEvent
@@ -47,6 +48,7 @@ public class ExperienceModule extends Module {
         keepXP = getBool("Keep All XP", false, "Set to true to keep all XP on death", false);
         xpLoss = getDouble("Lost XP Percent", 1, 0, 1, "Percent of experience lost on death", false);
         xpRecover = getDouble("Recoverable XP Percent", 0.2F, 0, 1, "Percent of lost experience that can be recovered", false);
+        maxXPRecover = getInt("Maximum Recoverable XP", 0, 0, 10000, "Maximum amount of experience that can be recovered, 0 to disable", false);
     }
 
     public void initPropOrder() {
@@ -70,6 +72,9 @@ public class ExperienceModule extends Module {
             EntityPlayer player = (EntityPlayer) e.getEntityLiving();
             int dropXP = (int) Math.round(player.experienceTotal * xpLoss * xpRecover);
             int keptXP = (int) Math.round(player.experienceTotal * (1 - xpLoss));
+            if (maxXPRecover > 0) {
+                dropXP = Math.min(maxXPRecover, dropXP);
+            }
             e.setDroppedExperience(dropXP);
             player.experienceLevel = 0;
             player.experience = 0.0F;

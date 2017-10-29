@@ -115,7 +115,7 @@ public class InventoryModule extends Module {
 
     public void loadModuleConfig() {
         setCategoryComment();
-        cfgEnabled = getBool("Enable Inventory Module", false, "Set to true to enable inventory module", false);
+        cfgEnabled = getBool("Enable Inventory Module", false, "Set to true to enable inventory module", true);
         keepArmor = getBool("Keep Armor", false, "Set to true to keep equipped armor on death", false);
         keepHotbar = getBool("Keep Hotbar", false, "Set to true to keep hotbar items on death", false);
         keepMainhand = getBool("Keep Mainhand", false, "Set to true to keep mainhand item on death", false);
