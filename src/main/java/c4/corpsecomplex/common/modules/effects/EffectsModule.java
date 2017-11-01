@@ -10,11 +10,13 @@ package c4.corpsecomplex.common.modules.effects;
 
 import c4.corpsecomplex.CorpseComplex;
 import c4.corpsecomplex.common.Module;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Level;
@@ -27,7 +29,6 @@ public class EffectsModule extends Module {
     private static ArrayList<String> validEffectsList;
     private static ArrayList<String[]> effects;
     private static ArrayList<String[]> customCureEffects;
-    private static ArrayList<ItemStack> cureList;
     private static String[] cfgCureList;
     private static boolean cfgEnabled;
 
@@ -46,6 +47,16 @@ public class EffectsModule extends Module {
         submoduleClasses = new ArrayList<>();
 
         addSubmodule(MoriModule.class);
+    }
+
+    @SubscribeEvent
+    public void onItemUseFinish(LivingEntityUseItemEvent.Finish evt) {
+
+        EntityLivingBase entityLivingBase = evt.getEntityLiving();
+
+        if (!entityLivingBase.world.isRemote && cfgCureList.length > 0) {
+            entityLivingBase.curePotionEffects(evt.getItem());
+        }
     }
 
     @SubscribeEvent
@@ -72,7 +83,6 @@ public class EffectsModule extends Module {
         String[] cfgCustomCureEffects = getStringList("Curable Respawn Effects", new String[]{}, "List of effects to apply to players on respawn that can be cured by the curing items list\n" + "Format: [effect] [duration(secs)] [power]", false);
         effects = new ArrayList<>(initEffectsList(cfgEffects));
         customCureEffects = new ArrayList<>(initEffectsList(cfgCustomCureEffects));
-        initCureList();
     }
 
     public void initPropOrder() {
@@ -99,24 +109,24 @@ public class EffectsModule extends Module {
             PotionEffect potionEffect = new PotionEffect(potion, duration, amp);
 
             if (useCureList) {
+
+                ArrayList<ItemStack> cureList = new ArrayList<>();
+
+                for (String s1 : cfgCureList) {
+                    Item item = Item.getByNameOrId(s1);
+
+                    if (item != null) {
+                        cureList.add(new ItemStack(item));
+                    }
+                }
+
                 potionEffect.setCurativeItems(cureList);
+
             } else {
                 potionEffect.setCurativeItems(new ArrayList<>(0));
             }
 
             player.addPotionEffect(potionEffect);
-        }
-    }
-
-    private static void initCureList() {
-
-        cureList = new ArrayList<>();
-
-        for (String s : cfgCureList) {
-            Item item = Item.getByNameOrId(s);
-            if (item != null) {
-                cureList.add(new ItemStack(item));
-            }
         }
     }
 
