@@ -29,9 +29,10 @@ public class ExperienceModule extends Module {
     @SubscribeEvent
     public void onPlayerXPDrop(LivingExperienceDropEvent e) {
 
-        if (!(e.getEntityLiving() instanceof EntityPlayer) || e.getEntityLiving().getEntityWorld().isRemote) { return;}
+        if (e.getEntityLiving() instanceof EntityPlayer) {
 
-        setExperiencesValues(e);
+            setExperiencesValues(e);
+        }
     }
 
     @SubscribeEvent

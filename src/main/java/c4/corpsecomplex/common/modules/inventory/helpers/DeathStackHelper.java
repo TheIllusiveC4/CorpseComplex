@@ -33,11 +33,14 @@ public final class DeathStackHelper {
         boolean cursed = !essential && isCursed(stack);
         boolean store = ((cfgStore && !cursed) || essential);
 
-        if (!store && EnchantmentModule.registerEnchant) {
+        if (EnchantmentModule.registerEnchant) {
             int level = EnchantmentHelper.getEnchantmentLevel(EnchantmentModule.soulbound, stack);
             if (level != 0) {
-                store = essential = handleSoulbound(stack, level);
+                essential = handleSoulbound(stack, level);
                 cursed = !essential && cursed;
+                if (!store && essential) {
+                    store = true;
+                }
             }
         }
 

@@ -90,6 +90,18 @@ public class InventoryModule extends Module {
         }
     }
 
+    @SubscribeEvent (priority = EventPriority.LOWEST, receiveCanceled = true)
+    public void canceledDeath (LivingDeathEvent e) {
+
+        if (!(e.getEntityLiving() instanceof EntityPlayer)) { return;}
+
+        EntityPlayer player = (EntityPlayer) e.getEntityLiving();
+
+        if (!player.world.getGameRules().getBoolean("keepInventory") && e.isCanceled()) {
+            retrieveInventories(player, player);
+        }
+    }
+
     @SubscribeEvent (priority = EventPriority.LOWEST)
     public void onPlayerDrop (PlayerDropsEvent e) {
 
