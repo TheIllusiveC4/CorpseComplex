@@ -33,6 +33,7 @@ public class SpawningModule extends Module {
 
     public static boolean returnScroll;
     public static boolean registerScroll;
+    public static boolean giveScroll;
     private static boolean disableBeds;
     private static boolean cfgEnabled;
 
@@ -44,7 +45,8 @@ public class SpawningModule extends Module {
         setCategoryComment();
         cfgEnabled = getBool("Enable Respawning Module", false, "Set to true to enable respawning module features", true);
         disableBeds = getBool("Disable Bed Spawn Points", false, "Set to true to disable beds setting spawn points", false);
-        returnScroll = getBool("Return Scroll", false, "Set to true to give players a scroll on respawn that can return them to their death location", true);
+        returnScroll = getBool("Return Scroll", false, "Set to true to enable a craftable return scroll that teleports players to their death location", true);
+        giveScroll = getBool("Give Scroll on Respawn", false, "If Return Scroll is true, set to true to automatically give players a return scroll on respawn", false);
         registerScroll = cfgEnabled && returnScroll;
     }
 
@@ -63,7 +65,7 @@ public class SpawningModule extends Module {
 
             EntityPlayer player = (EntityPlayer) e.getEntityLiving();
 
-            if (registerScroll) {
+            if (returnScroll) {
 
                 IDeathLocation deathLoc = player.getCapability(DeathLocation.Provider.DEATH_LOC_CAP, null);
                 if (deathLoc != null) {
@@ -84,7 +86,7 @@ public class SpawningModule extends Module {
     @SubscribeEvent
     public void onPlayerRespawn(PlayerEvent.Clone e) {
 
-        if (registerScroll && e.isWasDeath()) {
+        if (returnScroll && e.isWasDeath()) {
 
             EntityPlayer player = e.getEntityPlayer();
             EntityPlayer oldPlayer = e.getOriginal();
@@ -98,7 +100,7 @@ public class SpawningModule extends Module {
                 newDeathLoc.setHasDeathLocation(oldDeathLoc.hasDeathLocation());
             }
 
-            if (!e.getEntityPlayer().world.isRemote) {
+            if (!e.getEntityPlayer().world.isRemote && giveScroll) {
                 ItemHandlerHelper.giveItemToPlayer(e.getEntityPlayer(), new ItemStack(scroll));
             }
         }

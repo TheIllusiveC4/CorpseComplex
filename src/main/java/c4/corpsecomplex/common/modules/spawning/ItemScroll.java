@@ -14,6 +14,7 @@ import c4.corpsecomplex.common.modules.spawning.capability.IDeathLocation;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -36,6 +37,7 @@ import java.util.List;
 public class ItemScroll extends Item {
 
     public ItemScroll() {
+        this.setCreativeTab(CreativeTabs.TRANSPORTATION);
         this.setRegistryName("scroll");
         this.setUnlocalizedName(CorpseComplex.MODID + ".scroll");
     }
