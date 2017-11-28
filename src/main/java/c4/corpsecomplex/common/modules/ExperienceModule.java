@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class ExperienceModule extends Module {
     private static int maxXPRecover;
     private static boolean cfgEnabled;
 
-    @SubscribeEvent
+    @SubscribeEvent (priority = EventPriority.HIGH)
     public void onPlayerXPDrop(LivingExperienceDropEvent e) {
 
         if (e.getEntityLiving() instanceof EntityPlayer) {
@@ -35,12 +36,13 @@ public class ExperienceModule extends Module {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent (priority = EventPriority.HIGH)
     public void onPlayerRespawnBegin(PlayerEvent.Clone e) {
 
-        if (!e.isWasDeath() || e.getEntityPlayer().world.isRemote) { return;}
+        if (e.isWasDeath()) {
 
-        restoreXP(e.getEntityPlayer(), e.getOriginal());
+            restoreXP(e.getEntityPlayer(), e.getOriginal());
+        }
     }
 
     public ExperienceModule() {
@@ -66,24 +68,24 @@ public class ExperienceModule extends Module {
 
     private static void restoreXP(EntityPlayer player, EntityPlayer oldPlayer) {
 
+        resetXP(player);
         player.addExperience(oldPlayer.experienceTotal);
     }
 
     private static void setExperiencesValues(LivingExperienceDropEvent e) {
 
+        EntityPlayer player = (EntityPlayer) e.getEntityLiving();
+
         if (keepXP) {
             e.setCanceled(true);
         } else {
-            EntityPlayer player = (EntityPlayer) e.getEntityLiving();
             int dropXP = (int) Math.round(player.experienceTotal * xpLoss * xpRecover);
             int keptXP = (int) Math.round(player.experienceTotal * (1 - xpLoss));
             if (maxXPRecover > 0) {
                 dropXP = Math.min(maxXPRecover, dropXP);
             }
             e.setDroppedExperience(dropXP);
-            player.experienceLevel = 0;
-            player.experience = 0.0F;
-            player.experienceTotal = 0;
+            resetXP(player);
             addExperience(player, keptXP);
         }
     }
@@ -103,10 +105,14 @@ public class ExperienceModule extends Module {
             player.experienceLevel += 1;
 
             if (player.experienceLevel < 0) {
-                player.experienceLevel = 0;
-                player.experience = 0.0F;
-                player.experienceTotal = 0;
+                resetXP(player);
             }
         }
+    }
+
+    private static void resetXP(EntityPlayer player) {
+        player.experienceLevel = 0;
+        player.experience = 0.0F;
+        player.experienceTotal = 0;
     }
 }
