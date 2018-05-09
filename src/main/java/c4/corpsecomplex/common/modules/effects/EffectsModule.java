@@ -152,7 +152,7 @@ public class EffectsModule extends Module {
                 CorpseComplex.logger.log(Level.ERROR, "Problem parsing respawn effects list!", e1);
             } finally {
                 elements[1] = Integer.toString(Math.max(1,Math.min(i, 1600)));
-                elements[2] = Integer.toString(Math.max(1,Math.min(j, 4)));
+                elements[2] = Integer.toString(Math.max(1,Math.min(j, 10)));
                 effectAttributes[0] = elements[0];
                 effectAttributes[1] = elements[1];
                 effectAttributes[2] = elements[2];
