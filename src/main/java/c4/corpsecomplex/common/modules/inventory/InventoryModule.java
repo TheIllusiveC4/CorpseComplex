@@ -102,16 +102,6 @@ public class InventoryModule extends Module {
         }
     }
 
-    @SubscribeEvent (priority = EventPriority.LOWEST)
-    public void onPlayerDrop (PlayerDropsEvent e) {
-
-        EntityPlayer player = e.getEntityPlayer();
-
-        if (!player.world.getGameRules().getBoolean("keepInventory") && !player.world.isRemote) {
-            retrieveInventories(player);
-        }
-    }
-
     @SubscribeEvent
     public void onPlayerRespawnBegin(PlayerEvent.Clone e) {
 
