@@ -159,11 +159,6 @@ public class InventoryModule extends Module {
         });
     }
 
-    private void retrieveInventories(EntityPlayer player) {
-
-        retrieveInventories(player, player);
-    }
-
     private void retrieveInventories(EntityPlayer player, EntityPlayer oldPlayer) {
 
         IDeathInventory oldDeathInventory = oldPlayer.getCapability(DeathInventory.Provider.DEATH_INV_CAP, null);
