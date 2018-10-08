@@ -39,7 +39,7 @@ public class ItemScroll extends Item {
     public ItemScroll() {
         this.setCreativeTab(CreativeTabs.TRANSPORTATION);
         this.setRegistryName("scroll");
-        this.setUnlocalizedName(CorpseComplex.MODID + ".scroll");
+        this.setTranslationKey(CorpseComplex.MODID + ".scroll");
     }
 
     @Override
