@@ -9,6 +9,8 @@
 package c4.corpsecomplex.common.modules.inventory;
 
 import c4.corpsecomplex.CorpseComplex;
+import c4.corpsecomplex.common.modules.compatibility.camping.CampingHandler;
+import c4.corpsecomplex.common.modules.compatibility.camping.CampingModule;
 import c4.corpsecomplex.common.modules.inventory.helpers.DeathInventoryHandler;
 import c4.corpsecomplex.common.modules.inventory.capability.DeathInventory;
 import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
@@ -74,6 +76,7 @@ public class InventoryModule extends Module {
         addSubmodule("baubles", BaublesModule.class, BaublesHandler.class);
         addSubmodule("cosmeticarmorreworked", CosmeticModule.class, CosmeticHandler.class);
         addSubmodule("advinv", AdvModule.class, AdvHandler.class);
+        addSubmodule("camping", CampingModule.class, CampingHandler.class);
 
         handlerClasses.add(InventoryHandler.class);
     }
