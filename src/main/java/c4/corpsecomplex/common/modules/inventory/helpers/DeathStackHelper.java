@@ -28,6 +28,10 @@ public final class DeathStackHelper {
     private DeathStackHelper() {}
 
     public static ItemStack stackToStore(EntityPlayer player, ItemStack stack, boolean cfgStore) {
+        return stackToStore(player, stack, cfgStore, false);
+    }
+
+    public static ItemStack stackToStore(EntityPlayer player, ItemStack stack, boolean cfgStore, boolean isMainInventory) {
 
         boolean essential = isEssential(stack);
         boolean cursed = !essential && isCursed(stack);
@@ -60,7 +64,7 @@ public final class DeathStackHelper {
         if (stack.isEmpty()) { return ItemStack.EMPTY; }
 
         if (store) {
-            if (!essential && InventoryModule.randomDrop > 0) {
+            if (!essential && InventoryModule.randomDrop > 0 && (isMainInventory || !InventoryModule.randomDropOnlyMain)) {
                 int keepAmount = stack.getCount();
                 keepAmount -= randomlyDrop(stack);
                 return stack.splitStack(keepAmount);

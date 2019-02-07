@@ -48,6 +48,7 @@ public class InventoryModule extends Module {
     public static ArrayList<Class<? extends DeathInventoryHandler>> handlerClasses;
     public static boolean destroyCursed;
     public static double randomDrop;
+    public static boolean randomDropOnlyMain;
     public static String[] essentialItems;
     public static String[] cursedItems;
     public static double randomDestroy;
@@ -132,6 +133,7 @@ public class InventoryModule extends Module {
         keepMainInventory = getBool("Keep Main Inventory", false, "Set to true to keep main inventory (non-equipped non-hotbar) items on death", false);
         destroyCursed = getBool("Destroy Cursed Items", false, "Set to true to destroy cursed items instead of dropping them", false);
         randomDrop = getDouble("Random Drop Chance", 0,0,1,"Percent chance that items that are kept will still drop", false);
+        randomDropOnlyMain = getBool("Random Drop Only Main Inventory", false, "Set to true to only apply random drop chance to the main inventory", false);
         randomDestroy = getDouble("Random Destroy Chance", 0, 0, 1, "Percent chance that dropped items will be destroyed", false);
         essentialItems = getStringList("Essential Items", new String[]{}, "List of items that are always kept", false);
         cursedItems = getStringList("Cursed Items", new String[]{}, "List of items that are always dropped", false);
@@ -144,7 +146,7 @@ public class InventoryModule extends Module {
     public void initPropOrder() {
         propOrder = new ArrayList<>(Arrays.asList("Enable Inventory Module", "Keep Armor", "Keep Hotbar", "Keep Mainhand", "Keep Offhand",
                 "Keep Main Inventory", "Durability Loss on Drops", "Durability Loss on Kept Items", "Energy Drain on Drops", "Energy Drain on Kept Items",
-                "Random Drop Chance", "Random Destroy Chance", "Essential Items", "Cursed Items", "Destroy Cursed Items"));
+                "Random Drop Chance", "Random Drop Only Main Inventory", "Random Destroy Chance", "Essential Items", "Cursed Items", "Destroy Cursed Items"));
     }
 
     public void setEnabled() {
