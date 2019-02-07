@@ -32,14 +32,14 @@ public class MoriPotion extends Potion {
     private static final double percentIncrement = 0.05;
 
     private ResourceLocation icon;
-    private Map<IAttribute, Double> changeAmountMap = Maps.newHashMap();
-    private Map<IAttribute, AttributeModifier> attributeModifierMap = Maps.newHashMap();
-    private double tickHealth;
-    private double tickArmor;
-    private double tickTough;
-    private double tickMove;
-    private double tickSpeed;
-    private double tickDamage;
+    private static Map<IAttribute, Double> changeAmountMap = Maps.newHashMap();
+    private static Map<IAttribute, AttributeModifier> attributeModifierMap = Maps.newHashMap();
+    private static double tickHealth;
+    private static double tickArmor;
+    private static double tickTough;
+    private static double tickMove;
+    private static double tickSpeed;
+    private static double tickDamage;
 
     public MoriPotion() {
         super(true, 1);
@@ -85,7 +85,7 @@ public class MoriPotion extends Potion {
         }
     }
 
-    void setModifiers() {
+    public static void setModifiers() {
         attributeModifierMap.put(SharedMonsterAttributes.MAX_HEALTH, new AttributeModifier(UUID.fromString("ca572ca7-d11e-4054-b225-f4c797cdf69b"), name, MoriModule.modHealth, 0));
         attributeModifierMap.put(SharedMonsterAttributes.ARMOR, new AttributeModifier(UUID.fromString("b3bd0150-1953-4971-a822-8445953c4195"), name, MoriModule.modArmor, 0));
         attributeModifierMap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS, new AttributeModifier(UUID.fromString("5113ef1e-5200-4d6a-a898-946f0e4b5d26"), name, MoriModule.modToughness, 0));
@@ -116,7 +116,7 @@ public class MoriPotion extends Potion {
         iAttributeInstance.applyModifier(new AttributeModifier(attributeModifier.getID(), attributeModifier.getName(), attributeModifier.getAmount() + changeAmount, attributeModifier.getOperation()));
     }
 
-    private double setIncrement(IAttribute attribute, double amount, boolean isPercent) {
+    private static double setIncrement(IAttribute attribute, double amount, boolean isPercent) {
 
         if (amount == 0) { return 0; }
 

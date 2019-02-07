@@ -56,6 +56,10 @@ public class MoriModule extends Submodule {
             PotionEffect moriEffect = new PotionEffect(moriPotion, duration * 20, 0, false, true);
             moriEffect.setCurativeItems(cureList);
             e.player.addPotionEffect(moriEffect);
+
+            if (e.player.getHealth() < e.player.getMaxHealth()) {
+                e.player.setHealth(e.player.getMaxHealth());
+            }
         }
     }
 
@@ -108,9 +112,7 @@ public class MoriModule extends Submodule {
         noFood = getBool("Cannot Eat Food", false, "Set to true to disable eating food while effect is active", false);
         noXP = getBool("Cannot Gain XP", false, "Set to true to disable gaining experience while effect is active", false);
         curativeItems = getStringList("Curative Items", new String[]{"minecraft:milk_bucket"}, "List of items that can cure the effect", false);
-        if (moriPotion != null) {
-            moriPotion.setModifiers();
-        }
+        MoriPotion.setModifiers();
         initCureList();
     }
 
