@@ -8,15 +8,21 @@
 
 package c4.corpsecomplex.common.modules;
 
+import c4.corpsecomplex.CorpseComplex;
 import c4.corpsecomplex.common.Module;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.FoodStats;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class HungerModule extends Module {
+
+    private static final Field FOOD_SATURATION_LEVEL = ReflectionHelper.findField(FoodStats.class, "foodSaturationLevel", "field_75125_b");
 
     private static boolean keepFood;
     private static int minFood;
@@ -54,17 +60,22 @@ public class HungerModule extends Module {
     }
 
     private static void restoreHunger(EntityPlayer player, EntityPlayer oldPlayer) {
-
-        int oldFood = oldPlayer.getFoodStats().getFoodLevel();
+        FoodStats oldFood = oldPlayer.getFoodStats();
+        FoodStats newFood = player.getFoodStats();
 
         if (keepFood) {
-            player.getFoodStats().setFoodLevel(Math.max(minFood, (Math.min(maxFood, oldFood))));
+            newFood.setFoodLevel(Math.max(minFood, (Math.min(maxFood, oldFood.getFoodLevel()))));
         } else {
-            player.getFoodStats().setFoodLevel(Math.max(minFood, (Math.min(maxFood, 20))));
+            newFood.setFoodLevel(Math.max(minFood, (Math.min(maxFood, 20))));
         }
 
         if (keepSaturation) {
-            player.getFoodStats().setFoodSaturationLevel(oldPlayer.getFoodStats().getSaturationLevel());
+
+            try {
+                FOOD_SATURATION_LEVEL.setFloat(newFood, oldFood.getSaturationLevel());
+            } catch (IllegalAccessException e) {
+                CorpseComplex.logger.error("Error syncing food saturation level in hunger module!");
+            }
         }
     }
 }
