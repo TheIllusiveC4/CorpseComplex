@@ -9,6 +9,7 @@
 package c4.corpsecomplex.common.modules.spawning;
 
 import c4.corpsecomplex.common.Module;
+import c4.corpsecomplex.common.modules.compatibility.reskillable.ReskillableModule;
 import c4.corpsecomplex.common.modules.spawning.capability.DeathLocation;
 import c4.corpsecomplex.common.modules.spawning.capability.IDeathLocation;
 import net.minecraft.block.BlockBed;
@@ -19,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerSetSpawnEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -36,6 +38,12 @@ public class SpawningModule extends Module {
     public static boolean giveScroll;
     private static boolean disableBeds;
     private static boolean cfgEnabled;
+
+    {
+        submoduleClasses = new ArrayList<>();
+
+        addSubmodule("reskillable", ReskillableModule.class);
+    }
 
     public SpawningModule() {
         super("Respawning", "Customize general respawning rules");
