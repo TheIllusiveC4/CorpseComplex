@@ -16,8 +16,8 @@ import codersafterdark.reskillable.api.data.PlayerSkillInfo;
 import codersafterdark.reskillable.api.event.LevelUpEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import java.util.Collection;
 
@@ -39,10 +39,10 @@ public class ReskillableModule extends Submodule {
     }
 
     @SubscribeEvent
-    public void onPlayerRespawn(PlayerEvent.Clone e) {
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent evt) {
 
-        if (resetSkills && e.isWasDeath()) {
-            EntityPlayerMP player = (EntityPlayerMP)e.getEntityPlayer();
+        if (resetSkills && !evt.isEndConquered()) {
+            EntityPlayerMP player = (EntityPlayerMP)evt.player;
             PlayerData data = PlayerDataHandler.get(player);
             Collection<PlayerSkillInfo> allSkills = data.getAllSkillInfo();
 
