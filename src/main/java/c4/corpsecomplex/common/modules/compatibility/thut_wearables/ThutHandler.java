@@ -26,7 +26,7 @@ public class ThutHandler extends DeathStackHandler {
   public ThutHandler(EntityPlayer player) {
     super(player, MOD_ID);
     playerWearables = ThutWearables.getWearables(player);
-    setSize(playerWearables.getSizeInventory());
+    setSize(playerWearables.getSlots());
   }
 
   public boolean checkToStore(int slot) {
@@ -52,7 +52,7 @@ public class ThutHandler extends DeathStackHandler {
         continue;
       }
 
-      playerWearables.setInventorySlotContents(slot, stack);
+      playerWearables.setStackInSlot(slot, stack);
     }
   }
 }

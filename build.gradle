@@ -40,6 +40,9 @@ dependencies {
     deobfCompile curse.resolve('the-camping-mod', '2569056')
     deobfCompile curse.resolve('baubles', '2518667')
     deobfCompile curse.resolve('advanced-inventory', '2463903')
+    deobfCompile curse.resolve('sublib', '2522690')
+    deobfCompile curse.resolve('rikmulds-core-mod', '2569880')
+    deobfCompile curse.resolve('cxlibrary', '2463886');
 }
 
 processResources {

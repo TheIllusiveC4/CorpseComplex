@@ -30,7 +30,7 @@ public class OPHandler extends DeathStackHandler {
   public OPHandler(EntityPlayer player) {
     super(player, MOD_ID);
     playerInventory = UtilPlayerInventoryFilestorage.getPlayerInventory(player);
-    setSize(playerInventory.func_70302_i_());
+    setSize(playerInventory.getSizeInventory());
   }
 
   @Override
@@ -84,7 +84,7 @@ public class OPHandler extends DeathStackHandler {
         }
       } else {
         playerInventory.dropStackInSlot(player, index);
-        playerInventory.func_70299_a(index, ItemStack.EMPTY);
+        playerInventory.setInventorySlotContents(index, ItemStack.EMPTY);
       }
 
       if (!stack.isEmpty() && InventoryModule.randomDestroy > 0) {
@@ -98,7 +98,7 @@ public class OPHandler extends DeathStackHandler {
   }
 
   public ItemStack getStackInSlot(int slot) {
-    return playerInventory.func_70301_a(slot);
+    return playerInventory.getStackInSlot(slot);
   }
 
   public void retrieveInventory(IDeathInventory oldDeathInventory) {

@@ -27,7 +27,7 @@ public class CosmeticHandler extends DeathStackHandler {
     super(player, MOD_ID);
     playerCosmetics = CosmeticArmorReworked.invMan.getCosArmorInventory(
             player.getUniqueID());
-    setSize(playerCosmetics.func_70302_i_());
+    setSize(playerCosmetics.getSizeInventory());
   }
 
   public boolean checkToStore(int slot) {
@@ -35,7 +35,7 @@ public class CosmeticHandler extends DeathStackHandler {
   }
 
   public ItemStack getStackInSlot(int slot) {
-    return playerCosmetics.func_70301_a(slot);
+    return playerCosmetics.getStackInSlot(slot);
   }
 
   public void retrieveInventory(IDeathInventory oldDeathInventory) {
@@ -53,7 +53,7 @@ public class CosmeticHandler extends DeathStackHandler {
         continue;
       }
 
-      playerCosmetics.func_70299_a(slot, stack);
+      playerCosmetics.setInventorySlotContents(slot, stack);
     }
   }
 }
