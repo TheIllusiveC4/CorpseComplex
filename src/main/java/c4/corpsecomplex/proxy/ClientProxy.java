@@ -2,8 +2,10 @@
  * Copyright (c) 2017. <C4>
  *
  * This Java class is distributed as a part of Corpse Complex.
- * Corpse Complex is open source and licensed under the GNU General Public License v3.
- * A copy of the license can be found here: https://www.gnu.org/licenses/gpl.text
+ * Corpse Complex is open source and licensed under the GNU General Public
+ * License v3.
+ * A copy of the license can be found here: https://www.gnu.org/licenses/gpl
+ * .text
  */
 
 package c4.corpsecomplex.proxy;
@@ -18,22 +20,23 @@ import net.minecraftforge.fml.relauncher.Side;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
-    @Override
-    public void preInit(FMLPreInitializationEvent e) {
 
-        super.preInit(e);
+  @Override
+  public void preInit(FMLPreInitializationEvent e) {
+
+    super.preInit(e);
+  }
+
+  @Override
+  public void init(FMLInitializationEvent e) {
+
+    super.init(e);
+  }
+
+  @SubscribeEvent
+  public static void registerModels(ModelRegistryEvent e) {
+    if (SpawningModule.registerScroll) {
+      SpawningModule.scroll.initModel();
     }
-
-    @Override
-    public void init(FMLInitializationEvent e) {
-
-        super.init(e);
-    }
-
-    @SubscribeEvent
-    public static void registerModels(ModelRegistryEvent e) {
-        if (SpawningModule.registerScroll) {
-            SpawningModule.scroll.initModel();
-        }
-    }
+  }
 }

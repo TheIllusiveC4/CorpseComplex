@@ -2,8 +2,10 @@
  * Copyright (c) 2017. <C4>
  *
  * This Java class is distributed as a part of Corpse Complex.
- * Corpse Complex is open source and licensed under the GNU General Public License v3.
- * A copy of the license can be found here: https://www.gnu.org/licenses/gpl.text
+ * Corpse Complex is open source and licensed under the GNU General Public
+ * License v3.
+ * A copy of the license can be found here: https://www.gnu.org/licenses/gpl
+ * .text
  */
 
 package c4.corpsecomplex.common;
@@ -23,91 +25,112 @@ import java.util.function.Consumer;
 
 public abstract class Module {
 
-    public abstract void loadModuleConfig();
-    public abstract void initPropOrder();
-    public abstract void setEnabled();
+  public abstract void loadModuleConfig();
 
-    public boolean enabled;
-    public boolean prevEnabled;
+  public abstract void initPropOrder();
 
-    protected ConfigCategory configCategory;
-    protected List<String> propOrder;
-    protected ArrayList<Class<? extends Submodule>> submoduleClasses;
+  public abstract void setEnabled();
 
-    private Map<Class<? extends Submodule>, Submodule> subInstances = new HashMap<>();
+  public boolean enabled;
+  public boolean prevEnabled;
 
-    public Module() {
-        prevEnabled = false;
+  protected ConfigCategory configCategory;
+  protected List<String> propOrder;
+  protected ArrayList<Class<? extends Submodule>> submoduleClasses;
+
+  private Map<Class<? extends Submodule>, Submodule> subInstances =
+          new HashMap<>();
+
+  public Module() {
+    prevEnabled = false;
+  }
+
+  public Module(String category, String description) {
+    configCategory = new ConfigCategory(category);
+    configCategory.setComment(description);
+    prevEnabled = false;
+  }
+
+  public void setPropOrder() {
+    initPropOrder();
+    if (propOrder != null) {
+      ModuleHelper.cfg.getCategory(configCategory.getQualifiedName())
+              .setPropertyOrder(propOrder);
+    }
+    forEachSubmodule(Submodule::setPropOrder);
+  }
+
+  public boolean hasEvents() {
+    return true;
+  }
+
+  public void loadSubmodules() {
+
+    if (submoduleClasses == null || submoduleClasses.isEmpty()) {
+      return;
     }
 
-    public Module(String category, String description) {
-        configCategory = new ConfigCategory(category);
-        configCategory.setComment(description);
-        prevEnabled = false;
+    submoduleClasses.forEach(submodule -> {
+      try {
+        subInstances.put(submodule,
+                submodule.getDeclaredConstructor(Module.class)
+                        .newInstance(this));
+      } catch (Exception e1) {
+        CorpseComplex.logger.log(Level.ERROR,
+                "Failed to initialize submodule " + submodule, e1);
+      }
+    });
+  }
+
+  protected void addSubmodule(Class<? extends Submodule> submodule) {
+    if (!submoduleClasses.contains(submodule)) {
+      submoduleClasses.add(submodule);
     }
+  }
 
-    public void setPropOrder() {
-        initPropOrder();
-        if (propOrder != null) {
-            ModuleHelper.cfg.getCategory(configCategory.getQualifiedName()).setPropertyOrder(propOrder);
-        }
-        forEachSubmodule(Submodule::setPropOrder);
+  protected void addSubmodule(String modid,
+          Class<? extends Submodule> submodule) {
+    if (Loader.isModLoaded(modid) && !submoduleClasses.contains(submodule)) {
+      submoduleClasses.add(submodule);
     }
+  }
 
-    public boolean hasEvents() {
-        return true;
-    }
+  public void forEachSubmodule(Consumer<Submodule> submodule) {
+    subInstances.values().forEach(submodule);
+  }
 
-    public void loadSubmodules() {
+  protected void setCategoryComment() {
+    ModuleHelper.cfg.addCustomCategoryComment(configCategory.getQualifiedName(),
+            configCategory.getComment());
+  }
 
-        if (submoduleClasses == null || submoduleClasses.isEmpty()) { return; }
+  protected int getInt(String name, int defaultInt, int min, int max,
+          String comment, boolean requiresRestart) {
+    return ConfigHelper.getInt(name, configCategory.getQualifiedName(),
+            defaultInt, min, max, comment, requiresRestart);
+  }
 
-        submoduleClasses.forEach(submodule -> {
-            try {
-                subInstances.put(submodule, submodule.getDeclaredConstructor(Module.class).newInstance(this));
-            } catch (Exception e1) {
-                CorpseComplex.logger.log(Level.ERROR, "Failed to initialize submodule " + submodule, e1);
-            }
-        });
-    }
+  protected double getDouble(String name, double defaultDouble, float min,
+          float max, String comment, boolean requiresRestart) {
+    return ConfigHelper.getDouble(name, configCategory.getQualifiedName(),
+            defaultDouble, min, max, comment, requiresRestart);
+  }
 
-    protected void addSubmodule(Class<? extends Submodule> submodule) {
-        if (!submoduleClasses.contains(submodule)) {
-            submoduleClasses.add(submodule);
-        }
-    }
+  protected boolean getBool(String name, boolean defaultBool, String comment,
+          boolean requiresRestart) {
+    return ConfigHelper.getBool(name, configCategory.getQualifiedName(),
+            defaultBool, comment, requiresRestart);
+  }
 
-    protected void addSubmodule(String modid, Class<? extends Submodule> submodule) {
-        if (Loader.isModLoaded(modid) && !submoduleClasses.contains(submodule)) {
-            submoduleClasses.add(submodule);
-        }
-    }
+  protected String getString(String name, String defaultString, String comment,
+          String[] validValues, boolean requiresRestart) {
+    return ConfigHelper.getString(name, configCategory.getQualifiedName(),
+            defaultString, comment, validValues, requiresRestart);
+  }
 
-    public void forEachSubmodule(Consumer<Submodule> submodule) {
-        subInstances.values().forEach(submodule);
-    }
-
-    protected void setCategoryComment() {
-        ModuleHelper.cfg.addCustomCategoryComment(configCategory.getQualifiedName(), configCategory.getComment());
-    }
-
-    protected int getInt(String name, int defaultInt, int min, int max, String comment, boolean requiresRestart) {
-        return ConfigHelper.getInt(name, configCategory.getQualifiedName(), defaultInt, min, max, comment, requiresRestart);
-    }
-
-    protected double getDouble(String name, double defaultDouble, float min, float max, String comment, boolean requiresRestart) {
-        return ConfigHelper.getDouble(name, configCategory.getQualifiedName(), defaultDouble, min, max, comment, requiresRestart);
-    }
-
-    protected boolean getBool(String name, boolean defaultBool, String comment, boolean requiresRestart) {
-        return ConfigHelper.getBool(name, configCategory.getQualifiedName(), defaultBool, comment, requiresRestart);
-    }
-
-    protected String getString(String name, String defaultString, String comment, String[] validValues, boolean requiresRestart) {
-        return ConfigHelper.getString(name, configCategory.getQualifiedName(), defaultString, comment, validValues, requiresRestart);
-    }
-
-    protected String[] getStringList(String name, String[] defaultStringList, String comment, boolean requiresRestart) {
-        return ConfigHelper.getStringList(name, configCategory.getQualifiedName(), defaultStringList, comment, requiresRestart);
-    }
+  protected String[] getStringList(String name, String[] defaultStringList,
+          String comment, boolean requiresRestart) {
+    return ConfigHelper.getStringList(name, configCategory.getQualifiedName(),
+            defaultStringList, comment, requiresRestart);
+  }
 }

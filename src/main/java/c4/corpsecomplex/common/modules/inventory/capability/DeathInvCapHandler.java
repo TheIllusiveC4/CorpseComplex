@@ -2,8 +2,10 @@
  * Copyright (c) 2017. <C4>
  *
  * This Java class is distributed as a part of Corpse Complex.
- * Corpse Complex is open source and licensed under the GNU General Public License v3.
- * A copy of the license can be found here: https://www.gnu.org/licenses/gpl.text
+ * Corpse Complex is open source and licensed under the GNU General Public
+ * License v3.
+ * A copy of the license can be found here: https://www.gnu.org/licenses/gpl
+ * .text
  */
 
 package c4.corpsecomplex.common.modules.inventory.capability;
@@ -17,13 +19,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class DeathInvCapHandler {
 
-    private static final ResourceLocation DEATH_INV_CAP = new ResourceLocation(CorpseComplex.MODID,"deathInventory");
+  private static final ResourceLocation DEATH_INV_CAP = new ResourceLocation(
+          CorpseComplex.MODID, "deathInventory");
 
-    @SubscribeEvent
-    public void attachCapability(AttachCapabilitiesEvent<Entity> e) {
+  @SubscribeEvent
+  public void attachCapability(AttachCapabilitiesEvent<Entity> e) {
 
-        if (!((e.getObject()) instanceof EntityPlayer)) { return;}
-
-        e.addCapability(DEATH_INV_CAP, new DeathInventory.Provider());
+    if (!((e.getObject()) instanceof EntityPlayer)) {
+      return;
     }
+
+    e.addCapability(DEATH_INV_CAP, new DeathInventory.Provider());
+  }
 }

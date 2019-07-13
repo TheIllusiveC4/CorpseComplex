@@ -2,8 +2,10 @@
  * Copyright (c) 2017. <C4>
  *
  * This Java class is distributed as a part of Corpse Complex.
- * Corpse Complex is open source and licensed under the GNU General Public License v3.
- * A copy of the license can be found here: https://www.gnu.org/licenses/gpl.text
+ * Corpse Complex is open source and licensed under the GNU General Public
+ * License v3.
+ * A copy of the license can be found here: https://www.gnu.org/licenses/gpl
+ * .text
  */
 
 package c4.corpsecomplex.network;
@@ -24,44 +26,46 @@ import toughasnails.api.thirst.ThirstHelper;
 
 public class TANMessage implements IMessage {
 
-    private int thirst;
-    private int temp;
-    private static final String MOD_ID = "toughasnails";
+  private int thirst;
+  private int temp;
+  private static final String MOD_ID = "toughasnails";
 
-    public TANMessage() {
-    }
+  public TANMessage() {
+  }
 
-    public TANMessage(int thirst, int temp) {
-        this.thirst = thirst;
-        this.temp = temp;
-    }
+  public TANMessage(int thirst, int temp) {
+    this.thirst = thirst;
+    this.temp = temp;
+  }
+
+  @Override
+  public void toBytes(ByteBuf buf) {
+    buf.writeInt(thirst);
+    buf.writeInt(temp);
+  }
+
+  @Override
+  public void fromBytes(ByteBuf buf) {
+    thirst = buf.readInt();
+    temp = buf.readInt();
+  }
+
+  public static class TANMessageHandler
+          implements IMessageHandler<TANMessage, IMessage> {
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeInt(thirst);
-        buf.writeInt(temp);
+    @SideOnly(Side.CLIENT)
+    @Optional.Method(modid = MOD_ID)
+    public IMessage onMessage(TANMessage message, MessageContext ctx) {
+      IThreadListener mainThread = Minecraft.getMinecraft();
+      mainThread.addScheduledTask(() -> {
+        EntityPlayerSP playerSP = Minecraft.getMinecraft().player;
+        ThirstHelper.getThirstData(playerSP).setThirst(message.thirst);
+        TemperatureHelper.getTemperatureData(playerSP).setTemperature(
+                new Temperature(message.temp));
+      });
+      // No response packet
+      return null;
     }
-
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        thirst = buf.readInt();
-        temp = buf.readInt();
-    }
-
-    public static class TANMessageHandler implements IMessageHandler<TANMessage, IMessage> {
-
-        @Override
-        @SideOnly(Side.CLIENT)
-        @Optional.Method(modid = MOD_ID)
-        public IMessage onMessage(TANMessage message, MessageContext ctx) {
-            IThreadListener mainThread = Minecraft.getMinecraft();
-            mainThread.addScheduledTask(() -> {
-                EntityPlayerSP playerSP = Minecraft.getMinecraft().player;
-                ThirstHelper.getThirstData(playerSP).setThirst(message.thirst);
-                TemperatureHelper.getTemperatureData(playerSP).setTemperature(new Temperature(message.temp));
-            });
-            // No response packet
-            return null;
-        }
-    }
+  }
 }

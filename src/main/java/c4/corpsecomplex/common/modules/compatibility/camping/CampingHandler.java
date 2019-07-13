@@ -2,8 +2,10 @@
  * Copyright (c) 2018. <C4>
  *
  * This Java class is distributed as a part of Corpse Complex.
- * Corpse Complex is open source and licensed under the GNU General Public License v3.
- * A copy of the license can be found here: https://www.gnu.org/licenses/gpl.text
+ * Corpse Complex is open source and licensed under the GNU General Public
+ * License v3.
+ * A copy of the license can be found here: https://www.gnu.org/licenses/gpl
+ * .text
  */
 
 package c4.corpsecomplex.common.modules.compatibility.camping;
@@ -25,107 +27,112 @@ import java.util.Random;
 
 public class CampingHandler extends DeathInventoryHandler {
 
-    private static final String MOD_ID = "camping";
-    private NonNullList<ItemStack> campingSlots;
+  private static final String MOD_ID = "camping";
+  private NonNullList<ItemStack> campingSlots;
 
-    public CampingHandler (EntityPlayer player) {
-        super(player, MOD_ID);
-        campingSlots = getCampingSlots(player);
+  public CampingHandler(EntityPlayer player) {
+    super(player, MOD_ID);
+    campingSlots = getCampingSlots(player);
+  }
+
+  public void storeInventory() {
+
+    NonNullList<ItemStack> storedStacks = NonNullList.withSize(4,
+            ItemStack.EMPTY);
+
+    if (campingSlots == null) {
+      return;
     }
 
-    public void storeInventory() {
+    Random generator = new Random();
 
-        NonNullList<ItemStack> storedStacks = NonNullList.withSize(4, ItemStack.EMPTY);
+    for (int i = 0; i < campingSlots.size(); i++) {
+      ItemStack stack = campingSlots.get(i);
 
-        if (campingSlots == null) { return; }
+      if (stack.isEmpty()) {
+        continue;
+      }
 
-        Random generator = new Random();
+      boolean essential = DeathStackHelper.isEssential(stack);
+      boolean cursed = !essential && DeathStackHelper.isCursed(stack);
+      boolean store = ((checkToStore(0) && !cursed) || essential);
 
-        for (int i = 0; i < campingSlots.size(); i++) {
-            ItemStack stack = campingSlots.get(i);
+      if (!store && EnchantmentModule.registerEnchant) {
+        int level = EnchantmentHelper.getEnchantmentLevel(
+                EnchantmentModule.soulbound, stack);
+        if (level != 0) {
+          store = essential = DeathStackHelper.handleSoulbound(stack, level);
+          cursed = !essential && cursed;
+        }
+      }
 
-            if (stack.isEmpty()) {
-                continue;
-            }
+      if (cursed && InventoryModule.destroyCursed) {
+        campingSlots.set(i, ItemStack.EMPTY);
+        continue;
+      }
 
-            boolean essential = DeathStackHelper.isEssential(stack);
-            boolean cursed = !essential && DeathStackHelper.isCursed(stack);
-            boolean store = ((checkToStore(0) && !cursed) || essential);
+      if (InventoryModule.dropLoss > 0 || InventoryModule.keptLoss > 0) {
+        DeathStackHelper.loseDurability(player, stack, store);
+      }
 
-            if (!store && EnchantmentModule.registerEnchant) {
-                int level = EnchantmentHelper.getEnchantmentLevel(EnchantmentModule.soulbound, stack);
-                if (level != 0) {
-                    store = essential = DeathStackHelper.handleSoulbound(stack, level);
-                    cursed = !essential && cursed;
-                }
-            }
+      if (stack.isEmpty()) {
+        return;
+      }
 
-            if (cursed && InventoryModule.destroyCursed) {
-                campingSlots.set(i, ItemStack.EMPTY);
-                continue;
-            }
-
-            if (InventoryModule.dropLoss > 0 || InventoryModule.keptLoss > 0) {
-                DeathStackHelper.loseDurability(player, stack, store);
-            }
-
-            if (stack.isEmpty()) {
-                return;
-            }
-
-            if (store) {
-                if (!essential && generator.nextDouble() < InventoryModule.randomDrop) {
-                    if (generator.nextDouble() < InventoryModule.randomDestroy) {
-                        campingSlots.set(i, ItemStack.EMPTY);
-                        continue;
-                    }
-                    continue;
-                }
-            }
-
-            storedStacks.set(i, stack.copy());
+      if (store) {
+        if (!essential && generator.nextDouble() < InventoryModule.randomDrop) {
+          if (generator.nextDouble() < InventoryModule.randomDestroy) {
             campingSlots.set(i, ItemStack.EMPTY);
+            continue;
+          }
+          continue;
         }
+      }
 
-        player.getEntityData().setTag("campInv", stacksToData(campingSlots));
-        NBTTagCompound tag = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
-        tag.setTag("campInv", stacksToData(storedStacks));
-        player.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, tag);
+      storedStacks.set(i, stack.copy());
+      campingSlots.set(i, ItemStack.EMPTY);
     }
 
-    private NBTTagCompound stacksToData(NonNullList<ItemStack> stacks) {
-        NBTTagCompound data = new NBTTagCompound();
-        NBTTagList list = new NBTTagList();
-        for (int i = 0; i < stacks.size(); i++) {
-            NBTTagCompound compound = new NBTTagCompound();
-            compound.setByte("slotIndex", ((byte) i));
-            list.appendTag(stacks.get(i).writeToNBT(compound));
+    player.getEntityData().setTag("campInv", stacksToData(campingSlots));
+    NBTTagCompound tag = player.getEntityData().getCompoundTag(
+            EntityPlayer.PERSISTED_NBT_TAG);
+    tag.setTag("campInv", stacksToData(storedStacks));
+    player.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, tag);
+  }
+
+  private NBTTagCompound stacksToData(NonNullList<ItemStack> stacks) {
+    NBTTagCompound data = new NBTTagCompound();
+    NBTTagList list = new NBTTagList();
+    for (int i = 0; i < stacks.size(); i++) {
+      NBTTagCompound compound = new NBTTagCompound();
+      compound.setByte("slotIndex", ((byte) i));
+      list.appendTag(stacks.get(i).writeToNBT(compound));
+    }
+    data.setTag("items", list);
+    return data;
+  }
+
+  private NonNullList<ItemStack> getCampingSlots(EntityPlayer player) {
+    NonNullList<ItemStack> stacks = NonNullList.withSize(4, ItemStack.EMPTY);
+
+    if (player.getEntityData().hasKey("campInv")) {
+      NBTTagList taglist = player.getEntityData().getCompoundTag("campInv")
+              .getTagList("items", Constants.NBT.TAG_COMPOUND);
+      if (!taglist.isEmpty()) {
+        for (int i = 0; i < taglist.tagCount(); i++) {
+          NBTTagCompound compound = taglist.getCompoundTagAt(i);
+          stacks.set(compound.getByte("slotIndex"), new ItemStack(compound));
         }
-        data.setTag("items", list);
-        return data;
+      }
     }
+    return stacks;
+  }
 
-    private NonNullList<ItemStack> getCampingSlots(EntityPlayer player) {
-        NonNullList<ItemStack> stacks = NonNullList.withSize(4, ItemStack.EMPTY);
+  public boolean checkToStore(int slot) {
+    return CampingModule.keepCamping;
+  }
 
-        if (player.getEntityData().hasKey("campInv")) {
-            NBTTagList taglist = player.getEntityData().getCompoundTag("campInv").getTagList("items",
-                    Constants.NBT.TAG_COMPOUND);
-            if (!taglist.isEmpty()) {
-                for (int i = 0; i < taglist.tagCount(); i++) {
-                    NBTTagCompound compound = taglist.getCompoundTagAt(i);
-                    stacks.set(compound.getByte("slotIndex"), new ItemStack(compound));
-                }
-            }
-        }
-        return stacks;
-    }
-
-    public boolean checkToStore(int slot) {
-        return CampingModule.keepCamping;
-    }
-
-    public void retrieveInventory(IDeathInventory oldDeathInventory) {
-        //NO-OP
-    }
+  public void retrieveInventory(IDeathInventory oldDeathInventory) {
+    //NO-OP
+  }
 }
