@@ -13,14 +13,12 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: "com.wynprice.cursemaven"
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-
 
 version = "1.12.2-1.0.5.1"
-group = "c4.corpsecomplex" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "c4.corpsecomplex"
 archivesBaseName = "corpsecomplex"
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+sourceCompatibility = targetCompatibility = '1.8'
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
 }
@@ -28,34 +26,32 @@ compileJava {
 minecraft {
     version = "1.12.2-14.23.5.2768"
     runDir = "run"
-
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
     mappings = "stable_39"
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
 dependencies {
-    deobfCompile curse.resolve('tough-as-nails', '2710969');
+    deobfCompile curse.resolve('tough-as-nails', '2710969')
+    deobfCompile curse.resolve('wearable-backpacks', '2576699')
+    deobfCompile curse.resolve('thut-wearables', '2721121');
+    deobfCompile curse.resolve('the-rpg-inventory-and-classarmor-mod','2522691')
+    deobfCompile curse.resolve('reskillable', '2677196')
+    deobfCompile curse.resolve('overpowered-inventory', '2447452')
+    deobfCompile curse.resolve('cosmetic-armor-reworked','2697672')
+    deobfCompile curse.resolve('the-camping-mod', '2569056')
+    deobfCompile curse.resolve('baubles', '2518667')
+    deobfCompile curse.resolve('advanced-inventory', '2463903')
 }
 
 processResources {
-    // this will ensure that this task is redone when the versions change.
+
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
 
-    // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
@@ -63,14 +59,10 @@ processResources {
 
 task signJar(type: SignJar, dependsOn: reobfJar) {
 
-    // Skips if the keyStore property is missing.
     onlyIf {
         project.hasProperty('keyStore')
     }
 
-    // findProperty allows us to reference the property without it existing.
-    // Using project.propName would cause the script to fail validation if
-    // the property did not exist.
     keyStore = project.findProperty('keyStore')
     alias = project.findProperty('keyStoreAlias')
     storePass = project.findProperty('keyStorePass')
