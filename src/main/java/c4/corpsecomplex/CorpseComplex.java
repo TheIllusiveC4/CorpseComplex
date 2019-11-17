@@ -34,7 +34,7 @@ import org.apache.logging.log4j.Logger;
                 "after:tombstone;after:advinv",
         guiFactory = "c4." + CorpseComplex.MODID + ".client.gui.GuiFactory",
         acceptedMinecraftVersions = "[1.12, 1.13)",
-        certificateFingerprint = "5d5b8aee896a4f5ea3f3114784742662a67ad32f")
+        certificateFingerprint = "@FINGERPRINT@")
 
 public class CorpseComplex {
 

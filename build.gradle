@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-        classpath 'com.wynprice.cursemaven:CurseMaven:1.1.0'
+        classpath 'com.wynprice.cursemaven:CurseMaven:2.1.1'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -27,22 +27,24 @@ minecraft {
     version = "1.12.2-14.23.5.2768"
     runDir = "run"
     mappings = "stable_39"
+    replace '@FINGERPRINT@', project.findProperty('signSHA1')
+    replaceIn("CorpseComplex.java")
 }
 
 dependencies {
-    deobfCompile curse.resolve('tough-as-nails', '2710969')
-    deobfCompile curse.resolve('wearable-backpacks', '2576699')
-    deobfCompile curse.resolve('thut-wearables', '2721121');
-    deobfCompile curse.resolve('the-rpg-inventory-and-classarmor-mod','2522691')
-    deobfCompile curse.resolve('reskillable', '2677196')
-    deobfCompile curse.resolve('overpowered-inventory', '2447452')
-    deobfCompile curse.resolve('cosmetic-armor-reworked','2697672')
-    deobfCompile curse.resolve('the-camping-mod', '2569056')
-    deobfCompile curse.resolve('baubles', '2518667')
-    deobfCompile curse.resolve('advanced-inventory', '2463903')
-    deobfCompile curse.resolve('sublib', '2522690')
-    deobfCompile curse.resolve('rikmulds-core-mod', '2569880')
-    deobfCompile curse.resolve('cxlibrary', '2463886');
+    deobfProvided "curse.maven:tough-as-nails:2710969"
+    deobfProvided "curse.maven:wearable-backpacks:2576699"
+    deobfProvided "curse.maven:thut-wearables:2721121";
+    deobfProvided "curse.maven:the-rpg-inventory-and-classarmor-mod:2522691"
+    deobfProvided "curse.maven:reskillable:2677196"
+    deobfProvided "curse.maven:overpowered-inventory:2447452"
+    deobfProvided "curse.maven:cosmetic-armor-reworked:2697672"
+    deobfProvided "curse.maven:the-camping-mod:2569056"
+    deobfProvided "curse.maven:baubles:2518667"
+    deobfProvided "curse.maven:advanced-inventory:2463903"
+    deobfProvided "curse.maven:sublib:2522690"
+    deobfProvided "curse.maven:rikmulds-core-mod:2569880"
+    deobfProvided "curse.maven:cxlibrary:2463886"
 }
 
 processResources {
