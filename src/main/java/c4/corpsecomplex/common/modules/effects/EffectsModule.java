@@ -12,6 +12,8 @@ package c4.corpsecomplex.common.modules.effects;
 
 import c4.corpsecomplex.CorpseComplex;
 import c4.corpsecomplex.common.Module;
+import java.util.ArrayList;
+import java.util.Collections;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,32 +22,14 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Level;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class EffectsModule extends Module {
 
-  private static ArrayList<String> validEffectsList;
   private static ArrayList<String[]> effects;
   private static ArrayList<String[]> customCureEffects;
   private static String[] cfgCureList;
   private static boolean cfgEnabled;
-
-  static {
-    validEffectsList = new ArrayList<>();
-
-    for (Potion potion : GameRegistry.findRegistry(Potion.class)) {
-
-      if (potion.isInstant() || potion.getRegistryName() == null) {
-        continue;
-      }
-
-      validEffectsList.add(potion.getRegistryName().toString());
-    }
-  }
 
   {
     submoduleClasses = new ArrayList<>();
@@ -160,10 +144,6 @@ public class EffectsModule extends Module {
     for (String s : effectsList) {
       String[] elements = s.split("\\s+");
       String[] effectAttributes = new String[3];
-
-      if (!validEffectsList.contains(elements[0])) {
-        continue;
-      }
 
       int i = 0;
       int j = 0;
