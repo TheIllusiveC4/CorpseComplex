@@ -12,6 +12,7 @@ package c4.corpsecomplex;
 
 import c4.corpsecomplex.proxy.CommonProxy;
 import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
@@ -50,6 +51,8 @@ public class CorpseComplex {
   public static CorpseComplex instance;
   public static Logger logger;
 
+  public static boolean isEnderIOLoaded = false;
+
   @Mod.EventHandler
   public void preInit(FMLPreInitializationEvent e) {
 
@@ -60,6 +63,10 @@ public class CorpseComplex {
   @Mod.EventHandler
   public void init(FMLInitializationEvent e) {
     proxy.init(e);
+
+    if (Loader.isModLoaded("enderio")) {
+      isEnderIOLoaded = true;
+    }
   }
 
   @Mod.EventHandler

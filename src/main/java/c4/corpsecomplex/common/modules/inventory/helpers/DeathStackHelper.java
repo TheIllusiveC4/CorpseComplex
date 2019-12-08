@@ -10,6 +10,8 @@
 
 package c4.corpsecomplex.common.modules.inventory.helpers;
 
+import c4.corpsecomplex.CorpseComplex;
+import c4.corpsecomplex.common.modules.compatibility.enderio.EnderIOIntegration;
 import c4.corpsecomplex.common.modules.inventory.InventoryModule;
 import c4.corpsecomplex.common.modules.inventory.enchantment.EnchantmentModule;
 import net.minecraft.enchantment.Enchantment;
@@ -22,6 +24,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.Map;
 import java.util.Random;
+import net.minecraftforge.fml.common.Loader;
 
 public final class DeathStackHelper {
 
@@ -152,8 +155,17 @@ public final class DeathStackHelper {
               energy.getMaxEnergyStored() * InventoryModule.dropDrain);
     }
 
+    boolean hasUpgrade = CorpseComplex.isEnderIOLoaded && EnderIOIntegration.hasPowerUpgrade(stack);
+
     while (energyToLose > 0 && energy.getEnergyStored() > 0) {
-      energyToLose -= energy.extractEnergy(energyToLose, false);
+      int energyExtracted = hasUpgrade ?
+          EnderIOIntegration.extractEnergy(stack, energyToLose, false) :
+          energy.extractEnergy(energyToLose, false);
+
+      if (energyExtracted == 0) {
+        break;
+      }
+      energyToLose -= energyExtracted;
     }
   }
 
