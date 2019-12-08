@@ -33,8 +33,10 @@ import c4.corpsecomplex.common.modules.inventory.capability.DeathInventory;
 import c4.corpsecomplex.common.modules.inventory.capability.IDeathInventory;
 import c4.corpsecomplex.common.modules.inventory.enchantment.EnchantmentModule;
 import c4.corpsecomplex.common.modules.inventory.helpers.DeathInventoryHandler;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -64,6 +66,7 @@ public class InventoryModule extends Module {
   static boolean keepMainhand;
   static boolean keepOffhand;
   static boolean keepMainInventory;
+  static boolean noDropDespawn;
 
   private static boolean cfgEnabled;
 
@@ -130,6 +133,15 @@ public class InventoryModule extends Module {
     }
   }
 
+  @SubscribeEvent(priority = EventPriority.LOW)
+  public void onPlayerDrops(PlayerDropsEvent e) {
+
+    if (noDropDespawn) {
+      e.getDrops().forEach(EntityItem::setNoDespawn);
+    }
+  }
+
+
   public InventoryModule() {
     super("Inventory",
             "Customize how your inventory is handled on death and respawn");
@@ -174,6 +186,8 @@ public class InventoryModule extends Module {
             "Percent of energy drained on death for drops", false);
     keptDrain = getDouble("Energy Drain on Kept Items", 0, 0, 1,
             "Percent of energy drained on death for kept items", false);
+    noDropDespawn = getBool("No Drop Despawn", false, "Set to true to "
+        + "prevent death drops from despawning", false);
   }
 
   public void initPropOrder() {
