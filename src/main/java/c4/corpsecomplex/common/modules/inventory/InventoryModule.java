@@ -66,8 +66,8 @@ public class InventoryModule extends Module {
   static boolean keepMainhand;
   static boolean keepOffhand;
   static boolean keepMainInventory;
-  static boolean noDropDespawn;
 
+  private static boolean noDropDespawn;
   private static boolean cfgEnabled;
 
   {
