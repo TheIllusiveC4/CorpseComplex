@@ -18,6 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -25,6 +26,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -41,6 +43,7 @@ public class SpawningModule extends Module {
   public static boolean giveScroll;
   private static String[] spawnMobs;
   private static boolean disableBeds;
+  private static String[] respawnItems;
   private static boolean cfgEnabled;
 
   {
@@ -67,6 +70,8 @@ public class SpawningModule extends Module {
     giveScroll = getBool("Give Scroll on Respawn", false,
             "If Return Scroll is true, set to true to automatically give " +
                     "players a return scroll on respawn", false);
+    respawnItems = getStringList("Respawn Items", new String[] {}, "A list of items to give players on respawn. " +
+        "The format is modid:item_name;stacksize;metadata.", false);
     registerScroll = cfgEnabled && returnScroll;
   }
 
@@ -137,7 +142,11 @@ public class SpawningModule extends Module {
   @SubscribeEvent
   public void onPlayerRespawn(PlayerEvent.Clone e) {
 
-    if (returnScroll && e.isWasDeath()) {
+    if (!e.isWasDeath()) {
+      return;
+    }
+
+    if (returnScroll) {
 
       EntityPlayer player = e.getEntityPlayer();
       EntityPlayer oldPlayer = e.getOriginal();
@@ -156,6 +165,21 @@ public class SpawningModule extends Module {
       if (!e.getEntityPlayer().world.isRemote && giveScroll) {
         ItemHandlerHelper.giveItemToPlayer(e.getEntityPlayer(),
                 new ItemStack(scroll));
+      }
+    }
+
+    if (!e.getEntityPlayer().world.isRemote && respawnItems.length > 0) {
+
+      for (String s : respawnItems) {
+        String[] parse = s.split(";");
+        Item item = Item.getByNameOrId(parse[0]);
+
+        if (item != null) {
+          int stacksize = parse.length > 1 ? Integer.parseInt(parse[1]) : 1;
+          int metadata = parse.length > 2 ? Integer.parseInt(parse[2]) : 0;
+          ItemHandlerHelper.giveItemToPlayer(e.getEntityPlayer(),
+                new ItemStack(item, stacksize, metadata));
+        }
       }
     }
   }
