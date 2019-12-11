@@ -47,6 +47,7 @@ dependencies {
     deobfProvided "curse.maven:cxlibrary:2463886"
     deobfProvided "curse.maven:ender-io-base:2809859"
     deobfProvided "curse.maven:endercore:2822401"
+    deobfProvided "curse.maven:tool-belt:2811669"
 }
 
 processResources {

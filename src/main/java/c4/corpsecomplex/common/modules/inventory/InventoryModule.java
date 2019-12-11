@@ -27,6 +27,8 @@ import c4.corpsecomplex.common.modules.compatibility.rpginventory.RPGHandler;
 import c4.corpsecomplex.common.modules.compatibility.rpginventory.RPGModule;
 import c4.corpsecomplex.common.modules.compatibility.thut_wearables.ThutHandler;
 import c4.corpsecomplex.common.modules.compatibility.thut_wearables.ThutModule;
+import c4.corpsecomplex.common.modules.compatibility.toolbelt.ToolbeltHandler;
+import c4.corpsecomplex.common.modules.compatibility.toolbelt.ToolbeltModule;
 import c4.corpsecomplex.common.modules.compatibility.wearablebackpacks.WBHandler;
 import c4.corpsecomplex.common.modules.compatibility.wearablebackpacks.WBModule;
 import c4.corpsecomplex.common.modules.inventory.capability.DeathInventory;
@@ -82,6 +84,7 @@ public class InventoryModule extends Module {
     addSubmodule("baubles", BaublesModule.class, BaublesHandler.class);
     addSubmodule("cosmeticarmorreworked", CosmeticModule.class,
             CosmeticHandler.class);
+    addSubmodule("toolbelt", ToolbeltModule.class, ToolbeltHandler.class);
     addSubmodule("advinv", AdvModule.class, AdvHandler.class);
     addSubmodule("camping", CampingModule.class, CampingHandler.class);
 
@@ -118,7 +121,7 @@ public class InventoryModule extends Module {
     }
   }
 
-  @SubscribeEvent
+  @SubscribeEvent(priority = EventPriority.LOW)
   public void onPlayerRespawnBegin(PlayerEvent.Clone e) {
 
     if (!e.isWasDeath() || e.getEntityPlayer().world.isRemote) {
