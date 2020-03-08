@@ -1,82 +1,108 @@
 buildscript {
     repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url 'https://plugins.gradle.org/m2/' }
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-        classpath 'com.wynprice.cursemaven:CurseMaven:2.1.1'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: "com.wynprice.cursemaven"
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'com.matthewprenger.cursegradle'
 
-version = "1.12.2-1.0.8"
-group = "c4.corpsecomplex"
-archivesBaseName = "corpsecomplex"
+version = "${version_minecraft}-${mod_version}"
+group = "${mod_group}"
+archivesBaseName = "${mod_id}"
 
-sourceCompatibility = targetCompatibility = '1.8'
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
-}
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    version = "1.12.2-14.23.5.2847"
-    runDir = "run"
-    mappings = "stable_39"
-    replace '@FINGERPRINT@', project.findProperty('signSHA1')
-    replaceIn("CorpseComplex.java")
+    mappings channel: 'stable', version: "${version_mcp}".toString()
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                corpsecomplex {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                corpsecomplex {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
 dependencies {
-    deobfProvided "curse.maven:tough-as-nails:2710969"
-    deobfProvided "curse.maven:wearable-backpacks:2576699"
-    deobfProvided "curse.maven:thut-wearables:2721121";
-    deobfProvided "curse.maven:the-rpg-inventory-and-classarmor-mod:2522691"
-    deobfProvided "curse.maven:reskillable:2677196"
-    deobfProvided "curse.maven:overpowered-inventory:2447452"
-    deobfProvided "curse.maven:cosmetic-armor-reworked:2697672"
-    deobfProvided "curse.maven:the-camping-mod:2569056"
-    deobfProvided "curse.maven:baubles:2518667"
-    deobfProvided "curse.maven:advanced-inventory:2463903"
-    deobfProvided "curse.maven:sublib:2522690"
-    deobfProvided "curse.maven:rikmulds-core-mod:2569880"
-    deobfProvided "curse.maven:cxlibrary:2463886"
-    deobfProvided "curse.maven:ender-io-base:2809859"
-    deobfProvided "curse.maven:endercore:2822401"
-    deobfProvided "curse.maven:tool-belt:2811669"
+    minecraft "net.minecraftforge:forge:${version_forge}"
 }
+
+sourceSets {
+    main {
+        resources {
+            srcDirs += 'docs'
+        }
+    }
+}
+
+jar {
+    manifest {
+        attributes(["Specification-Title": "${mod_name}",
+                    "Specification-Vendor": "${mod_author}",
+                    "Specification-Version": "${version}",
+                    "Implementation-Title": "${mod_name}",
+                    "Implementation-Version": "${version}",
+                    "Implementation-Vendor" :"${mod_author}",
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
+    }
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+tasks.build.dependsOn sourcesJar
 
 processResources {
 
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        expand 'version': project.version, 'mcversion': project.minecraft.version
+        include 'META-INF/mods.toml'
+        expand 'version': project.version, 'mod_id' : mod_id, 'mod_name': mod_name, 'mod_url': mod_url, 'mod_author': mod_author, 'mod_description': mod_description, 'mod_icon': mod_icon
     }
 
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+        exclude 'META-INF/mods.toml'
     }
 }
 
-task signJar(type: SignJar, dependsOn: reobfJar) {
 
-    onlyIf {
-        project.hasProperty('keyStore')
+curseforge {
+
+    project {
+        apiKey = findProperty('curseKey') ?: 0
+        id = "${curse_id}"
+        releaseType = "${curse_release}"
+        changelogType = 'markdown'
+        changelog = file('docs/CHANGELOG.md')
+        addArtifact(sourcesJar)
     }
-
-    keyStore = project.findProperty('keyStore')
-    alias = project.findProperty('keyStoreAlias')
-    storePass = project.findProperty('keyStorePass')
-    keyPass = project.findProperty('keyStoreKeyPass')
-    inputFile = jar.archivePath
-    outputFile = jar.archivePath
 }
-
-build.dependsOn signJar
