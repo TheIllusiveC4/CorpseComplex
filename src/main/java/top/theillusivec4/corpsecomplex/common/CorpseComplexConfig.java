@@ -1,6 +1,7 @@
 package top.theillusivec4.corpsecomplex.common;
 
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
@@ -30,6 +31,12 @@ public class CorpseComplexConfig {
 
   public static class Server {
 
+    public final BooleanValue keepFood;
+    public final BooleanValue keepSaturation;
+    public final BooleanValue keepExhaustion;
+    public final IntValue minFood;
+    public final IntValue maxFood;
+
     public final DoubleValue lostXp;
     public final EnumValue<XpDropMode> xpDropMode;
     public final DoubleValue droppedXpPercent;
@@ -37,6 +44,25 @@ public class CorpseComplexConfig {
     public final IntValue maxDroppedXp;
 
     public Server(ForgeConfigSpec.Builder builder) {
+      builder.push("hunger");
+
+      keepFood = builder.comment("Set to true to retain food level on death")
+          .translation(CONFIG_PREFIX + ".keepFood").define("keepFood", false);
+
+      keepSaturation = builder.comment("Set to true to retain saturation on death")
+          .translation(CONFIG_PREFIX + ".keepSaturation").define("keepSaturation", false);
+
+      keepExhaustion = builder.comment("Set to true to retain exhaustion on death")
+          .translation(CONFIG_PREFIX + ".keepExhaustion").define("keepExhaustion", false);
+
+      minFood = builder.comment("Lowest amount of food level on respawn")
+          .translation(CONFIG_PREFIX + ".minFood").defineInRange("minFood", 0, 0, 20);
+
+      maxFood = builder.comment("Highest amount of food level on respawn")
+          .translation(CONFIG_PREFIX + ".maxFood").defineInRange("maxFood", 20, 0, 20);
+
+      builder.pop();
+
       builder.push("experience");
 
       lostXp = builder.comment("Percentage of experience lost on death")
