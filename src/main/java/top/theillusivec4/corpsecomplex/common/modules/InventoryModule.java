@@ -52,7 +52,7 @@ public class InventoryModule {
   @SubscribeEvent
   public void playerRespawn(final PlayerEvent.Clone evt) {
 
-    if (!evt.getEntity().getEntityWorld().isRemote() && evt.isWasDeath()) {
+    if (evt.isWasDeath()) {
       DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(
           newStorage -> DeathStorageCapability.getCapability(evt.getOriginal()).ifPresent(
               oldStorage -> STORAGE

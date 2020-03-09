@@ -19,6 +19,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
+import top.theillusivec4.corpsecomplex.common.modules.ExperienceModule;
 import top.theillusivec4.corpsecomplex.common.modules.InventoryModule;
 
 @Mod(CorpseComplex.MODID)
@@ -31,6 +32,7 @@ public class CorpseComplex {
     IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
     eventBus.addListener(this::setup);
     MinecraftForge.EVENT_BUS.register(new InventoryModule());
+    MinecraftForge.EVENT_BUS.register(new ExperienceModule());
   }
 
   private void setup(final FMLCommonSetupEvent evt) {
