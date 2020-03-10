@@ -1,4 +1,4 @@
-package top.theillusivec4.corpsecomplex.common.modules.inventory;
+package top.theillusivec4.corpsecomplex.common.modules.inventory.inventories;
 
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability.IDeathStorage;
 

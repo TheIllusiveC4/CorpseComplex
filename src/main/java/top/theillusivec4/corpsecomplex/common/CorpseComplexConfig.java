@@ -63,6 +63,7 @@ public class CorpseComplexConfig {
     public final ConfigValue<List<? extends String>> mementoCures;
     public final BooleanValue noFood;
     public final DoubleValue percentXp;
+    public final BooleanValue beneficial;
 
     public final BooleanValue restrictRespawning;
     public final ConfigValue<List<? extends String>> respawnItems;
@@ -174,6 +175,9 @@ public class CorpseComplexConfig {
 
       percentXp = builder.comment("Percent modifier for XP gain while the effect is active")
           .translation(CONFIG_PREFIX + "percentXp").defineInRange("percentXp", 0.0F, -1.0F, 10.0F);
+
+      beneficial = builder.comment("Set to true to set the effect as beneficial instead of harmful")
+          .translation(CONFIG_PREFIX + "beneficial").define("beneficial", false);
 
       builder.pop();
 

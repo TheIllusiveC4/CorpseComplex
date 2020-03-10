@@ -1,4 +1,4 @@
-package top.theillusivec4.corpsecomplex.common.modules;
+package top.theillusivec4.corpsecomplex.common.modules.inventory;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,8 +14,8 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability.Provider;
-import top.theillusivec4.corpsecomplex.common.modules.inventory.Storage;
-import top.theillusivec4.corpsecomplex.common.modules.inventory.VanillaStorage;
+import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.Storage;
+import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.VanillaStorage;
 
 public class InventoryModule {
 

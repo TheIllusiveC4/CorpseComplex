@@ -1,4 +1,4 @@
-package top.theillusivec4.corpsecomplex.common.modules.inventory;
+package top.theillusivec4.corpsecomplex.common.modules.inventory.inventories;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
