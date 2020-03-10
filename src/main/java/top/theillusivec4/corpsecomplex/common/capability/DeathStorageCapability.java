@@ -1,13 +1,18 @@
 package top.theillusivec4.corpsecomplex.common.capability;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
@@ -15,6 +20,7 @@ import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
 
@@ -25,6 +31,9 @@ public class DeathStorageCapability {
 
   public static final ResourceLocation ID = new ResourceLocation(CorpseComplex.MODID,
       "death_storage");
+
+  private static final String INVENTORIES = "Inventories";
+  private static final String EFFECTS = "Effects";
 
   static {
     DEATH_STORAGE_CAP = null;
@@ -37,7 +46,16 @@ public class DeathStorageCapability {
       public INBT writeNBT(Capability<IDeathStorage> capability, IDeathStorage instance,
           Direction side) {
         CompoundNBT compound = new CompoundNBT();
-        instance.getDeathStorage().forEach(compound::put);
+        CompoundNBT inventories = new CompoundNBT();
+        instance.getDeathInventory().forEach(inventories::put);
+        compound.put(INVENTORIES, inventories);
+        ListNBT effects = new ListNBT();
+        instance.getEffects().forEach(effectInstance -> {
+          CompoundNBT effect = new CompoundNBT();
+          effectInstance.write(effect);
+          effects.add(effect);
+        });
+        compound.put(EFFECTS, effects);
         return compound;
       }
 
@@ -45,7 +63,13 @@ public class DeathStorageCapability {
       public void readNBT(Capability<IDeathStorage> capability, IDeathStorage instance,
           Direction side, INBT nbt) {
         CompoundNBT compound = (CompoundNBT) nbt;
-        compound.keySet().forEach(modid -> instance.addStorage(modid, compound.get(modid)));
+        CompoundNBT inventories = compound.getCompound(INVENTORIES);
+        inventories.keySet().forEach(modid -> instance.addInventory(modid, compound.get(modid)));
+        ListNBT effects = compound.getList(EFFECTS, NBT.TAG_COMPOUND);
+        effects.forEach(effect -> {
+          EffectInstance effectInstance = EffectInstance.read((CompoundNBT) effect);
+          instance.addEffectInstance(effectInstance);
+        });
       }
     }, DeathStorage::new);
   }
@@ -58,16 +82,21 @@ public class DeathStorageCapability {
 
     PlayerEntity getPlayer();
 
-    void addStorage(String modid, INBT nbt);
+    void addInventory(String modid, INBT nbt);
 
-    INBT getStorage(String modid);
+    INBT getInventory(String modid);
 
-    Map<String, INBT> getDeathStorage();
+    Map<String, INBT> getDeathInventory();
+
+    void addEffectInstance(EffectInstance effectInstance);
+
+    List<EffectInstance> getEffects();
   }
 
   public static class DeathStorage implements IDeathStorage {
 
     private final Map<String, INBT> storage = new HashMap<>();
+    private final List<EffectInstance> effects = new ArrayList<>();
     private final PlayerEntity player;
 
     public DeathStorage() {
@@ -85,18 +114,31 @@ public class DeathStorageCapability {
     }
 
     @Override
-    public void addStorage(String modid, INBT nbt) {
+    public void addInventory(String modid, INBT nbt) {
       this.storage.put(modid, nbt);
     }
 
     @Override
-    public INBT getStorage(String modid) {
-      return storage.get(modid);
+    public INBT getInventory(String modid) {
+      return this.storage.get(modid);
     }
 
     @Override
-    public Map<String, INBT> getDeathStorage() {
-      return ImmutableMap.copyOf(storage);
+    public Map<String, INBT> getDeathInventory() {
+      return ImmutableMap.copyOf(this.storage);
+    }
+
+    @Override
+    public void addEffectInstance(EffectInstance effectInstance) {
+      EffectInstance instance = new EffectInstance(effectInstance.getPotion(),
+          effectInstance.getDuration(), effectInstance.getAmplifier());
+      instance.setCurativeItems(effectInstance.getCurativeItems());
+      this.effects.add(instance);
+    }
+
+    @Override
+    public List<EffectInstance> getEffects() {
+      return ImmutableList.copyOf(this.effects);
     }
   }
 

@@ -21,7 +21,7 @@ public class VanillaStorage implements Storage {
       take(inventory.mainInventory, 0, list);
       take(inventory.armorInventory, 100, list);
       take(inventory.offHandInventory, 150, list);
-      deathStorage.addStorage("vanilla", list);
+      deathStorage.addInventory("vanilla", list);
     }
   }
 
@@ -31,7 +31,7 @@ public class VanillaStorage implements Storage {
     PlayerEntity oldPlayer = oldStorage.getPlayer();
 
     if (player != null && oldPlayer != null) {
-      ListNBT list = (ListNBT) oldStorage.getStorage("vanilla");
+      ListNBT list = (ListNBT) oldStorage.getInventory("vanilla");
       PlayerInventory inventory = player.inventory;
 
       for (int i = 0; i < list.size(); ++i) {
