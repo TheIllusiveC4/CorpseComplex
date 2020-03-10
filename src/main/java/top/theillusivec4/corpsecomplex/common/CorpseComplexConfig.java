@@ -52,6 +52,18 @@ public class CorpseComplexConfig {
     public final IntValue droppedXpPerLevel;
     public final IntValue maxDroppedXp;
 
+    public final IntValue healthMod;
+    public final IntValue armorMod;
+    public final IntValue toughnessMod;
+    public final DoubleValue movementMod;
+    public final DoubleValue damageMod;
+    public final DoubleValue attackSpeedMod;
+    public final BooleanValue gradualRecovery;
+    public final IntValue duration;
+    public final ConfigValue<List<? extends String>> mementoCures;
+    public final BooleanValue noFood;
+    public final DoubleValue percentXp;
+
     public final BooleanValue restrictRespawning;
     public final ConfigValue<List<? extends String>> respawnItems;
 
@@ -120,6 +132,48 @@ public class CorpseComplexConfig {
       maxDroppedXp = builder.comment("Maximum amount of dropped experience")
           .translation(CONFIG_PREFIX + "maxDroppedXp")
           .defineInRange("maxDroppedXp", 100, 0, 100000);
+
+      builder.pop();
+
+      builder.push("mementomori");
+
+      healthMod = builder.comment("Amount modifier for maximum health")
+          .translation(CONFIG_PREFIX + "healthMod").defineInRange("healthMod", 0, -1024, 1024);
+
+      armorMod = builder.comment("Amount modifier for armor")
+          .translation(CONFIG_PREFIX + "armorMod").defineInRange("armorMod", 0, -30, 30);
+
+      toughnessMod = builder.comment("Amount modifier for armor toughness")
+          .translation(CONFIG_PREFIX + "toughnessMod").defineInRange("toughnessMod", 0, -20, 20);
+
+      movementMod = builder.comment("Percent modifier for movement speed")
+          .translation(CONFIG_PREFIX + "movementMod")
+          .defineInRange("movementMod", 0.0F, -1.0F, 10.0F);
+
+      damageMod = builder.comment("Amount modifier for attack damage")
+          .translation(CONFIG_PREFIX + "damageMod")
+          .defineInRange("damageMod", 0.0F, -2048.0F, 2048.0F);
+
+      attackSpeedMod = builder.comment("Percent modifier for attack speed")
+          .translation(CONFIG_PREFIX + "attackSpeedMod")
+          .defineInRange("attackSpeedMod", 0.0F, -1.0F, 10.0F);
+
+      gradualRecovery = builder
+          .comment("Set to true to enable gradual recovery (modifiers will gradually diminish)")
+          .translation(CONFIG_PREFIX + "gradualRecovery").define("gradualRecovery", false);
+
+      duration = builder.comment("Duration in seconds of the effect")
+          .translation(CONFIG_PREFIX + "duration").defineInRange("duration", 30, 1, 1600);
+
+      mementoCures = builder.comment("List of items that can cure the effect")
+          .translation(CONFIG_PREFIX + "mementoCures")
+          .defineList("mementoCures", new ArrayList<>(), s -> s instanceof String);
+
+      noFood = builder.comment("Set to true to disable eating while the effect is active")
+          .translation(CONFIG_PREFIX + "noFood").define("noFood", false);
+
+      percentXp = builder.comment("Percent modifier for XP gain while the effect is active")
+          .translation(CONFIG_PREFIX + "percentXp").defineInRange("percentXp", 0.0F, -1.0F, 10.0F);
 
       builder.pop();
 
