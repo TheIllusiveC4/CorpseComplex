@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import top.theillusivec4.corpsecomplex.common.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
+import top.theillusivec4.corpsecomplex.common.modules.EffectModule;
 import top.theillusivec4.corpsecomplex.common.modules.ExperienceModule;
 import top.theillusivec4.corpsecomplex.common.modules.HungerModule;
 import top.theillusivec4.corpsecomplex.common.modules.InventoryModule;
@@ -39,6 +40,7 @@ public class CorpseComplex {
     MinecraftForge.EVENT_BUS.register(new InventoryModule());
     MinecraftForge.EVENT_BUS.register(new ExperienceModule());
     MinecraftForge.EVENT_BUS.register(new HungerModule());
+    MinecraftForge.EVENT_BUS.register(new EffectModule());
   }
 
   private void setup(final FMLCommonSetupEvent evt) {
