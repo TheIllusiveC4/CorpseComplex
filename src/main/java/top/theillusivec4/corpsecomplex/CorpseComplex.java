@@ -26,6 +26,7 @@ import top.theillusivec4.corpsecomplex.common.modules.EffectModule;
 import top.theillusivec4.corpsecomplex.common.modules.ExperienceModule;
 import top.theillusivec4.corpsecomplex.common.modules.HungerModule;
 import top.theillusivec4.corpsecomplex.common.modules.InventoryModule;
+import top.theillusivec4.corpsecomplex.common.modules.MiscModule;
 
 @Mod(CorpseComplex.MODID)
 public class CorpseComplex {
@@ -41,6 +42,7 @@ public class CorpseComplex {
     MinecraftForge.EVENT_BUS.register(new ExperienceModule());
     MinecraftForge.EVENT_BUS.register(new HungerModule());
     MinecraftForge.EVENT_BUS.register(new EffectModule());
+    MinecraftForge.EVENT_BUS.register(new MiscModule());
   }
 
   private void setup(final FMLCommonSetupEvent evt) {

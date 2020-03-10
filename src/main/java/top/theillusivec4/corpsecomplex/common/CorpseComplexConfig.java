@@ -52,6 +52,9 @@ public class CorpseComplexConfig {
     public final IntValue droppedXpPerLevel;
     public final IntValue maxDroppedXp;
 
+    public final BooleanValue restrictRespawning;
+    public final ConfigValue<List<? extends String>> respawnItems;
+
     public Server(ForgeConfigSpec.Builder builder) {
       builder.push("effects");
 
@@ -117,6 +120,19 @@ public class CorpseComplexConfig {
       maxDroppedXp = builder.comment("Maximum amount of dropped experience")
           .translation(CONFIG_PREFIX + "maxDroppedXp")
           .defineInRange("maxDroppedXp", 100, 0, 100000);
+
+      builder.pop();
+
+      builder.push("miscellaneous");
+
+      restrictRespawning = builder.comment(
+          "Set to true to restrict respawning to the world spawn, players cannot set new spawn points")
+          .translation(CONFIG_PREFIX + "restrictRespawning").define("restrictRespawning", false);
+
+      respawnItems = builder
+          .comment("List of items to give players on respawn\nFormat is: modid:item;stacksize")
+          .translation(CONFIG_PREFIX + "respawnItems")
+          .defineList("respawnItems", new ArrayList<>(), s -> s instanceof String);
 
       builder.pop();
     }
