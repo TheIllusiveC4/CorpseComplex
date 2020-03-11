@@ -168,7 +168,8 @@ public class CorpseComplexConfig {
 
       mementoCures = builder.comment("List of items that can cure the effect")
           .translation(CONFIG_PREFIX + "mementoCures")
-          .defineList("mementoCures", new ArrayList<>(), s -> s instanceof String);
+          .defineList("mementoCures", Collections.singletonList("minecraft:milk_bucket"),
+              s -> s instanceof String);
 
       noFood = builder.comment("Set to true to disable eating while the effect is active")
           .translation(CONFIG_PREFIX + "noFood").define("noFood", false);

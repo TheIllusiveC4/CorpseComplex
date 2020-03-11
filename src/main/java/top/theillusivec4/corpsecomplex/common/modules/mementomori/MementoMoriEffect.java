@@ -107,7 +107,6 @@ public class MementoMoriEffect extends Effect {
                 attributemodifier.getOperation()));
       }
     }
-    entityLivingBaseIn.setHealth(entityLivingBaseIn.getMaxHealth());
   }
 
   public static class AttributeInfo {
