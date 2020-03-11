@@ -2,10 +2,11 @@ package top.theillusivec4.corpsecomplex.common.modules.mementomori;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AbstractAttributeMap;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.entity.ai.attributes.IAttribute;
@@ -13,7 +14,6 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
-import top.theillusivec4.corpsecomplex.CorpseComplex;
 import top.theillusivec4.corpsecomplex.common.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.registry.CorpseComplexRegistry;
 import top.theillusivec4.corpsecomplex.common.registry.RegistryReference;
@@ -28,7 +28,7 @@ public class MementoMoriEffect extends Effect {
 
   public MementoMoriEffect() {
     super(EffectType.HARMFUL, 0);
-    this.setRegistryName(CorpseComplex.MODID, RegistryReference.MEMENTO_MORI);
+    this.setRegistryName(RegistryReference.MEMENTO_MORI);
   }
 
   @Override
@@ -51,11 +51,16 @@ public class MementoMoriEffect extends Effect {
         }
       });
     }
+
+    if (entityLivingBaseIn.getHealth() > entityLivingBaseIn.getMaxHealth()) {
+      entityLivingBaseIn.setHealth(entityLivingBaseIn.getMaxHealth());
+    }
   }
 
   @Override
   public boolean isReady(int duration, int amplifier) {
-    return CorpseComplexConfig.SERVER.gradualRecovery.get() && isChangeTick(duration);
+    return duration < CorpseComplexConfig.SERVER.duration.get() * 20
+        && CorpseComplexConfig.SERVER.gradualRecovery.get() && isChangeTick(duration);
   }
 
   private boolean isChangeTick(int duration) {
@@ -65,6 +70,44 @@ public class MementoMoriEffect extends Effect {
   @Override
   public boolean isBeneficial() {
     return CorpseComplexConfig.SERVER.beneficial.get();
+  }
+
+  @Override
+  public void removeAttributesModifiersFromEntity(LivingEntity entityLivingBaseIn,
+      @Nonnull AbstractAttributeMap attributeMapIn, int amplifier) {
+
+    for (Entry<IAttribute, AttributeInfo> attribute : ATTRIBUTES.entrySet()) {
+      IAttributeInstance iattributeinstance = attributeMapIn
+          .getAttributeInstance(attribute.getKey());
+
+      if (iattributeinstance != null) {
+        AttributeModifier modifier = iattributeinstance
+            .getModifier(attribute.getValue().modifier.getID());
+
+        if (modifier != null) {
+          iattributeinstance.removeModifier(modifier);
+        }
+      }
+    }
+  }
+
+  @Override
+  public void applyAttributesModifiersToEntity(LivingEntity entityLivingBaseIn,
+      @Nonnull AbstractAttributeMap attributeMapIn, int amplifier) {
+
+    for (Entry<IAttribute, AttributeInfo> attribute : ATTRIBUTES.entrySet()) {
+      IAttributeInstance iattributeinstance = attributeMapIn
+          .getAttributeInstance(attribute.getKey());
+
+      if (iattributeinstance != null) {
+        AttributeModifier attributemodifier = attribute.getValue().modifier;
+        iattributeinstance.removeModifier(attributemodifier);
+        iattributeinstance.applyModifier(
+            new AttributeModifier(attributemodifier.getID(), NAME, attributemodifier.getAmount(),
+                attributemodifier.getOperation()));
+      }
+    }
+    entityLivingBaseIn.setHealth(entityLivingBaseIn.getMaxHealth());
   }
 
   public static class AttributeInfo {

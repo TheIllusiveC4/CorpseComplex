@@ -115,11 +115,10 @@ public class EffectModule {
   public void playerClone(final PlayerEvent.Clone evt) {
 
     if (evt.isWasDeath()) {
-      DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(deathStorage -> {
-        DeathStorageCapability.getCapability(evt.getOriginal()).ifPresent(
-            oldDeathStorage -> oldDeathStorage.getEffects()
-                .forEach(deathStorage::addEffectInstance));
-      });
+      DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(
+          deathStorage -> DeathStorageCapability.getCapability(evt.getOriginal()).ifPresent(
+              oldDeathStorage -> oldDeathStorage.getEffects()
+                  .forEach(deathStorage::addEffectInstance)));
     }
   }
 
@@ -128,8 +127,10 @@ public class EffectModule {
 
     if (!evt.isEndConquered()) {
       PlayerEntity player = evt.getPlayer();
-      DeathStorageCapability.getCapability(player)
-          .ifPresent(deathStorage -> deathStorage.getEffects().forEach(player::addPotionEffect));
+      DeathStorageCapability.getCapability(player).ifPresent(deathStorage -> {
+        deathStorage.getEffects().forEach(player::addPotionEffect);
+        deathStorage.clearEffects();
+      });
       effects.forEach(effectInstance -> {
         EffectInstance newEffect = new EffectInstance(effectInstance.getPotion(),
             effectInstance.getDuration(), effectInstance.getAmplifier());
