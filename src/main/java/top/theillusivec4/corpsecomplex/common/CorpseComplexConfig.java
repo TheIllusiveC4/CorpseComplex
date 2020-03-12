@@ -33,7 +33,13 @@ public class CorpseComplexConfig {
     PERCENT, PER_LEVEL
   }
 
+  public enum InventorySection {
+    MAINHAND, HOTBAR, OFFHAND, ARMOR, MAIN
+  }
+
   public static class Server {
+
+    public final ConfigValue<List<? extends String>> keepInventory;
 
     public final ConfigValue<List<? extends String>> cures;
     public final ConfigValue<List<? extends String>> effects;
@@ -69,6 +75,15 @@ public class CorpseComplexConfig {
     public final ConfigValue<List<? extends String>> respawnItems;
 
     public Server(ForgeConfigSpec.Builder builder) {
+      builder.push("inventory");
+
+      keepInventory = builder.comment(
+          "List of inventory sections to keep on death\nAllowed Values: MAINHAND, OFFHAND, ARMOR, MAIN, HOTBAR")
+          .translation(CONFIG_PREFIX + "keepInventory")
+          .defineList("keepInventory", new ArrayList<>(), s -> s instanceof String);
+
+      builder.pop();
+
       builder.push("effects");
 
       cures = builder.comment("List of valid items to cure curable effects")

@@ -7,9 +7,11 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemHandlerHelper;
+import top.theillusivec4.corpsecomplex.common.CorpseComplexConfig.InventorySection;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability.IDeathStorage;
+import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryModule;
 
-public class VanillaStorage implements Storage {
+public class VanillaInventory implements Inventory {
 
   @Override
   public void storeInventory(IDeathStorage deathStorage) {
@@ -18,9 +20,33 @@ public class VanillaStorage implements Storage {
     if (player != null) {
       PlayerInventory inventory = player.inventory;
       ListNBT list = new ListNBT();
-      take(inventory.mainInventory, 0, list);
-      take(inventory.armorInventory, 100, list);
-      take(inventory.offHandInventory, 150, list);
+
+      for (int i = 0; i < inventory.mainInventory.size(); ++i) {
+
+        if ((i == inventory.currentItem && InventoryModule.KEEP.contains(InventorySection.MAINHAND)
+            || (i != inventory.currentItem && i < 9 && InventoryModule.KEEP
+            .contains(InventorySection.HOTBAR)) || (i >= 9 && i < 36 && InventoryModule.KEEP
+            .contains(InventorySection.MAIN)))) {
+          ItemStack stack = inventory.mainInventory.get(i);
+
+          if (!stack.isEmpty()) {
+            CompoundNBT compoundnbt = new CompoundNBT();
+            compoundnbt.putByte("Slot", (byte) i);
+            inventory.mainInventory.get(i).write(compoundnbt);
+            inventory.mainInventory.set(i, ItemStack.EMPTY);
+            list.add(compoundnbt);
+          }
+        }
+
+      }
+
+      if (InventoryModule.KEEP.contains(InventorySection.ARMOR)) {
+        take(inventory.armorInventory, 100, list);
+      }
+
+      if (InventoryModule.KEEP.contains(InventorySection.OFFHAND)) {
+        take(inventory.offHandInventory, 150, list);
+      }
       deathStorage.addInventory("vanilla", list);
     }
   }
@@ -53,11 +79,11 @@ public class VanillaStorage implements Storage {
 
   private static void take(NonNullList<ItemStack> inventory, int offset, ListNBT list) {
 
-    for(int i = 0; i < inventory.size(); ++i) {
+    for (int i = 0; i < inventory.size(); ++i) {
 
       if (!inventory.get(i).isEmpty()) {
         CompoundNBT compoundnbt = new CompoundNBT();
-        compoundnbt.putByte("Slot", (byte)(i + offset));
+        compoundnbt.putByte("Slot", (byte) (i + offset));
         inventory.get(i).write(compoundnbt);
         inventory.set(i, ItemStack.EMPTY);
         list.add(compoundnbt);
