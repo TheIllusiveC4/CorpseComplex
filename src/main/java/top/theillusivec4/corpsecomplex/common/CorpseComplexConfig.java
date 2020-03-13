@@ -34,12 +34,14 @@ public class CorpseComplexConfig {
   }
 
   public enum InventorySection {
-    MAINHAND, HOTBAR, OFFHAND, ARMOR, MAIN
+    MAINHAND, HOTBAR, OFFHAND, MAIN, HEAD, CHEST, LEGS, FEET
   }
 
   public static class Server {
 
     public final ConfigValue<List<? extends String>> keepInventory;
+    public final ConfigValue<List<? extends String>> essentialItems;
+    public final ConfigValue<List<? extends String>> cursedItems;
 
     public final ConfigValue<List<? extends String>> cures;
     public final ConfigValue<List<? extends String>> effects;
@@ -78,9 +80,18 @@ public class CorpseComplexConfig {
       builder.push("inventory");
 
       keepInventory = builder.comment(
-          "List of inventory sections to keep on death\nAllowed Values: MAINHAND, OFFHAND, ARMOR, MAIN, HOTBAR")
+          "List of inventory sections to keep on death\nAllowed Values: MAINHAND, OFFHAND, MAIN, HOTBAR, HEAD, CHEST, LEGS, FEET")
           .translation(CONFIG_PREFIX + "keepInventory")
           .defineList("keepInventory", new ArrayList<>(), s -> s instanceof String);
+
+      essentialItems = builder.comment("List of items to always keep, regardless of other settings")
+          .translation(CONFIG_PREFIX + "essentialItems")
+          .defineList("essentialItems", new ArrayList<>(), s -> s instanceof String);
+
+      cursedItems = builder.comment(
+          "List of items to always drop, regardless of other settings\nAppend ';destroy' if it should be destroyed")
+          .translation(CONFIG_PREFIX + "cursedItems")
+          .defineList("cursedItems", new ArrayList<>(), s -> s instanceof String);
 
       builder.pop();
 
@@ -92,7 +103,7 @@ public class CorpseComplexConfig {
               s -> s instanceof String);
 
       effects = builder.comment(
-          "List of effects to apply on respawn\nFormat: modid:effect;duration(seconds);amplifier[;incurable]")
+          "List of effects to apply on respawn\nFormat: modid:effect;duration(seconds);amplifier\nAppend ';incurable' if applicable")
           .translation(CONFIG_PREFIX + "effects")
           .defineList("effects", new ArrayList<>(), s -> s instanceof String);
 
@@ -204,7 +215,7 @@ public class CorpseComplexConfig {
           .translation(CONFIG_PREFIX + "restrictRespawning").define("restrictRespawning", false);
 
       respawnItems = builder
-          .comment("List of items to give players on respawn\nFormat is: modid:item;stacksize")
+          .comment("List of items to give players on respawn\nFormat: modid:item;stacksize")
           .translation(CONFIG_PREFIX + "respawnItems")
           .defineList("respawnItems", new ArrayList<>(), s -> s instanceof String);
 

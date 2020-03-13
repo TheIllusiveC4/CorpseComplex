@@ -1,8 +1,6 @@
 package top.theillusivec4.corpsecomplex.common.modules.inventory;
 
 import java.util.Collections;
-import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -17,6 +17,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
 import top.theillusivec4.corpsecomplex.common.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.CorpseComplexConfig.InventorySection;
@@ -29,7 +30,9 @@ public class InventoryModule {
 
   public static final Map<String, Class<? extends Inventory>> STORAGE_ADDONS = new HashMap<>();
   public static final List<Inventory> STORAGE = Collections.singletonList(new VanillaInventory());
-  public static final Set<InventorySection> KEEP = new HashSet<>();
+  public static final Set<InventorySection> KEEP_SECTIONS = new HashSet<>();
+  public static final Set<Item> ESSENTIAL_ITEMS = new HashSet<>();
+  public static final Map<Item, Boolean> CURSED_ITEMS = new HashMap<>();
 
   static {
     //    STORAGE_ADDONS.put("curios", CuriosStorage.class);
@@ -46,7 +49,22 @@ public class InventoryModule {
       }
 
       if (section != null) {
-        KEEP.add(section);
+        KEEP_SECTIONS.add(section);
+      }
+    });
+    CorpseComplexConfig.SERVER.essentialItems.get().forEach(string -> {
+      Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(string));
+
+      if (item != null) {
+        ESSENTIAL_ITEMS.add(item);
+      }
+    });
+    CorpseComplexConfig.SERVER.cursedItems.get().forEach(string -> {
+      String[] parsed = string.split(";");
+      Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(parsed[0]));
+
+      if (item != null) {
+        CURSED_ITEMS.put(item, parsed.length > 1);
       }
     });
   }

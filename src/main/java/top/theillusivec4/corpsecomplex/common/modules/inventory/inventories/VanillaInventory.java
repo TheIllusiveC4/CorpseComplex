@@ -1,5 +1,6 @@
 package top.theillusivec4.corpsecomplex.common.modules.inventory.inventories;
 
+import java.util.function.Supplier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -10,6 +11,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import top.theillusivec4.corpsecomplex.common.CorpseComplexConfig.InventorySection;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability.IDeathStorage;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryModule;
+import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryUtils;
+import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryUtils.InventoryRule;
 
 public class VanillaInventory implements Inventory {
 
@@ -21,33 +24,53 @@ public class VanillaInventory implements Inventory {
       PlayerInventory inventory = player.inventory;
       ListNBT list = new ListNBT();
 
-      for (int i = 0; i < inventory.mainInventory.size(); ++i) {
+      for (int i = 0; i < 9; i++) {
+        int index = i;
+        take(inventory, i, list, () -> {
+          boolean store;
 
-        if ((i == inventory.currentItem && InventoryModule.KEEP.contains(InventorySection.MAINHAND)
-            || (i != inventory.currentItem && i < 9 && InventoryModule.KEEP
-            .contains(InventorySection.HOTBAR)) || (i >= 9 && i < 36 && InventoryModule.KEEP
-            .contains(InventorySection.MAIN)))) {
-          ItemStack stack = inventory.mainInventory.get(i);
-
-          if (!stack.isEmpty()) {
-            CompoundNBT compoundnbt = new CompoundNBT();
-            compoundnbt.putByte("Slot", (byte) i);
-            inventory.mainInventory.get(i).write(compoundnbt);
-            inventory.mainInventory.set(i, ItemStack.EMPTY);
-            list.add(compoundnbt);
+          if (index == inventory.currentItem) {
+            store = InventoryModule.KEEP_SECTIONS.contains(InventorySection.MAINHAND);
+          } else {
+            store = InventoryModule.KEEP_SECTIONS.contains(InventorySection.HOTBAR);
           }
-        }
-
+          return store ? InventoryRule.KEEP : InventoryRule.DROP;
+        });
       }
 
-      if (InventoryModule.KEEP.contains(InventorySection.ARMOR)) {
-        take(inventory.armorInventory, 100, list);
+      for (int i = 9; i < 36; i++) {
+        take(inventory, i, list, InventorySection.MAIN);
       }
-
-      if (InventoryModule.KEEP.contains(InventorySection.OFFHAND)) {
-        take(inventory.offHandInventory, 150, list);
-      }
+      take(inventory, 36, list, InventorySection.FEET);
+      take(inventory, 37, list, InventorySection.LEGS);
+      take(inventory, 38, list, InventorySection.CHEST);
+      take(inventory, 39, list, InventorySection.HEAD);
+      take(inventory, 40, list, InventorySection.OFFHAND);
       deathStorage.addInventory("vanilla", list);
+    }
+  }
+
+  private static void take(PlayerInventory inventory, int index, ListNBT list,
+      InventorySection section) {
+    take(inventory, index, list,
+        () -> InventoryModule.KEEP_SECTIONS.contains(section) ? InventoryRule.KEEP
+            : InventoryRule.DROP);
+  }
+
+  private static void take(PlayerInventory inventory, int index, ListNBT list,
+      Supplier<InventoryRule> ruleSupplier) {
+    ItemStack stack = inventory.getStackInSlot(index);
+    InventoryRule inventoryRule = InventoryUtils.getImperative(stack).orElseGet(ruleSupplier);
+
+    if (inventoryRule == InventoryRule.KEEP) {
+      CompoundNBT compoundnbt = new CompoundNBT();
+      compoundnbt.putInt("Slot", index);
+      stack.write(compoundnbt);
+      list.add(compoundnbt);
+    }
+
+    if (inventoryRule != InventoryRule.DROP) {
+      inventory.setInventorySlotContents(index, ItemStack.EMPTY);
     }
   }
 
@@ -62,43 +85,18 @@ public class VanillaInventory implements Inventory {
 
       for (int i = 0; i < list.size(); ++i) {
         CompoundNBT compoundnbt = list.getCompound(i);
-        int slot = compoundnbt.getByte("Slot") & 255;
+        int slot = compoundnbt.getInt("Slot");
         ItemStack itemstack = ItemStack.read(compoundnbt);
         if (!itemstack.isEmpty()) {
-          if (slot < inventory.mainInventory.size()) {
-            setOrGive(player, inventory.mainInventory, slot, itemstack);
-          } else if (slot >= 100 && slot < inventory.armorInventory.size() + 100) {
-            setOrGive(player, inventory.armorInventory, slot - 100, itemstack);
-          } else if (slot >= 150 && slot < inventory.offHandInventory.size() + 150) {
-            setOrGive(player, inventory.offHandInventory, slot - 150, itemstack);
+          ItemStack existing = inventory.getStackInSlot(slot);
+
+          if (existing.isEmpty()) {
+            inventory.setInventorySlotContents(slot, itemstack);
+          } else {
+            ItemHandlerHelper.giveItemToPlayer(inventory.player, itemstack);
           }
         }
       }
-    }
-  }
-
-  private static void take(NonNullList<ItemStack> inventory, int offset, ListNBT list) {
-
-    for (int i = 0; i < inventory.size(); ++i) {
-
-      if (!inventory.get(i).isEmpty()) {
-        CompoundNBT compoundnbt = new CompoundNBT();
-        compoundnbt.putByte("Slot", (byte) (i + offset));
-        inventory.get(i).write(compoundnbt);
-        inventory.set(i, ItemStack.EMPTY);
-        list.add(compoundnbt);
-      }
-    }
-  }
-
-  private static void setOrGive(PlayerEntity player, NonNullList<ItemStack> inventory, int slot,
-      ItemStack stack) {
-    ItemStack existing = inventory.get(slot);
-
-    if (existing.isEmpty()) {
-      inventory.set(slot, stack);
-    } else {
-      ItemHandlerHelper.giveItemToPlayer(player, stack);
     }
   }
 }
