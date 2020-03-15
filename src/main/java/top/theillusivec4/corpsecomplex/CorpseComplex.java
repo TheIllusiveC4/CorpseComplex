@@ -15,13 +15,14 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import top.theillusivec4.corpsecomplex.common.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
+import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.modules.EffectModule;
 import top.theillusivec4.corpsecomplex.common.modules.ExperienceModule;
 import top.theillusivec4.corpsecomplex.common.modules.HungerModule;
@@ -39,6 +40,7 @@ public class CorpseComplex {
     ModLoadingContext.get().registerConfig(Type.SERVER, CorpseComplexConfig.serverSpec);
     IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
     eventBus.addListener(this::setup);
+    eventBus.addListener(this::config);
     MinecraftForge.EVENT_BUS.register(new InventoryModule());
     MinecraftForge.EVENT_BUS.register(new ExperienceModule());
     MinecraftForge.EVENT_BUS.register(new HungerModule());
@@ -58,5 +60,12 @@ public class CorpseComplex {
         }
       }
     });
+  }
+
+  private void config(final ModConfigEvent evt) {
+
+    if (evt.getConfig().getSpec() == CorpseComplexConfig.serverSpec) {
+      CorpseComplexConfig.bakeConfigs();
+    }
   }
 }

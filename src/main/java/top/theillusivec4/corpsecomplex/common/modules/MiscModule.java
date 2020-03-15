@@ -12,7 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
-import top.theillusivec4.corpsecomplex.common.CorpseComplexConfig;
+import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 
 public class MiscModule {
 

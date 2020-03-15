@@ -14,7 +14,7 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
-import top.theillusivec4.corpsecomplex.common.CorpseComplexConfig;
+import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.registry.CorpseComplexRegistry;
 import top.theillusivec4.corpsecomplex.common.registry.RegistryReference;
 

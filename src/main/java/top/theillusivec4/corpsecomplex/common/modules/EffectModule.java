@@ -17,9 +17,9 @@ import net.minecraftforge.event.entity.player.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import top.theillusivec4.corpsecomplex.common.CorpseComplexConfig;
-import top.theillusivec4.corpsecomplex.common.CorpseComplexConfig.PermissionMode;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
+import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
+import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig.PermissionMode;
 
 public class EffectModule {
 

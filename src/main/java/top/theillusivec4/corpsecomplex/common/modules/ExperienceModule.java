@@ -5,8 +5,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import top.theillusivec4.corpsecomplex.common.CorpseComplexConfig;
-import top.theillusivec4.corpsecomplex.common.CorpseComplexConfig.XpDropMode;
+import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
+import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig.XpDropMode;
 
 public class ExperienceModule {
 

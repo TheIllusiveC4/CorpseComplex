@@ -18,7 +18,7 @@ import net.minecraftforge.event.entity.player.PlayerXpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import top.theillusivec4.corpsecomplex.common.CorpseComplexConfig;
+import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.modules.mementomori.MementoMoriEffect.AttributeInfo;
 import top.theillusivec4.corpsecomplex.common.registry.CorpseComplexRegistry;
 

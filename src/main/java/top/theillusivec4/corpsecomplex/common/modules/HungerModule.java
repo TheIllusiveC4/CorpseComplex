@@ -6,7 +6,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
-import top.theillusivec4.corpsecomplex.common.CorpseComplexConfig;
+import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 
 public class HungerModule {
 
