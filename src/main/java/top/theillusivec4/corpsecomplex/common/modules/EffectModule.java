@@ -41,47 +41,6 @@ public class EffectModule {
   }
 
   @SubscribeEvent
-  public void serverStart(final FMLServerStartedEvent evt) {
-    List<? extends String> configCures = CorpseComplexConfig.SERVER.cures.get();
-    configCures.forEach(cure -> {
-      Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(cure));
-
-      if (item != null) {
-        cures.add(new ItemStack(item));
-      }
-    });
-    List<? extends String> configKeep = CorpseComplexConfig.SERVER.keepEffects.get();
-    configKeep.forEach(effect -> {
-      Effect effect1 = ForgeRegistries.POTIONS.getValue(new ResourceLocation(effect));
-
-      if (effect1 != null) {
-        keepEffects.add(effect1);
-      }
-    });
-    List<? extends String> configEffects = CorpseComplexConfig.SERVER.effects.get();
-    configEffects.forEach(effect -> {
-      String[] parse = effect.split(";");
-
-      if (parse.length >= 2) {
-        Effect effect1 = ForgeRegistries.POTIONS.getValue(new ResourceLocation(parse[0]));
-
-        if (effect1 != null) {
-          int amplifier = parse.length >= 3 ? Integer.parseInt(parse[2]) : 0;
-          EffectInstance instance = new EffectInstance(effect1, Integer.parseInt(parse[1]) * 20,
-              amplifier);
-
-          if (parse.length >= 4) {
-            instance.setCurativeItems(new ArrayList<>());
-          } else {
-            instance.setCurativeItems(cures);
-          }
-          effects.add(instance);
-        }
-      }
-    });
-  }
-
-  @SubscribeEvent
   public void playerDeath(final LivingDeathEvent evt) {
 
     if (!(evt.getEntityLiving() instanceof PlayerEntity)) {

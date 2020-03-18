@@ -29,9 +29,6 @@ public class InventoryModule {
 
   public static final Map<String, Class<? extends Inventory>> STORAGE_ADDONS = new HashMap<>();
   public static final List<Inventory> STORAGE = Collections.singletonList(new VanillaInventory());
-  public static final Set<InventorySection> KEEP_SECTIONS = new HashSet<>();
-  public static final Set<Item> ESSENTIAL_ITEMS = new HashSet<>();
-  public static final Map<Item, Boolean> CURSED_ITEMS = new HashMap<>();
 
   static {
     //    STORAGE_ADDONS.put("curios", CuriosStorage.class);

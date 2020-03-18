@@ -16,22 +16,6 @@ import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 
 public class MiscModule {
 
-  private static final Map<Item, Integer> respawnItems = new HashMap<>();
-
-  @SubscribeEvent
-  public void serverStart(final FMLServerStartedEvent evt) {
-    List<? extends String> configItems = CorpseComplexConfig.SERVER.respawnItems.get();
-    configItems.forEach(item -> {
-      String[] parsed = item.split(";");
-      Item item1 = ForgeRegistries.ITEMS.getValue(new ResourceLocation(parsed[0]));
-
-      if (item1 != null) {
-        int amount = parsed.length > 1 ? Integer.parseInt(parsed[1]) : 1;
-        respawnItems.put(item1, amount);
-      }
-    });
-  }
-
   @SubscribeEvent
   public void setSpawn(final PlayerSetSpawnEvent evt) {
 

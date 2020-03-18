@@ -11,6 +11,8 @@ import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import org.apache.commons.lang3.tuple.Pair;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
+import top.theillusivec4.corpsecomplex.common.util.Enums.PermissionMode;
+import top.theillusivec4.corpsecomplex.common.util.Enums.XpDropMode;
 
 public class CorpseComplexConfig {
 
@@ -65,8 +67,7 @@ public class CorpseComplexConfig {
   public static double feetKeepDurabilityLoss;
   public static double feetDropDurabilityLoss;
 
-  public static List<? extends String> essentialItems;
-  public static List<? extends String> cursedItems;
+  public static List<? extends String> itemSettings;
 
   public static List<? extends String> cures;
   public static List<? extends String> effects;
@@ -143,8 +144,7 @@ public class CorpseComplexConfig {
     public final DoubleValue feetKeepDurabilityLoss;
     public final DoubleValue feetDropDurabilityLoss;
 
-    public final ConfigValue<List<? extends String>> essentialItems;
-    public final ConfigValue<List<? extends String>> cursedItems;
+    public final ConfigValue<List<? extends String>> itemSettings;
 
     public final ConfigValue<List<? extends String>> cures;
     public final ConfigValue<List<? extends String>> effects;
@@ -275,13 +275,11 @@ public class CorpseComplexConfig {
           .translation(CONFIG_PREFIX + "headDestroyChance")
           .defineInRange("headDestroyChance", 0.0D, 0.0D, 1.0D);
 
-      headKeepDurabilityLoss = builder
-          .comment("Percent durability loss on kept head item")
+      headKeepDurabilityLoss = builder.comment("Percent durability loss on kept head item")
           .translation(CONFIG_PREFIX + "headKeepDurabilityLoss")
           .defineInRange("headKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
 
-      headDropDurabilityLoss = builder
-          .comment("Percent durability loss on dropped head item")
+      headDropDurabilityLoss = builder.comment("Percent durability loss on dropped head item")
           .translation(CONFIG_PREFIX + "headDropDurabilityLoss")
           .defineInRange("headDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
 
@@ -297,13 +295,11 @@ public class CorpseComplexConfig {
           .translation(CONFIG_PREFIX + "chestDestroyChance")
           .defineInRange("chestDestroyChance", 0.0D, 0.0D, 1.0D);
 
-      chestKeepDurabilityLoss = builder
-          .comment("Percent durability loss on kept chest item")
+      chestKeepDurabilityLoss = builder.comment("Percent durability loss on kept chest item")
           .translation(CONFIG_PREFIX + "chestKeepDurabilityLoss")
           .defineInRange("chestKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
 
-      chestDropDurabilityLoss = builder
-          .comment("Percent durability loss on dropped chest item")
+      chestDropDurabilityLoss = builder.comment("Percent durability loss on dropped chest item")
           .translation(CONFIG_PREFIX + "chestDropDurabilityLoss")
           .defineInRange("chestDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
 
@@ -319,13 +315,11 @@ public class CorpseComplexConfig {
           .translation(CONFIG_PREFIX + "legsDestroyChance")
           .defineInRange("legsDestroyChance", 0.0D, 0.0D, 1.0D);
 
-      legsKeepDurabilityLoss = builder
-          .comment("Percent durability loss on kept legs item")
+      legsKeepDurabilityLoss = builder.comment("Percent durability loss on kept legs item")
           .translation(CONFIG_PREFIX + "legsKeepDurabilityLoss")
           .defineInRange("legsKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
 
-      legsDropDurabilityLoss = builder
-          .comment("Percent durability loss on dropped legs item")
+      legsDropDurabilityLoss = builder.comment("Percent durability loss on dropped legs item")
           .translation(CONFIG_PREFIX + "legsDropDurabilityLoss")
           .defineInRange("legsDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
 
@@ -341,26 +335,21 @@ public class CorpseComplexConfig {
           .translation(CONFIG_PREFIX + "feetDestroyChance")
           .defineInRange("feetDestroyChance", 0.0D, 0.0D, 1.0D);
 
-      feetKeepDurabilityLoss = builder
-          .comment("Percent durability loss on kept feet item")
+      feetKeepDurabilityLoss = builder.comment("Percent durability loss on kept feet item")
           .translation(CONFIG_PREFIX + "feetKeepDurabilityLoss")
           .defineInRange("feetKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
 
-      feetDropDurabilityLoss = builder
-          .comment("Percent durability loss on dropped head item")
+      feetDropDurabilityLoss = builder.comment("Percent durability loss on dropped head item")
           .translation(CONFIG_PREFIX + "feetDropDurabilityLoss")
           .defineInRange("feetDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
 
       builder.pop();
 
-      essentialItems = builder.comment("List of items to always keep, regardless of other settings")
-          .translation(CONFIG_PREFIX + "essentialItems")
-          .defineList("essentialItems", new ArrayList<>(), s -> s instanceof String);
-
-      cursedItems = builder.comment(
-          "List of items to always drop, regardless of other settings\nAppend ';destroy' if it should be destroyed")
-          .translation(CONFIG_PREFIX + "cursedItems")
-          .defineList("cursedItems", new ArrayList<>(), s -> s instanceof String);
+      itemSettings = builder
+          .comment("List of items to always keep, drop, or destroy, regardless of other settings",
+              "Format: modid:item;[keep/drop/destroy]")
+          .translation(CONFIG_PREFIX + "itemSettings")
+          .defineList("itemSettings", new ArrayList<>(), s -> s instanceof String);
 
       builder.pop();
 
@@ -533,8 +522,7 @@ public class CorpseComplexConfig {
     feetKeepDurabilityLoss = SERVER.feetKeepDurabilityLoss.get();
     feetDropDurabilityLoss = SERVER.feetDropDurabilityLoss.get();
 
-    essentialItems = SERVER.essentialItems.get();
-    cursedItems = SERVER.cursedItems.get();
+    itemSettings = SERVER.itemSettings.get();
 
     cures = SERVER.cures.get();
     effects = SERVER.effects.get();
@@ -568,17 +556,5 @@ public class CorpseComplexConfig {
 
     restrictRespawning = SERVER.restrictRespawning.get();
     respawnItems = SERVER.respawnItems.get();
-  }
-
-  public enum PermissionMode {
-    BLACKLIST, WHITELIST
-  }
-
-  public enum XpDropMode {
-    PERCENT, PER_LEVEL
-  }
-
-  public enum InventorySection {
-    MAINHAND, HOTBAR, OFFHAND, MAIN, HEAD, CHEST, LEGS, FEET
   }
 }
