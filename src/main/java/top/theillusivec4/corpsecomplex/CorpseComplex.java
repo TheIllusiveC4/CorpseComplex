@@ -69,7 +69,7 @@ public class CorpseComplex {
 
     if (evt.getConfig().getSpec() == CorpseComplexConfig.serverSpec) {
       CorpseComplexConfig.bakeConfigs();
-      DeathSettings.createDefault();
+      DeathSettings.setConfigDefault();
     }
   }
 }

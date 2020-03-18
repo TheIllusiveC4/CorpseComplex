@@ -18,7 +18,7 @@ import top.theillusivec4.corpsecomplex.common.util.Enums.XpDropMode;
 
 public class DeathSettings {
 
-  public static DeathSettings DEFAULT;
+  public static DeathSettings CONFIG_DEFAULT = new DeathSettings();
 
   public Hunger hunger;
   public Inventory inventory;
@@ -27,15 +27,13 @@ public class DeathSettings {
   public Effects effects;
   public Miscellaneous miscellaneous;
 
-  public static void createDefault() {
-    DeathSettings settings = new DeathSettings();
-    settings.hunger = new Hunger();
-    settings.inventory = new Inventory();
-    settings.experience = new Experience();
-    settings.mementoMori = new MementoMori();
-    settings.effects = new Effects();
-    settings.miscellaneous = new Miscellaneous();
-    DEFAULT = settings;
+  public static void setConfigDefault() {
+    CONFIG_DEFAULT.hunger = new Hunger();
+    CONFIG_DEFAULT.inventory = new Inventory();
+    CONFIG_DEFAULT.experience = new Experience();
+    CONFIG_DEFAULT.mementoMori = new MementoMori();
+    CONFIG_DEFAULT.effects = new Effects();
+    CONFIG_DEFAULT.miscellaneous = new Miscellaneous();
   }
 
   public static class Inventory {
@@ -138,10 +136,10 @@ public class DeathSettings {
 
   public static class Effects {
 
-    public List<ItemStack> cures;
-    public List<EffectInstance> effects;
+    public List<ItemStack> cures = new ArrayList<>();
+    public List<EffectInstance> effects = new ArrayList<>();
     public PermissionMode keepEffectsMode;
-    public List<Effect> keepEffects;
+    public List<Effect> keepEffects = new ArrayList<>();
 
     public Effects() {
       this.keepEffectsMode = CorpseComplexConfig.keepEffectsMode;

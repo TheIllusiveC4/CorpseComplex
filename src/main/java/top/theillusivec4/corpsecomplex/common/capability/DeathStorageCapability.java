@@ -105,7 +105,7 @@ public class DeathStorageCapability {
 
     private final Map<String, INBT> storage = new HashMap<>();
     private final List<EffectInstance> effects = new ArrayList<>();
-    private final DeathSettings deathSettings = DeathSettings.DEFAULT;
+    private final DeathSettings deathSettings = DeathSettings.CONFIG_DEFAULT;
     private final PlayerEntity player;
 
     public DeathStorage() {
