@@ -21,6 +21,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import top.theillusivec4.corpsecomplex.common.CommonEventHandler;
+import top.theillusivec4.corpsecomplex.common.DeathSettings;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
 import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.modules.EffectModule;
@@ -47,6 +49,7 @@ public class CorpseComplex {
     MinecraftForge.EVENT_BUS.register(new EffectModule());
     MinecraftForge.EVENT_BUS.register(new MementoMoriModule());
     MinecraftForge.EVENT_BUS.register(new MiscModule());
+    MinecraftForge.EVENT_BUS.register(new CommonEventHandler());
   }
 
   private void setup(final FMLCommonSetupEvent evt) {
@@ -66,6 +69,7 @@ public class CorpseComplex {
 
     if (evt.getConfig().getSpec() == CorpseComplexConfig.serverSpec) {
       CorpseComplexConfig.bakeConfigs();
+      DeathSettings.createDefault();
     }
   }
 }

@@ -23,6 +23,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
+import top.theillusivec4.corpsecomplex.common.DeathSettings;
 
 public class DeathStorageCapability {
 
@@ -34,6 +35,7 @@ public class DeathStorageCapability {
 
   private static final String INVENTORIES = "Inventories";
   private static final String EFFECTS = "Effects";
+  private static final String SETTINGS = "Settings";
 
   static {
     DEATH_STORAGE_CAP = null;
@@ -82,6 +84,10 @@ public class DeathStorageCapability {
 
     PlayerEntity getPlayer();
 
+    void setSettings(DeathSettings settings);
+
+    DeathSettings getSettings();
+
     void addInventory(String modid, INBT nbt);
 
     INBT getInventory(String modid);
@@ -99,6 +105,7 @@ public class DeathStorageCapability {
 
     private final Map<String, INBT> storage = new HashMap<>();
     private final List<EffectInstance> effects = new ArrayList<>();
+    private final DeathSettings deathSettings = DeathSettings.DEFAULT;
     private final PlayerEntity player;
 
     public DeathStorage() {
@@ -113,6 +120,16 @@ public class DeathStorageCapability {
     @Override
     public PlayerEntity getPlayer() {
       return this.player;
+    }
+
+    @Override
+    public void setSettings(DeathSettings settings) {
+
+    }
+
+    @Override
+    public DeathSettings getSettings() {
+      return this.deathSettings;
     }
 
     @Override

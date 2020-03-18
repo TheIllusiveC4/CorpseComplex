@@ -5,8 +5,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
-import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig.XpDropMode;
+import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
+import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability.IDeathStorage;
+import top.theillusivec4.corpsecomplex.common.util.Enums.XpDropMode;
 
 public class ExperienceModule {
 
@@ -15,38 +16,41 @@ public class ExperienceModule {
 
     if (evt.getEntityLiving() instanceof PlayerEntity) {
       PlayerEntity player = (PlayerEntity) evt.getEntityLiving();
-      double lose = CorpseComplexConfig.SERVER.lostXp.get();
+      DeathStorageCapability.getCapability(player).ifPresent(deathStorage -> {
+        double lose = deathStorage.getSettings().experience.lostXp;
 
-      if (lose <= 0.0D) {
-        evt.setCanceled(true);
-        return;
-      }
-      int lostXp = (int) (lose * player.experienceTotal);
-      int droppedXp = getExperiencePoints(player, lostXp);
-      evt.setDroppedExperience(droppedXp);
-      int keptXp = player.experienceTotal - lostXp;
-      player.experience = 0;
-      player.experienceTotal = 0;
-      player.experienceLevel = 0;
-      player.experience += (float) keptXp / (float) player.xpBarCap();
-      player.experienceTotal = MathHelper.clamp(player.experienceTotal + keptXp, 0, Integer.MAX_VALUE);
-
-      while(player.experience < 0.0F) {
-        float f = player.experience * (float) player.xpBarCap();
-        if (player.experienceLevel > 0) {
-          player.addExperienceLevel(-1);
-          player.experience = 1.0F + f / (float) player.xpBarCap();
-        } else {
-          player.addExperienceLevel(-1);
-          player.experience = 0.0F;
+        if (lose <= 0.0D) {
+          evt.setCanceled(true);
+          return;
         }
-      }
+        int lostXp = (int) (lose * player.experienceTotal);
+        int droppedXp = getExperiencePoints(player, lostXp, deathStorage);
+        evt.setDroppedExperience(droppedXp);
+        int keptXp = player.experienceTotal - lostXp;
+        player.experience = 0;
+        player.experienceTotal = 0;
+        player.experienceLevel = 0;
+        player.experience += (float) keptXp / (float) player.xpBarCap();
+        player.experienceTotal = MathHelper
+            .clamp(player.experienceTotal + keptXp, 0, Integer.MAX_VALUE);
 
-      while(player.experience >= 1.0F) {
-        player.experience = (player.experience - 1.0F) * (float) player.xpBarCap();
-        player.addExperienceLevel(1);
-        player.experience /= (float) player.xpBarCap();
-      }
+        while (player.experience < 0.0F) {
+          float f = player.experience * (float) player.xpBarCap();
+          if (player.experienceLevel > 0) {
+            player.addExperienceLevel(-1);
+            player.experience = 1.0F + f / (float) player.xpBarCap();
+          } else {
+            player.addExperienceLevel(-1);
+            player.experience = 0.0F;
+          }
+        }
+
+        while (player.experience >= 1.0F) {
+          player.experience = (player.experience - 1.0F) * (float) player.xpBarCap();
+          player.addExperienceLevel(1);
+          player.experience /= (float) player.xpBarCap();
+        }
+      });
     }
   }
 
@@ -58,11 +62,12 @@ public class ExperienceModule {
     }
   }
 
-  private static int getExperiencePoints(PlayerEntity player, int lostXp) {
+  private static int getExperiencePoints(PlayerEntity player, int lostXp,
+      IDeathStorage deathStorage) {
     if (!player.isSpectator()) {
       int i;
 
-      if (CorpseComplexConfig.SERVER.xpDropMode.get() == XpDropMode.PER_LEVEL) {
+      if (deathStorage.getSettings().experience.xpDropMode == XpDropMode.PER_LEVEL) {
         int newTotal = player.experienceTotal - lostXp;
         int lostLevels;
 
@@ -75,11 +80,11 @@ public class ExperienceModule {
         } else {
           lostLevels = (int) (player.experienceLevel - (-3 + Math.sqrt(newTotal + 9)));
         }
-        i = lostLevels * CorpseComplexConfig.SERVER.droppedXpPerLevel.get();
+        i = lostLevels * deathStorage.getSettings().experience.droppedXpPerLevel;
       } else {
-        i = (int) (lostXp * CorpseComplexConfig.SERVER.droppedXpPercent.get());
+        i = (int) (lostXp * deathStorage.getSettings().experience.droppedXpPercent);
       }
-      return Math.min(i, CorpseComplexConfig.SERVER.maxDroppedXp.get());
+      return Math.min(i, deathStorage.getSettings().experience.maxDroppedXp);
     } else {
       return 0;
     }

@@ -7,11 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.items.ItemHandlerHelper;
+import top.theillusivec4.corpsecomplex.common.DeathSettings.Inventory.SectionSettings;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability.IDeathStorage;
-import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig.InventorySection;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryModule;
-import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryUtils;
-import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryUtils.InventoryRule;
+import top.theillusivec4.corpsecomplex.common.util.Enums.DropMode;
+import top.theillusivec4.corpsecomplex.common.util.Enums.InventorySection;
 
 public class VanillaInventory implements Inventory {
 
@@ -24,51 +24,50 @@ public class VanillaInventory implements Inventory {
       ListNBT list = new ListNBT();
 
       for (int i = 0; i < 9; i++) {
-        int index = i;
-        take(inventory, i, list, () -> {
-          boolean store;
-
-          if (index == inventory.currentItem) {
-            store = InventoryModule.KEEP_SECTIONS.contains(InventorySection.MAINHAND);
-          } else {
-            store = InventoryModule.KEEP_SECTIONS.contains(InventorySection.HOTBAR);
-          }
-          return store ? InventoryRule.KEEP : InventoryRule.DROP;
-        });
+        take(deathStorage, inventory, i, list,
+            i == inventory.currentItem ? InventorySection.MAINHAND : InventorySection.HOTBAR);
       }
 
       for (int i = 9; i < 36; i++) {
-        take(inventory, i, list, InventorySection.MAIN);
+        take(deathStorage, inventory, i, list, InventorySection.MAIN);
       }
-      take(inventory, 36, list, InventorySection.FEET);
-      take(inventory, 37, list, InventorySection.LEGS);
-      take(inventory, 38, list, InventorySection.CHEST);
-      take(inventory, 39, list, InventorySection.HEAD);
-      take(inventory, 40, list, InventorySection.OFFHAND);
+      take(deathStorage, inventory, 36, list, InventorySection.FEET);
+      take(deathStorage, inventory, 37, list, InventorySection.LEGS);
+      take(deathStorage, inventory, 38, list, InventorySection.CHEST);
+      take(deathStorage, inventory, 39, list, InventorySection.HEAD);
+      take(deathStorage, inventory, 40, list, InventorySection.OFFHAND);
       deathStorage.addInventory("vanilla", list);
     }
   }
 
-  private static void take(PlayerInventory inventory, int index, ListNBT list,
-      InventorySection section) {
-    take(inventory, index, list,
-        () -> InventoryModule.KEEP_SECTIONS.contains(section) ? InventoryRule.KEEP
-            : InventoryRule.DROP);
+  private static void take(IDeathStorage deathStorage, PlayerInventory inventory, int index,
+      ListNBT list, InventorySection section) {
+    take(deathStorage, inventory, index, list, () -> {
+      SectionSettings sectionSettings = deathStorage.getSettings().inventory.inventorySettings
+          .get(section);
+      if (sectionSettings.keepChance > InventoryModule.RANDOM.nextFloat()) {
+        return DropMode.KEEP;
+      } else if (sectionSettings.destroyChance > InventoryModule.RANDOM.nextFloat()) {
+        return DropMode.DESTROY;
+      }
+      return DropMode.DROP;
+    });
   }
 
-  private static void take(PlayerInventory inventory, int index, ListNBT list,
-      Supplier<InventoryRule> ruleSupplier) {
+  private static void take(IDeathStorage deathStorage, PlayerInventory inventory, int index,
+      ListNBT list, Supplier<DropMode> ruleSupplier) {
     ItemStack stack = inventory.getStackInSlot(index);
-    InventoryRule inventoryRule = InventoryUtils.getImperative(stack).orElseGet(ruleSupplier);
+    DropMode inventoryRule = deathStorage.getSettings().inventory.items
+        .getOrDefault(stack.getItem(), ruleSupplier.get());
 
-    if (inventoryRule == InventoryRule.KEEP) {
+    if (inventoryRule == DropMode.KEEP) {
       CompoundNBT compoundnbt = new CompoundNBT();
       compoundnbt.putInt("Slot", index);
       stack.write(compoundnbt);
       list.add(compoundnbt);
     }
 
-    if (inventoryRule != InventoryRule.DROP) {
+    if (inventoryRule != DropMode.DROP) {
       inventory.setInventorySlotContents(index, ItemStack.EMPTY);
     }
   }

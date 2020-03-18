@@ -1,42 +1,33 @@
 package top.theillusivec4.corpsecomplex.common.modules;
 
-import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
-import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
-import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig.PermissionMode;
+import top.theillusivec4.corpsecomplex.common.util.Enums.PermissionMode;
 
 public class EffectModule {
-
-  private static final List<EffectInstance> effects = new ArrayList<>();
-  private static final List<ItemStack> cures = new ArrayList<>();
-  private static final List<Effect> keepEffects = new ArrayList<>();
 
   @SubscribeEvent
   public void finishItemUse(LivingEntityUseItemEvent.Finish evt) {
     LivingEntity entity = evt.getEntityLiving();
 
-    if (!entity.getEntityWorld().isRemote()) {
-      cures.forEach(itemStack -> {
-        if (ItemStack.areItemsEqual(evt.getItem(), itemStack)) {
-          entity.curePotionEffects(evt.getItem());
-        }
-      });
+    if (!entity.getEntityWorld().isRemote() && entity instanceof PlayerEntity) {
+      DeathStorageCapability.getCapability((PlayerEntity) entity)
+          .ifPresent(deathStorage -> deathStorage.getSettings().effects.cures.forEach(itemStack -> {
+            if (ItemStack.areItemsEqual(evt.getItem(), itemStack)) {
+              entity.curePotionEffects(evt.getItem());
+            }
+          }));
     }
   }
 
@@ -53,10 +44,11 @@ public class EffectModule {
       DeathStorageCapability.getCapability(playerEntity).ifPresent(
           deathStorage -> playerEntity.getActivePotionEffects().forEach(effectInstance -> {
             boolean flag;
+            List<Effect> keepEffects = deathStorage.getSettings().effects.keepEffects;
 
             if (keepEffects.isEmpty()) {
               flag = true;
-            } else if (CorpseComplexConfig.SERVER.keepEffectsMode.get()
+            } else if (deathStorage.getSettings().effects.keepEffectsMode
                 == PermissionMode.BLACKLIST) {
               flag = !keepEffects.contains(effectInstance.getPotion());
             } else {
@@ -89,12 +81,12 @@ public class EffectModule {
       DeathStorageCapability.getCapability(player).ifPresent(deathStorage -> {
         deathStorage.getEffects().forEach(player::addPotionEffect);
         deathStorage.clearEffects();
-      });
-      effects.forEach(effectInstance -> {
-        EffectInstance newEffect = new EffectInstance(effectInstance.getPotion(),
-            effectInstance.getDuration(), effectInstance.getAmplifier());
-        newEffect.setCurativeItems(effectInstance.getCurativeItems());
-        player.addPotionEffect(newEffect);
+        deathStorage.getSettings().effects.effects.forEach(effectInstance -> {
+          EffectInstance newEffect = new EffectInstance(effectInstance.getPotion(),
+              effectInstance.getDuration(), effectInstance.getAmplifier());
+          newEffect.setCurativeItems(effectInstance.getCurativeItems());
+          player.addPotionEffect(newEffect);
+        });
       });
     }
   }

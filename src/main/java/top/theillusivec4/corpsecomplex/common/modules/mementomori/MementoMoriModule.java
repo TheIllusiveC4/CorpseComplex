@@ -18,6 +18,7 @@ import net.minecraftforge.event.entity.player.PlayerXpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
 import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.modules.mementomori.MementoMoriEffect.AttributeInfo;
 import top.theillusivec4.corpsecomplex.common.registry.CorpseComplexRegistry;
@@ -92,37 +93,41 @@ public class MementoMoriModule {
 
   @SubscribeEvent
   public void eatingFood(final PlayerInteractEvent.RightClickItem evt) {
-
-    if (CorpseComplexConfig.SERVER.noFood.get() && evt.getPlayer()
-        .isPotionActive(CorpseComplexRegistry.MEMENTO_MORI)
-        && evt.getItemStack().getUseAction() == UseAction.EAT) {
-      evt.setCanceled(true);
-    }
+    DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(deathStorage -> {
+      if (deathStorage.getSettings().mementoMori.noFood && evt.getPlayer()
+          .isPotionActive(CorpseComplexRegistry.MEMENTO_MORI)
+          && evt.getItemStack().getUseAction() == UseAction.EAT) {
+        evt.setCanceled(true);
+      }
+    });
   }
 
   @SubscribeEvent
   public void eatingCake(final PlayerInteractEvent.RightClickBlock evt) {
-
-    if (CorpseComplexConfig.SERVER.noFood.get() && evt.getPlayer()
-        .isPotionActive(CorpseComplexRegistry.MEMENTO_MORI) && evt.getWorld()
-        .getBlockState(evt.getPos()).getBlock() instanceof CakeBlock) {
-      evt.setCanceled(true);
-    }
+    DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(deathStorage -> {
+      if (deathStorage.getSettings().mementoMori.noFood && evt.getPlayer()
+          .isPotionActive(CorpseComplexRegistry.MEMENTO_MORI) && evt.getWorld()
+          .getBlockState(evt.getPos()).getBlock() instanceof CakeBlock) {
+        evt.setCanceled(true);
+      }
+    });
   }
 
   @SubscribeEvent
   public void playerChangeXp(final PlayerXpEvent.XpChange evt) {
-    double percentXp = CorpseComplexConfig.SERVER.percentXp.get();
-    PlayerEntity playerEntity = evt.getPlayer();
-    EffectInstance effectInstance = playerEntity
-        .getActivePotionEffect(CorpseComplexRegistry.MEMENTO_MORI);
+    DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(deathStorage -> {
+      double percentXp = deathStorage.getSettings().mementoMori.percentXp;
+      PlayerEntity playerEntity = evt.getPlayer();
+      EffectInstance effectInstance = playerEntity
+          .getActivePotionEffect(CorpseComplexRegistry.MEMENTO_MORI);
 
-    if (percentXp != 0 && effectInstance != null) {
-      double modifier =
-          CorpseComplexConfig.SERVER.gradualRecovery.get() ? (((float) effectInstance.getDuration())
-              / CorpseComplexConfig.SERVER.duration.get()) : 1.0D;
-      percentXp *= modifier;
-      evt.setAmount(Math.max(1, (int) (evt.getAmount() * (1 + percentXp))));
-    }
+      if (percentXp != 0 && effectInstance != null) {
+        double modifier =
+            CorpseComplexConfig.gradualRecovery ? (((float) effectInstance.getDuration())
+                / CorpseComplexConfig.duration) : 1.0D;
+        percentXp *= modifier;
+        evt.setAmount(Math.max(1, (int) (evt.getAmount() * (1 + percentXp))));
+      }
+    });
   }
 }
