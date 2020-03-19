@@ -1,0 +1,4 @@
+[[overrides]]
+  mainhandKeepChance=1.0
+  mainhandDestroyChance=1.0
+  keepFood=true

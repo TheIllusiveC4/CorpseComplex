@@ -1,5 +1,8 @@
 package top.theillusivec4.corpsecomplex.common.config;
 
+import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.conversion.ObjectConverter;
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -101,6 +104,26 @@ public class CorpseComplexConfig {
 
   public static boolean restrictRespawning;
   public static List<? extends String> respawnItems;
+
+  public static final ForgeConfigSpec overridesSpec;
+  public static final Overrides OVERRIDES;
+
+  static {
+    final Pair<Overrides, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
+        .configure(Overrides::new);
+    overridesSpec = specPair.getRight();
+    OVERRIDES = specPair.getLeft();
+  }
+
+  public static class Overrides {
+
+    public OverridesConfig overrides;
+
+    public Overrides(ForgeConfigSpec.Builder builder) {
+      builder.comment("Overrides go here").define("overrides", new ArrayList<>());
+      builder.build();
+    }
+  }
 
   public static class Server {
 
@@ -347,8 +370,7 @@ public class CorpseComplexConfig {
 
       itemSettings = builder
           .comment("List of items to always keep, drop, or destroy, regardless of other settings",
-              "Format: modid:item;[keep/drop/destroy]")
-          .translation(CONFIG_PREFIX + "itemSettings")
+              "Format: modid:item;[keep/drop/destroy]").translation(CONFIG_PREFIX + "itemSettings")
           .defineList("itemSettings", new ArrayList<>(), s -> s instanceof String);
 
       builder.pop();
@@ -479,6 +501,10 @@ public class CorpseComplexConfig {
 
       builder.pop();
     }
+  }
+
+  public static void transform(CommentedConfig configData) {
+    OVERRIDES.overrides = new ObjectConverter().toObject(configData, OverridesConfig::new);
   }
 
   public static void bakeConfigs() {
