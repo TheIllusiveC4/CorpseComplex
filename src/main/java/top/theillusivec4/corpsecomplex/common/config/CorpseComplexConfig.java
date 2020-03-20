@@ -2,7 +2,6 @@ package top.theillusivec4.corpsecomplex.common.config;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -120,7 +119,10 @@ public class CorpseComplexConfig {
     public OverridesConfig overrides;
 
     public Overrides(ForgeConfigSpec.Builder builder) {
-      builder.comment("Overrides go here").define("overrides", new ArrayList<>());
+      builder.comment("List of overridden settings based on conditions")
+          .define("overrides", new ArrayList<>());
+      builder.comment("List of possible conditions for overrides")
+          .define("conditions", new ArrayList<>());
       builder.build();
     }
   }

@@ -7,8 +7,11 @@ import top.theillusivec4.corpsecomplex.common.util.Enums.XpDropMode;
 public class OverridesConfig {
 
   public List<OverrideConfig> overrides;
+  public List<ConditionConfig> conditions;
 
   public static class OverrideConfig {
+    public Integer priority = 0;
+
     public Double mainhandKeepChance;
     public Double mainhandDestroyChance;
     public Double mainhandKeepDurabilityLoss;
@@ -74,5 +77,15 @@ public class OverridesConfig {
 
     public Boolean restrictRespawning;
     public List<? extends String> respawnItems;
+
+    public List<? extends String> conditions;
+  }
+
+  public static class ConditionConfig {
+
+    public String identifier;
+    public String damageType;
+    public String immediateSource;
+    public String trueSource;
   }
 }
