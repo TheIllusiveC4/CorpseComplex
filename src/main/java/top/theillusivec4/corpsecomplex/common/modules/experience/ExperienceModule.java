@@ -1,4 +1,4 @@
-package top.theillusivec4.corpsecomplex.common.modules;
+package top.theillusivec4.corpsecomplex.common.modules.experience;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;

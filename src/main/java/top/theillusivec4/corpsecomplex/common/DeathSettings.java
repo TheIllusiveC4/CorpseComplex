@@ -11,6 +11,8 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
+import top.theillusivec4.corpsecomplex.common.modules.experience.ExperienceSettings;
+import top.theillusivec4.corpsecomplex.common.modules.hunger.HungerSettings;
 import top.theillusivec4.corpsecomplex.common.util.Enums.DropMode;
 import top.theillusivec4.corpsecomplex.common.util.Enums.InventorySection;
 import top.theillusivec4.corpsecomplex.common.util.Enums.PermissionMode;
@@ -20,15 +22,27 @@ public class DeathSettings {
 
   public static DeathSettings CONFIG_DEFAULT = new DeathSettings();
 
-  public Hunger hunger;
+  private HungerSettings hungerSettings;
   public Inventory inventory;
-  public Experience experience;
+  public ExperienceSettings experienceSettings;
   public MementoMori mementoMori;
   public Effects effects;
   public Miscellaneous miscellaneous;
 
+  public DeathSettings() {
+
+  }
+
+  public HungerSettings getHungerSettings() {
+    return this.hungerSettings;
+  }
+
+  public ExperienceSettings getExperienceSettings() {
+    return this.experienceSettings;
+  }
+
   public static void setConfigDefault() {
-    CONFIG_DEFAULT.hunger = new Hunger();
+    CONFIG_DEFAULT.hungerSettings = new HungerSettings();
     CONFIG_DEFAULT.inventory = new Inventory();
     CONFIG_DEFAULT.experience = new Experience();
     CONFIG_DEFAULT.mementoMori = new MementoMori();
@@ -117,23 +131,6 @@ public class DeathSettings {
     }
   }
 
-  public static class Hunger {
-
-    public boolean keepFood;
-    public boolean keepSaturation;
-    public boolean keepExhaustion;
-    public int minFood;
-    public int maxFood;
-
-    public Hunger() {
-      this.keepFood = CorpseComplexConfig.keepFood;
-      this.keepSaturation = CorpseComplexConfig.keepSaturation;
-      this.keepExhaustion = CorpseComplexConfig.keepExhaustion;
-      this.minFood = CorpseComplexConfig.minFood;
-      this.maxFood = CorpseComplexConfig.maxFood;
-    }
-  }
-
   public static class Effects {
 
     public List<ItemStack> cures = new ArrayList<>();
@@ -177,23 +174,6 @@ public class DeathSettings {
           }
         }
       });
-    }
-  }
-
-  public static class Experience {
-
-    public double lostXp;
-    public XpDropMode xpDropMode;
-    public double droppedXpPercent;
-    public int droppedXpPerLevel;
-    public int maxDroppedXp;
-
-    public Experience() {
-      this.lostXp = CorpseComplexConfig.lostXp;
-      this.xpDropMode = CorpseComplexConfig.xpDropMode;
-      this.droppedXpPercent = CorpseComplexConfig.droppedXpPercent;
-      this.droppedXpPerLevel = CorpseComplexConfig.droppedXpPerLevel;
-      this.maxDroppedXp = CorpseComplexConfig.maxDroppedXp;
     }
   }
 

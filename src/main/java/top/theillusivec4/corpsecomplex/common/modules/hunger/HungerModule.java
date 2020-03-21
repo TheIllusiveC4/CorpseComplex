@@ -1,4 +1,4 @@
-package top.theillusivec4.corpsecomplex.common.modules;
+package top.theillusivec4.corpsecomplex.common.modules.hunger;
 
 import java.lang.reflect.Field;
 import net.minecraft.util.FoodStats;
@@ -6,6 +6,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
+import top.theillusivec4.corpsecomplex.common.DeathSettings;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
 import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 
@@ -23,13 +24,14 @@ public class HungerModule {
       DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(deathStorage -> {
         FoodStats stats = evt.getPlayer().getFoodStats();
         FoodStats oldStats = evt.getOriginal().getFoodStats();
-        int minFood = deathStorage.getSettings().hunger.minFood;
-        int maxFood = deathStorage.getSettings().hunger.maxFood;
+        DeathSettings deathSettings = deathStorage.getSettings();
+        int minFood = deathSettings.hunger.minFood;
+        int maxFood = deathSettings.hunger.maxFood;
 
         if (maxFood < minFood) {
           CorpseComplex.LOGGER.error("Config error: minFood cannot be greater than maxFood!");
         } else {
-          int food = deathStorage.getSettings().hunger.keepFood ? oldStats.getFoodLevel() : 20;
+          int food = deathStorage.getSettings().getHungerSettings().keepFood ? oldStats.getFoodLevel() : 20;
           stats.setFoodLevel(Math.max(minFood, Math.min(maxFood, food)));
         }
 

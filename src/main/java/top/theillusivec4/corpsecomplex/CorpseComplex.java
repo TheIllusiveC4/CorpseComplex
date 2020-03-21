@@ -13,7 +13,6 @@ package top.theillusivec4.corpsecomplex;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
@@ -33,11 +32,13 @@ import top.theillusivec4.corpsecomplex.common.DeathSettings;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
 import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.modules.EffectModule;
-import top.theillusivec4.corpsecomplex.common.modules.ExperienceModule;
-import top.theillusivec4.corpsecomplex.common.modules.HungerModule;
+import top.theillusivec4.corpsecomplex.common.modules.experience.ExperienceModule;
+import top.theillusivec4.corpsecomplex.common.modules.hunger.HungerModule;
 import top.theillusivec4.corpsecomplex.common.modules.MiscModule;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryModule;
 import top.theillusivec4.corpsecomplex.common.modules.mementomori.MementoMoriModule;
+import top.theillusivec4.corpsecomplex.common.util.DeathConditionManager;
+import top.theillusivec4.corpsecomplex.common.util.DeathSettingsManager;
 
 @Mod(CorpseComplex.MODID)
 public class CorpseComplex {
@@ -86,30 +87,13 @@ public class CorpseComplex {
     });
   }
 
-  //  public void registerConfig(ModConfig.Type type, ForgeConfigSpec spec, String fileName) {
-  //    overrideConfig = new ModConfig(type, spec, ModLoadingContext.get().getActiveContainer(),
-  //        fileName);
-  //    ModLoadingContext.get().getActiveContainer().addConfig(overrideConfig);
-  //  }
-
   private void config(final ModConfigEvent evt) {
 
     if (evt.getConfig().getModId().equals(MODID)) {
-      ForgeConfigSpec spec = evt.getConfig().getSpec();
-
-      //      if (spec == CorpseComplexConfig.serverSpec) {
-      CorpseComplexConfig.bakeConfigs();
-      //      } else if (spec == CorpseComplexConfig.overridesSpec) {
-      //        final Path serverConfig = server.getActiveAnvilConverter()
-      //            .getFile(server.getFolderName(), "serverconfig").toPath();
-      //        final CommentedFileConfig configData = CommentedFileConfig
-      //            .builder(evt.getConfig().getFullPath()).sync().autosave()
-      //            .defaultResource("corpsecomplex-overrides.toml").writingMode(WritingMode.REPLACE).build();
-      //        configData.load();
-      //        spec.setConfig(configData);
-      //      }
-      CorpseComplexConfig.transform(evt.getConfig().getConfigData());
+      CorpseComplexConfig.bakeConfigs(evt.getConfig().getConfigData());
       DeathSettings.setConfigDefault();
+      DeathConditionManager.importConfig();
+      DeathSettingsManager.importConfig();
     }
   }
 }
