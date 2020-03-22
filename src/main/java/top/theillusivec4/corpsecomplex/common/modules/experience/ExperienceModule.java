@@ -17,7 +17,7 @@ public class ExperienceModule {
     if (evt.getEntityLiving() instanceof PlayerEntity) {
       PlayerEntity player = (PlayerEntity) evt.getEntityLiving();
       DeathStorageCapability.getCapability(player).ifPresent(deathStorage -> {
-        double lose = deathStorage.getSettings().experience.lostXp;
+        double lose = deathStorage.getSettings().getExperienceSettings().getLostXp();
 
         if (lose <= 0.0D) {
           evt.setCanceled(true);
@@ -64,10 +64,12 @@ public class ExperienceModule {
 
   private static int getExperiencePoints(PlayerEntity player, int lostXp,
       IDeathStorage deathStorage) {
+
     if (!player.isSpectator()) {
       int i;
+      ExperienceSetting setting = deathStorage.getSettings().getExperienceSettings();
 
-      if (deathStorage.getSettings().experience.xpDropMode == XpDropMode.PER_LEVEL) {
+      if (setting.getXpDropMode() == XpDropMode.PER_LEVEL) {
         int newTotal = player.experienceTotal - lostXp;
         int lostLevels;
 
@@ -80,11 +82,11 @@ public class ExperienceModule {
         } else {
           lostLevels = (int) (player.experienceLevel - (-3 + Math.sqrt(newTotal + 9)));
         }
-        i = lostLevels * deathStorage.getSettings().experience.droppedXpPerLevel;
+        i = lostLevels * setting.getDroppedXpPerLevel();
       } else {
-        i = (int) (lostXp * deathStorage.getSettings().experience.droppedXpPercent);
+        i = (int) (lostXp * setting.getDroppedXpPercent());
       }
-      return Math.min(i, deathStorage.getSettings().experience.maxDroppedXp);
+      return Math.min(i, setting.getMaxDroppedXp());
     } else {
       return 0;
     }

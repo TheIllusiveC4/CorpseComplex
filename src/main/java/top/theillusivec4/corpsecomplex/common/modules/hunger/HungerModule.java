@@ -6,9 +6,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
-import top.theillusivec4.corpsecomplex.common.DeathSettings;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
-import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 
 public class HungerModule {
 
@@ -24,18 +22,18 @@ public class HungerModule {
       DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(deathStorage -> {
         FoodStats stats = evt.getPlayer().getFoodStats();
         FoodStats oldStats = evt.getOriginal().getFoodStats();
-        DeathSettings deathSettings = deathStorage.getSettings();
-        int minFood = deathSettings.hunger.minFood;
-        int maxFood = deathSettings.hunger.maxFood;
+        HungerSetting setting = deathStorage.getSettings().getHungerSettings();
+        int minFood = setting.getMinFood();
+        int maxFood = setting.getMaxFood();
 
         if (maxFood < minFood) {
           CorpseComplex.LOGGER.error("Config error: minFood cannot be greater than maxFood!");
         } else {
-          int food = deathStorage.getSettings().getHungerSettings().keepFood ? oldStats.getFoodLevel() : 20;
+          int food = setting.isKeepFood() ? oldStats.getFoodLevel() : 20;
           stats.setFoodLevel(Math.max(minFood, Math.min(maxFood, food)));
         }
 
-        if (deathStorage.getSettings().hunger.keepSaturation) {
+        if (setting.isKeepSaturation()) {
           try {
             SATURATION_LEVEL.setFloat(stats, oldStats.getSaturationLevel());
           } catch (IllegalAccessException e) {
@@ -43,7 +41,7 @@ public class HungerModule {
           }
         }
 
-        if (deathStorage.getSettings().hunger.keepExhaustion) {
+        if (setting.isKeepExhaustion()) {
           try {
             float exhaustion = EXHAUSTION_LEVEL.getFloat(oldStats);
             EXHAUSTION_LEVEL.setFloat(stats, exhaustion);

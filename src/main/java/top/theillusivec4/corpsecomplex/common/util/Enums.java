@@ -17,4 +17,8 @@ public class Enums {
   public enum InventorySection {
     MAINHAND, HOTBAR, OFFHAND, MAIN, HEAD, CHEST, LEGS, FEET
   }
+
+  public enum ModuleType {
+    HUNGER, EXPERIENCE, INVENTORY, MISCELLANEOUS, MEMENTO_MORI, EFFECTS
+  }
 }

@@ -7,11 +7,11 @@ import net.minecraft.entity.EntityType;
 public class DeathCondition {
 
   @Nullable
-  public String damageType;
+  private final String damageType;
   @Nullable
-  public EntityType<?> immediateSource;
+  private final EntityType<?> immediateSource;
   @Nullable
-  public EntityType<?> trueSource;
+  private final EntityType<?> trueSource;
 
   private DeathCondition(Builder builder) {
     this.damageType = builder.damageType;

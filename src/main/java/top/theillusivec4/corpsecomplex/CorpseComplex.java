@@ -31,14 +31,14 @@ import top.theillusivec4.corpsecomplex.common.CommonEventHandler;
 import top.theillusivec4.corpsecomplex.common.DeathSettings;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
 import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
-import top.theillusivec4.corpsecomplex.common.modules.EffectModule;
+import top.theillusivec4.corpsecomplex.common.modules.effects.EffectsModule;
 import top.theillusivec4.corpsecomplex.common.modules.experience.ExperienceModule;
 import top.theillusivec4.corpsecomplex.common.modules.hunger.HungerModule;
 import top.theillusivec4.corpsecomplex.common.modules.MiscModule;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryModule;
 import top.theillusivec4.corpsecomplex.common.modules.mementomori.MementoMoriModule;
 import top.theillusivec4.corpsecomplex.common.util.DeathConditionManager;
-import top.theillusivec4.corpsecomplex.common.util.DeathSettingsManager;
+import top.theillusivec4.corpsecomplex.common.util.DeathOverrideManager;
 
 @Mod(CorpseComplex.MODID)
 public class CorpseComplex {
@@ -68,7 +68,7 @@ public class CorpseComplex {
     MinecraftForge.EVENT_BUS.register(new InventoryModule());
     MinecraftForge.EVENT_BUS.register(new ExperienceModule());
     MinecraftForge.EVENT_BUS.register(new HungerModule());
-    MinecraftForge.EVENT_BUS.register(new EffectModule());
+    MinecraftForge.EVENT_BUS.register(new EffectsModule());
     MinecraftForge.EVENT_BUS.register(new MementoMoriModule());
     MinecraftForge.EVENT_BUS.register(new MiscModule());
     MinecraftForge.EVENT_BUS.register(new CommonEventHandler());
@@ -93,7 +93,7 @@ public class CorpseComplex {
       CorpseComplexConfig.bakeConfigs(evt.getConfig().getConfigData());
       DeathSettings.setConfigDefault();
       DeathConditionManager.importConfig();
-      DeathSettingsManager.importConfig();
+      DeathOverrideManager.importConfig();
     }
   }
 }

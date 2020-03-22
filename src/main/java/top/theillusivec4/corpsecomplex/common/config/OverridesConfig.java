@@ -10,7 +10,7 @@ public class OverridesConfig {
   public List<ConditionConfig> conditions;
 
   public static class OverrideConfig {
-    public Integer priority = 0;
+    public Integer priority;
 
     public Double mainhandKeepChance;
     public Double mainhandDestroyChance;

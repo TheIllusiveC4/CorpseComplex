@@ -24,6 +24,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
 import top.theillusivec4.corpsecomplex.common.DeathSettings;
+import top.theillusivec4.corpsecomplex.common.util.DeathSettingManager;
 
 public class DeathStorageCapability {
 
@@ -105,8 +106,9 @@ public class DeathStorageCapability {
 
     private final Map<String, INBT> storage = new HashMap<>();
     private final List<EffectInstance> effects = new ArrayList<>();
-    private final DeathSettings deathSettings = DeathSettings.CONFIG_DEFAULT;
     private final PlayerEntity player;
+
+    private DeathSettings deathSettings;
 
     public DeathStorage() {
       this(null);
@@ -123,13 +125,11 @@ public class DeathStorageCapability {
     }
 
     @Override
-    public void setSettings(DeathSettings settings) {
-
-    }
-
-    @Override
     public DeathSettings getSettings() {
-      return this.deathSettings;
+      if (deathSettings == null) {
+        deathSettings = DeathSettingManager.buildSettings(this.player);
+      }
+      return deathSettings;
     }
 
     @Override
