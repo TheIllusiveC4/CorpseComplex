@@ -14,6 +14,8 @@ import c4.corpsecomplex.CorpseComplex;
 import c4.corpsecomplex.common.modules.compatibility.enderio.EnderIOIntegration;
 import c4.corpsecomplex.common.modules.inventory.InventoryModule;
 import c4.corpsecomplex.common.modules.inventory.enchantment.EnchantmentModule;
+import java.util.Map;
+import java.util.Random;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,10 +24,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
-import java.util.Map;
-import java.util.Random;
-import net.minecraftforge.fml.common.Loader;
-
 public final class DeathStackHelper {
 
   private static Random generator = new Random();
@@ -33,21 +31,19 @@ public final class DeathStackHelper {
   private DeathStackHelper() {
   }
 
-  public static ItemStack stackToStore(EntityPlayer player, ItemStack stack,
-          boolean cfgStore) {
+  public static ItemStack stackToStore(EntityPlayer player, ItemStack stack, boolean cfgStore) {
     return stackToStore(player, stack, cfgStore, false);
   }
 
-  public static ItemStack stackToStore(EntityPlayer player, ItemStack stack,
-          boolean cfgStore, boolean isMainInventory) {
+  public static ItemStack stackToStore(EntityPlayer player, ItemStack stack, boolean cfgStore,
+      boolean isMainInventory) {
 
     boolean essential = isEssential(stack);
     boolean cursed = !essential && isCursed(stack);
     boolean store = ((cfgStore && !cursed) || essential);
 
     if (EnchantmentModule.registerEnchant) {
-      int level = EnchantmentHelper.getEnchantmentLevel(
-              EnchantmentModule.soulbound, stack);
+      int level = EnchantmentHelper.getEnchantmentLevel(EnchantmentModule.soulbound, stack);
       if (level != 0) {
         essential = handleSoulbound(stack, level);
         cursed = !essential && cursed;
@@ -75,8 +71,8 @@ public final class DeathStackHelper {
     }
 
     if (store) {
-      if (!essential && InventoryModule.randomDrop > 0 &&
-              (isMainInventory || !InventoryModule.randomDropOnlyMain)) {
+      if (!essential && InventoryModule.randomDrop > 0 && (isMainInventory
+          || !InventoryModule.randomDropOnlyMain)) {
         int keepAmount = stack.getCount();
         keepAmount -= randomlyDrop(stack);
         return stack.splitStack(keepAmount);
@@ -119,22 +115,23 @@ public final class DeathStackHelper {
     stack.shrink(destroyAmount);
   }
 
-  public static void loseDurability(EntityPlayer player, ItemStack stack,
-          boolean store) {
+  public static void loseDurability(EntityPlayer player, ItemStack stack, boolean store) {
 
     if (!stack.isItemStackDamageable()) {
       return;
     }
+    int limit =
+        InventoryModule.durabilityLossLimiter ? stack.getMaxDamage() - stack.getItemDamage() - 1
+            : stack.getMaxDamage();
+    int loss;
 
     if (store) {
-      stack.damageItem(
-              (int) Math.round(stack.getMaxDamage() * InventoryModule.keptLoss),
-              player);
+      loss = (int) Math.round(stack.getMaxDamage() * InventoryModule.keptLoss);
+      stack.damageItem(Math.min(loss, limit), player);
     } else {
-      stack.damageItem(
-              (int) Math.round(stack.getMaxDamage() * InventoryModule.dropLoss),
-              player);
+      loss = (int) Math.round(stack.getMaxDamage() * InventoryModule.dropLoss);
     }
+    stack.damageItem(Math.min(loss, limit), player);
   }
 
   public static void loseEnergy(ItemStack stack, boolean store) {
@@ -148,19 +145,17 @@ public final class DeathStackHelper {
     int energyToLose;
 
     if (store) {
-      energyToLose = (int) Math.round(
-              energy.getMaxEnergyStored() * InventoryModule.keptDrain);
+      energyToLose = (int) Math.round(energy.getMaxEnergyStored() * InventoryModule.keptDrain);
     } else {
-      energyToLose = (int) Math.round(
-              energy.getMaxEnergyStored() * InventoryModule.dropDrain);
+      energyToLose = (int) Math.round(energy.getMaxEnergyStored() * InventoryModule.dropDrain);
     }
 
     boolean hasUpgrade = CorpseComplex.isEnderIOLoaded && EnderIOIntegration.hasPowerUpgrade(stack);
 
     while (energyToLose > 0 && energy.getEnergyStored() > 0) {
-      int energyExtracted = hasUpgrade ?
-          EnderIOIntegration.extractEnergy(stack, energyToLose, false) :
-          energy.extractEnergy(energyToLose, false);
+      int energyExtracted =
+          hasUpgrade ? EnderIOIntegration.extractEnergy(stack, energyToLose, false)
+              : energy.extractEnergy(energyToLose, false);
 
       if (energyExtracted == 0) {
         break;
@@ -211,8 +206,7 @@ public final class DeathStackHelper {
 
   public static boolean handleSoulbound(ItemStack stack, int level) {
 
-    double savePercent = EnchantmentModule.baseSave +
-            EnchantmentModule.extraPerLevel * (level - 1);
+    double savePercent = EnchantmentModule.baseSave + EnchantmentModule.extraPerLevel * (level - 1);
     boolean activated = false;
 
     if (generator.nextDouble() < savePercent) {
@@ -224,8 +218,7 @@ public final class DeathStackHelper {
         level = Math.max(0, level - 1);
       }
 
-      Map<Enchantment, Integer> enchMap = EnchantmentHelper.getEnchantments(
-              stack);
+      Map<Enchantment, Integer> enchMap = EnchantmentHelper.getEnchantments(stack);
       enchMap.remove(EnchantmentModule.soulbound);
 
       if (level > 0) {
