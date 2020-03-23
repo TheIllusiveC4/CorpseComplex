@@ -19,7 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class ToolbeltHandler extends DeathStackHandler {
 
-  private static final String MOD_ID = "baubles";
+  private static final String MOD_ID = "toolbelt";
   private ExtensionSlotBelt beltSlot;
 
   public ToolbeltHandler(EntityPlayer player) {
