@@ -3,14 +3,20 @@ package top.theillusivec4.corpsecomplex.common.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.stream.Collectors;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
 import top.theillusivec4.corpsecomplex.common.DeathCondition;
 import top.theillusivec4.corpsecomplex.common.DeathOverride;
 import top.theillusivec4.corpsecomplex.common.DeathSettings;
+import top.theillusivec4.corpsecomplex.common.config.ConfigParser;
 import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
+import top.theillusivec4.corpsecomplex.common.modules.effects.EffectsOverride;
 import top.theillusivec4.corpsecomplex.common.modules.experience.ExperienceOverride;
 import top.theillusivec4.corpsecomplex.common.modules.hunger.HungerOverride;
+import top.theillusivec4.corpsecomplex.common.modules.mementomori.MementoMoriOverride;
+import top.theillusivec4.corpsecomplex.common.modules.miscellaneous.MiscellaneousOverride;
 
 public class DeathOverrideManager {
 
@@ -48,8 +54,26 @@ public class DeathOverrideManager {
           .keepSaturation(override.keepSaturation).keepExhaustion(override.keepExhaustion)
           .minFood(override.minFood).maxFood(override.maxFood).build();
 
+      List<ItemStack> cures = ConfigParser.parseItems(override.cures).keySet().stream()
+          .map(ItemStack::new).collect(Collectors.toList());
+      EffectsOverride effects = new EffectsOverride.Builder().cures(cures)
+          .effects(ConfigParser.parseEffectInstances(override.effects, cures))
+          .keepEffectsMode(override.keepEffectsMode)
+          .keepEffects(ConfigParser.parseEffects(override.keepEffects)).build();
+
+      List<ItemStack> mementoCures = ConfigParser.parseItems(override.mementoCures).keySet()
+          .stream().map(ItemStack::new).collect(Collectors.toList());
+      MementoMoriOverride mementoMori = new MementoMoriOverride.Builder().mementoCures(mementoCures)
+          .noFood(override.noFood).percentXp(override.percentXp).build();
+
+      List<ItemStack> respawnItems = ConfigParser.parseItems(override.respawnItems).keySet()
+          .stream().map(ItemStack::new).collect(Collectors.toList());
+      MiscellaneousOverride misc = new MiscellaneousOverride.Builder().respawnItems(respawnItems)
+          .restrictRespawning(override.restrictRespawning).build();
+
       OVERRIDES.add((new DeathOverride.Builder().priority(override.priority).conditions(conditions)
-          .experience(experience).hunger(hunger)).build());
+          .experience(experience).hunger(hunger).effects(effects).mementoMori(mementoMori)
+          .miscellaneous(misc)).build());
     });
   }
 

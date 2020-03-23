@@ -15,6 +15,8 @@ import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.modules.effects.EffectsSetting;
 import top.theillusivec4.corpsecomplex.common.modules.experience.ExperienceSetting;
 import top.theillusivec4.corpsecomplex.common.modules.hunger.HungerSetting;
+import top.theillusivec4.corpsecomplex.common.modules.mementomori.MementoMoriSetting;
+import top.theillusivec4.corpsecomplex.common.modules.miscellaneous.MiscellaneousSetting;
 import top.theillusivec4.corpsecomplex.common.util.Enums.DropMode;
 import top.theillusivec4.corpsecomplex.common.util.Enums.InventorySection;
 import top.theillusivec4.corpsecomplex.common.util.Enums.ModuleType;
@@ -28,6 +30,8 @@ public class DeathSettings {
     modules.put(ModuleType.HUNGER, new HungerSetting());
     modules.put(ModuleType.EXPERIENCE, new ExperienceSetting());
     modules.put(ModuleType.EFFECTS, new EffectsSetting());
+    modules.put(ModuleType.MEMENTO_MORI, new MementoMoriSetting());
+    modules.put(ModuleType.MISCELLANEOUS, new MiscellaneousSetting());
     modules.values().forEach(Setting::importConfig);
   }
 
@@ -41,6 +45,14 @@ public class DeathSettings {
 
   public HungerSetting getHungerSettings() {
     return (HungerSetting) this.modules.get(ModuleType.HUNGER);
+  }
+
+  public MementoMoriSetting getMementoMoriSettings() {
+    return (MementoMoriSetting) this.modules.get(ModuleType.MEMENTO_MORI);
+  }
+
+  public MiscellaneousSetting getMiscellaneousSettings() {
+    return (MiscellaneousSetting) this.modules.get(ModuleType.MISCELLANEOUS);
   }
 
   public static class Inventory {
@@ -121,35 +133,6 @@ public class DeathSettings {
         this.keepDurabilityLoss = keepDurabilityLoss;
         this.dropDurabilityLoss = dropDurabilityLoss;
       }
-    }
-  }
-
-  public static class MementoMori {
-
-    public List<Item> mementoCures = new ArrayList<>();
-    public boolean noFood;
-    public double percentXp;
-
-    public MementoMori() {
-      CorpseComplexConfig.mementoCures.forEach(string -> {
-        Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(string));
-
-        if (item != null) {
-          this.mementoCures.add(item);
-        }
-      });
-      this.noFood = CorpseComplexConfig.noFood;
-      this.percentXp = CorpseComplexConfig.percentXp;
-    }
-  }
-
-  public static class Miscellaneous {
-
-    public boolean restrictRespawning;
-    public Map<Item, Integer> respawnItems = new HashMap<>();
-
-    public Miscellaneous() {
-
     }
   }
 }

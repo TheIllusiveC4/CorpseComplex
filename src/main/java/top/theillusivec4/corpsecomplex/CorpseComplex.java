@@ -34,7 +34,7 @@ import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.modules.effects.EffectsModule;
 import top.theillusivec4.corpsecomplex.common.modules.experience.ExperienceModule;
 import top.theillusivec4.corpsecomplex.common.modules.hunger.HungerModule;
-import top.theillusivec4.corpsecomplex.common.modules.MiscModule;
+import top.theillusivec4.corpsecomplex.common.modules.miscellaneous.MiscellaneousModule;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryModule;
 import top.theillusivec4.corpsecomplex.common.modules.mementomori.MementoMoriModule;
 import top.theillusivec4.corpsecomplex.common.util.DeathConditionManager;
@@ -70,7 +70,7 @@ public class CorpseComplex {
     MinecraftForge.EVENT_BUS.register(new HungerModule());
     MinecraftForge.EVENT_BUS.register(new EffectsModule());
     MinecraftForge.EVENT_BUS.register(new MementoMoriModule());
-    MinecraftForge.EVENT_BUS.register(new MiscModule());
+    MinecraftForge.EVENT_BUS.register(new MiscellaneousModule());
     MinecraftForge.EVENT_BUS.register(new CommonEventHandler());
   }
 

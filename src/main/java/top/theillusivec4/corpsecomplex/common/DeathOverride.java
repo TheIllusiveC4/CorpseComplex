@@ -3,9 +3,11 @@ package top.theillusivec4.corpsecomplex.common;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
+import top.theillusivec4.corpsecomplex.common.modules.effects.EffectsOverride;
 import top.theillusivec4.corpsecomplex.common.modules.experience.ExperienceOverride;
 import top.theillusivec4.corpsecomplex.common.modules.hunger.HungerOverride;
-import top.theillusivec4.corpsecomplex.common.util.Enums.PermissionMode;
+import top.theillusivec4.corpsecomplex.common.modules.mementomori.MementoMoriOverride;
+import top.theillusivec4.corpsecomplex.common.modules.miscellaneous.MiscellaneousOverride;
 
 public class DeathOverride {
 
@@ -14,6 +16,9 @@ public class DeathOverride {
 
   private final ExperienceOverride experience;
   private final HungerOverride hunger;
+  private final EffectsOverride effects;
+  private final MementoMoriOverride mementoMori;
+  private final MiscellaneousOverride miscellaneous;
 
   @Nullable
   private Double mainhandKeepChance;
@@ -90,34 +95,15 @@ public class DeathOverride {
   @Nullable
   private List<? extends String> itemSettings;
 
-  @Nullable
-  private List<? extends String> cures;
-  @Nullable
-  private List<? extends String> effects;
-  @Nullable
-  private PermissionMode keepEffectsMode;
-  @Nullable
-  private List<? extends String> keepEffects;
-
-
-  @Nullable
-  private List<? extends String> mementoCures;
-  @Nullable
-  private Boolean noFood;
-  @Nullable
-  private Double percentXp;
-
-  @Nullable
-  private Boolean restrictRespawning;
-  @Nullable
-  private List<? extends String> respawnItems;
-
   private DeathOverride(Builder builder) {
     this.priority = builder.priority;
     this.conditions = builder.conditions;
 
     this.experience = builder.experience;
     this.hunger = builder.hunger;
+    this.effects = builder.effects;
+    this.miscellaneous = builder.miscellaneous;
+    this.mementoMori = builder.mementoMori;
   }
 
   public int getPriority() {
@@ -136,9 +122,24 @@ public class DeathOverride {
     return this.hunger;
   }
 
+  public EffectsOverride getEffectsOverride() {
+    return this.effects;
+  }
+
+  public MementoMoriOverride getMementoMoriOverride() {
+    return this.mementoMori;
+  }
+
+  public MiscellaneousOverride getMiscellaneousOverride() {
+    return this.miscellaneous;
+  }
+
   public void apply(DeathSettings settings) {
     settings.getExperienceSettings().applyOverride(this.getExperienceOverride());
     settings.getHungerSettings().applyOverride(this.getHungerOverride());
+    settings.getEffectsSettings().applyOverride(this.getEffectsOverride());
+    settings.getMementoMoriSettings().applyOverride(this.getMementoMoriOverride());
+    settings.getMiscellaneousSettings().applyOverride(this.getMiscellaneousOverride());
   }
 
   public static class Builder {
@@ -148,6 +149,9 @@ public class DeathOverride {
 
     private ExperienceOverride experience;
     private HungerOverride hunger;
+    private EffectsOverride effects;
+    private MementoMoriOverride mementoMori;
+    private MiscellaneousOverride miscellaneous;
 
     public Builder priority(Integer priority) {
       this.priority = priority;
@@ -166,6 +170,21 @@ public class DeathOverride {
 
     public Builder hunger(HungerOverride hunger) {
       this.hunger = hunger;
+      return this;
+    }
+
+    public Builder effects(EffectsOverride effects) {
+      this.effects = effects;
+      return this;
+    }
+
+    public Builder mementoMori(MementoMoriOverride mementoMori) {
+      this.mementoMori = mementoMori;
+      return this;
+    }
+
+    public Builder miscellaneous(MiscellaneousOverride misc) {
+      this.miscellaneous = misc;
       return this;
     }
 
