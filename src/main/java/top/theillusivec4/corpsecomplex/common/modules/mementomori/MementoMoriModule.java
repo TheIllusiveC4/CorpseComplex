@@ -94,8 +94,8 @@ public class MementoMoriModule {
   @SubscribeEvent
   public void eatingFood(final PlayerInteractEvent.RightClickItem evt) {
     DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(deathStorage -> {
-      if (deathStorage.getSettings().getMementoMoriSettings().isNoFood() && evt.getPlayer()
-          .isPotionActive(CorpseComplexRegistry.MEMENTO_MORI)
+      if (evt.getPlayer().isPotionActive(CorpseComplexRegistry.MEMENTO_MORI) && deathStorage
+          .getSettings().getMementoMoriSettings().isNoFood()
           && evt.getItemStack().getUseAction() == UseAction.EAT) {
         evt.setCanceled(true);
       }
@@ -105,8 +105,8 @@ public class MementoMoriModule {
   @SubscribeEvent
   public void eatingCake(final PlayerInteractEvent.RightClickBlock evt) {
     DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(deathStorage -> {
-      if (deathStorage.getSettings().getMementoMoriSettings().isNoFood() && evt.getPlayer()
-          .isPotionActive(CorpseComplexRegistry.MEMENTO_MORI) && evt.getWorld()
+      if (evt.getPlayer().isPotionActive(CorpseComplexRegistry.MEMENTO_MORI) && deathStorage
+          .getSettings().getMementoMoriSettings().isNoFood() && evt.getWorld()
           .getBlockState(evt.getPos()).getBlock() instanceof CakeBlock) {
         evt.setCanceled(true);
       }
@@ -116,17 +116,20 @@ public class MementoMoriModule {
   @SubscribeEvent
   public void playerChangeXp(final PlayerXpEvent.XpChange evt) {
     DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(deathStorage -> {
-      double percentXp = deathStorage.getSettings().getMementoMoriSettings().getPercentXp();
       PlayerEntity playerEntity = evt.getPlayer();
       EffectInstance effectInstance = playerEntity
           .getActivePotionEffect(CorpseComplexRegistry.MEMENTO_MORI);
 
-      if (percentXp != 0 && effectInstance != null) {
-        double modifier =
-            CorpseComplexConfig.gradualRecovery ? (((float) effectInstance.getDuration())
-                / CorpseComplexConfig.duration) : 1.0D;
-        percentXp *= modifier;
-        evt.setAmount(Math.max(1, (int) (evt.getAmount() * (1 + percentXp))));
+      if (effectInstance != null) {
+        double percentXp = deathStorage.getSettings().getMementoMoriSettings().getPercentXp();
+
+        if (percentXp != 0) {
+          double modifier =
+              CorpseComplexConfig.gradualRecovery ? (((float) effectInstance.getDuration())
+                  / CorpseComplexConfig.duration) : 1.0D;
+          percentXp *= modifier;
+          evt.setAmount(Math.max(1, (int) (evt.getAmount() * (1 + percentXp))));
+        }
       }
     });
   }
