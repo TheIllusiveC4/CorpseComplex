@@ -52,12 +52,12 @@ public class OverridesConfig {
     public Double feetKeepDurabilityLoss;
     public Double feetDropDurabilityLoss;
 
-    public List<? extends String> itemSettings;
+    public List<String> itemSettings;
 
-    public List<? extends String> cures;
-    public List<? extends String> effects;
+    public List<String> cures;
+    public List<String> effects;
     public PermissionMode keepEffectsMode;
-    public List<? extends String> keepEffects;
+    public List<String> keepEffects;
 
     public Boolean keepFood;
     public Boolean keepSaturation;
@@ -71,14 +71,14 @@ public class OverridesConfig {
     public Integer droppedXpPerLevel;
     public Integer maxDroppedXp;
 
-    public List<? extends String> mementoCures;
+    public List<String> mementoCures;
     public Boolean noFood;
     public Double percentXp;
 
     public Boolean restrictRespawning;
-    public List<? extends String> respawnItems;
+    public List<String> respawnItems;
 
-    public List<? extends String> conditions;
+    public List<String> conditions;
   }
 
   public static class ConditionConfig {

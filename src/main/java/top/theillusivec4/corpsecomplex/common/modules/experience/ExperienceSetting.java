@@ -1,6 +1,6 @@
 package top.theillusivec4.corpsecomplex.common.modules.experience;
 
-import top.theillusivec4.corpsecomplex.common.Setting;
+import top.theillusivec4.corpsecomplex.common.modules.Setting;
 import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.util.Enums.XpDropMode;
 

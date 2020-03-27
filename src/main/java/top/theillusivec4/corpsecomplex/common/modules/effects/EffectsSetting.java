@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
-import top.theillusivec4.corpsecomplex.common.Setting;
+import top.theillusivec4.corpsecomplex.common.modules.Setting;
 import top.theillusivec4.corpsecomplex.common.config.ConfigParser;
 import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.util.Enums.PermissionMode;

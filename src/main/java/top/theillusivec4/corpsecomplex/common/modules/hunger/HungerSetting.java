@@ -1,7 +1,6 @@
 package top.theillusivec4.corpsecomplex.common.modules.hunger;
 
-import top.theillusivec4.corpsecomplex.common.DeathOverride;
-import top.theillusivec4.corpsecomplex.common.Setting;
+import top.theillusivec4.corpsecomplex.common.modules.Setting;
 import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 
 public class HungerSetting implements Setting<HungerOverride> {

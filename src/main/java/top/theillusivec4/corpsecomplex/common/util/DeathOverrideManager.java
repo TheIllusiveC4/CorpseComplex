@@ -1,22 +1,31 @@
 package top.theillusivec4.corpsecomplex.common.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.stream.Collectors;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
 import top.theillusivec4.corpsecomplex.common.DeathCondition;
 import top.theillusivec4.corpsecomplex.common.DeathOverride;
 import top.theillusivec4.corpsecomplex.common.DeathSettings;
+import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability.IDeathStorage;
 import top.theillusivec4.corpsecomplex.common.config.ConfigParser;
 import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.modules.effects.EffectsOverride;
 import top.theillusivec4.corpsecomplex.common.modules.experience.ExperienceOverride;
 import top.theillusivec4.corpsecomplex.common.modules.hunger.HungerOverride;
+import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryOverride;
+import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryOverride.SectionSettings;
 import top.theillusivec4.corpsecomplex.common.modules.mementomori.MementoMoriOverride;
 import top.theillusivec4.corpsecomplex.common.modules.miscellaneous.MiscellaneousOverride;
+import top.theillusivec4.corpsecomplex.common.util.Enums.DropMode;
+import top.theillusivec4.corpsecomplex.common.util.Enums.InventorySection;
 
 public class DeathOverrideManager {
 
@@ -54,33 +63,70 @@ public class DeathOverrideManager {
           .keepSaturation(override.keepSaturation).keepExhaustion(override.keepExhaustion)
           .minFood(override.minFood).maxFood(override.maxFood).build();
 
-      List<ItemStack> cures = ConfigParser.parseItems(override.cures).keySet().stream()
-          .map(ItemStack::new).collect(Collectors.toList());
-      EffectsOverride effects = new EffectsOverride.Builder().cures(cures)
-          .effects(ConfigParser.parseEffectInstances(override.effects, cures))
-          .keepEffectsMode(override.keepEffectsMode)
-          .keepEffects(ConfigParser.parseEffects(override.keepEffects)).build();
-
-      List<ItemStack> mementoCures = ConfigParser.parseItems(override.mementoCures).keySet()
+      List<ItemStack> cures = ConfigParser
+          .parseItems(override.cures != null ? override.cures : CorpseComplexConfig.cures).keySet()
           .stream().map(ItemStack::new).collect(Collectors.toList());
+      List<EffectInstance> effectsConfig =
+          override.effects != null ? ConfigParser.parseEffectInstances(override.effects, cures)
+              : null;
+      List<Effect> keepEffectsConfig =
+          override.keepEffects != null ? ConfigParser.parseEffects(override.keepEffects) : null;
+      EffectsOverride effects = new EffectsOverride.Builder().cures(cures).effects(effectsConfig)
+          .keepEffectsMode(override.keepEffectsMode).keepEffects(keepEffectsConfig).build();
+
+      List<ItemStack> mementoCures =
+          override.mementoCures != null ? ConfigParser.parseItems(override.mementoCures).keySet()
+              .stream().map(ItemStack::new).collect(Collectors.toList()) : null;
       MementoMoriOverride mementoMori = new MementoMoriOverride.Builder().mementoCures(mementoCures)
           .noFood(override.noFood).percentXp(override.percentXp).build();
 
-      List<ItemStack> respawnItems = ConfigParser.parseItems(override.respawnItems).keySet()
-          .stream().map(ItemStack::new).collect(Collectors.toList());
+      List<ItemStack> respawnItems =
+          override.respawnItems != null ? ConfigParser.parseItems(override.respawnItems).keySet()
+              .stream().map(ItemStack::new).collect(Collectors.toList()) : null;
       MiscellaneousOverride misc = new MiscellaneousOverride.Builder().respawnItems(respawnItems)
           .restrictRespawning(override.restrictRespawning).build();
 
-      OVERRIDES.add((new DeathOverride.Builder().priority(override.priority).conditions(conditions)
-          .experience(experience).hunger(hunger).effects(effects).mementoMori(mementoMori)
-          .miscellaneous(misc)).build());
+      Map<InventorySection, SectionSettings> inventorySettings = new HashMap<>();
+      inventorySettings.put(InventorySection.MAINHAND,
+          new SectionSettings(override.mainhandKeepChance, override.mainhandDestroyChance,
+              override.mainhandKeepDurabilityLoss, override.mainhandDropDurabilityLoss));
+      inventorySettings.put(InventorySection.OFFHAND,
+          new SectionSettings(override.offhandKeepChance, override.offhandDestroyChance,
+              override.offhandKeepDurabilityLoss, override.offhandDropDurabilityLoss));
+      inventorySettings.put(InventorySection.HOTBAR,
+          new SectionSettings(override.hotbarKeepChance, override.hotbarDestroyChance,
+              override.hotbarKeepDurabilityLoss, override.hotbarDropDurabilityLoss));
+      inventorySettings.put(InventorySection.MAIN,
+          new SectionSettings(override.mainKeepChance, override.mainDestroyChance,
+              override.mainKeepDurabilityLoss, override.mainDropDurabilityLoss));
+      inventorySettings.put(InventorySection.HEAD,
+          new SectionSettings(override.headKeepChance, override.headDestroyChance,
+              override.headKeepDurabilityLoss, override.headDropDurabilityLoss));
+      inventorySettings.put(InventorySection.CHEST,
+          new SectionSettings(override.chestKeepChance, override.chestDestroyChance,
+              override.chestKeepDurabilityLoss, override.chestDropDurabilityLoss));
+      inventorySettings.put(InventorySection.LEGS,
+          new SectionSettings(override.legsKeepChance, override.legsDestroyChance,
+              override.legsKeepDurabilityLoss, override.legsDropDurabilityLoss));
+      inventorySettings.put(InventorySection.FEET,
+          new SectionSettings(override.feetKeepChance, override.feetDestroyChance,
+              override.feetKeepDurabilityLoss, override.feetDropDurabilityLoss));
+
+      Map<Item, DropMode> itemSettings =
+          override.itemSettings != null ? ConfigParser.parseDrops(override.itemSettings) : null;
+      InventoryOverride inventory = new InventoryOverride.Builder()
+          .inventorySettings(inventorySettings).items(itemSettings).build();
+
+      OVERRIDES.add((new DeathOverride.Builder().priority(override.priority).inventory(inventory)
+          .conditions(conditions).experience(experience).hunger(hunger).effects(effects)
+          .mementoMori(mementoMori).miscellaneous(misc)).build());
     });
   }
 
-  public static void apply(DeathSettings settings, LivingDeathEvent evt) {
+  public static void apply(DeathSettings settings, IDeathStorage deathStorage) {
     OVERRIDES.forEach(override -> {
       if (override.getConditions().stream()
-          .anyMatch(condition -> DeathConditionManager.matches(condition, evt))) {
+          .anyMatch(condition -> DeathConditionManager.matches(condition, deathStorage))) {
         override.apply(settings);
       }
     });

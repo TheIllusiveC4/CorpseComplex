@@ -7,9 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.items.ItemHandlerHelper;
-import top.theillusivec4.corpsecomplex.common.DeathSettings.Inventory.SectionSettings;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability.IDeathStorage;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryModule;
+import top.theillusivec4.corpsecomplex.common.modules.inventory.InventorySetting.SectionSettings;
 import top.theillusivec4.corpsecomplex.common.util.Enums.DropMode;
 import top.theillusivec4.corpsecomplex.common.util.Enums.InventorySection;
 
@@ -43,8 +43,8 @@ public class VanillaInventory implements Inventory {
   private static void take(IDeathStorage deathStorage, PlayerInventory inventory, int index,
       ListNBT list, InventorySection section) {
     take(deathStorage, inventory, index, list, () -> {
-      SectionSettings sectionSettings = deathStorage.getSettings().inventory.inventorySettings
-          .get(section);
+      SectionSettings sectionSettings = deathStorage.getSettings().getInventorySettings()
+          .getInventorySettings().get(section);
       if (sectionSettings.keepChance > InventoryModule.RANDOM.nextFloat()) {
         return DropMode.KEEP;
       } else if (sectionSettings.destroyChance > InventoryModule.RANDOM.nextFloat()) {
@@ -57,7 +57,7 @@ public class VanillaInventory implements Inventory {
   private static void take(IDeathStorage deathStorage, PlayerInventory inventory, int index,
       ListNBT list, Supplier<DropMode> ruleSupplier) {
     ItemStack stack = inventory.getStackInSlot(index);
-    DropMode inventoryRule = deathStorage.getSettings().inventory.items
+    DropMode inventoryRule = deathStorage.getSettings().getInventorySettings().getItems()
         .getOrDefault(stack.getItem(), ruleSupplier.get());
 
     if (inventoryRule == DropMode.KEEP) {

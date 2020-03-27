@@ -10,18 +10,20 @@ public class MiscellaneousModule {
 
   @SubscribeEvent
   public void setSpawn(final PlayerSetSpawnEvent evt) {
-    DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(deathStorage -> {
-      if (deathStorage.getSettings().getMiscellaneousSettings().isRestrictRespawning()) {
-        evt.setCanceled(true);
-      }
-    });
+
+    if (!evt.getPlayer().getEntityWorld().isRemote) {
+      DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(deathStorage -> {
+        if (deathStorage.getSettings().getMiscellaneousSettings().isRestrictRespawning()) {
+          evt.setCanceled(true);
+        }
+      });
+    }
   }
 
   @SubscribeEvent
   public void playerRespawn(final PlayerRespawnEvent evt) {
-    DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(deathStorage -> {
-      deathStorage.getSettings().getMiscellaneousSettings().getRespawnItems()
-          .forEach((item) -> ItemHandlerHelper.giveItemToPlayer(evt.getPlayer(), item.copy()));
-    });
+    DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(
+        deathStorage -> deathStorage.getSettings().getMiscellaneousSettings().getRespawnItems()
+            .forEach((item) -> ItemHandlerHelper.giveItemToPlayer(evt.getPlayer(), item.copy())));
   }
 }

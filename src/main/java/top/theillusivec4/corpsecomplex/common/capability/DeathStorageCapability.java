@@ -24,6 +24,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
 import top.theillusivec4.corpsecomplex.common.DeathSettings;
+import top.theillusivec4.corpsecomplex.common.util.DeathDamageSource;
 import top.theillusivec4.corpsecomplex.common.util.DeathSettingManager;
 
 public class DeathStorageCapability {
@@ -36,7 +37,6 @@ public class DeathStorageCapability {
 
   private static final String INVENTORIES = "Inventories";
   private static final String EFFECTS = "Effects";
-  private static final String SETTINGS = "Settings";
 
   static {
     DEATH_STORAGE_CAP = null;
@@ -59,6 +59,7 @@ public class DeathStorageCapability {
           effects.add(effect);
         });
         compound.put(EFFECTS, effects);
+        instance.getDeathDamageSource().write(compound);
         return compound;
       }
 
@@ -73,6 +74,9 @@ public class DeathStorageCapability {
           EffectInstance effectInstance = EffectInstance.read((CompoundNBT) effect);
           instance.addEffectInstance(effectInstance);
         });
+        DeathDamageSource deathDamageSource = new DeathDamageSource();
+        deathDamageSource.read(compound);
+        instance.setDeathDamageSource(deathDamageSource);
       }
     }, DeathStorage::new);
   }
@@ -85,9 +89,13 @@ public class DeathStorageCapability {
 
     PlayerEntity getPlayer();
 
-    void setSettings(DeathSettings settings);
+    void buildSettings();
 
     DeathSettings getSettings();
+
+    void setDeathDamageSource(DeathDamageSource deathDamageSource);
+
+    DeathDamageSource getDeathDamageSource();
 
     void addInventory(String modid, INBT nbt);
 
@@ -108,6 +116,7 @@ public class DeathStorageCapability {
     private final List<EffectInstance> effects = new ArrayList<>();
     private final PlayerEntity player;
 
+    private DeathDamageSource deathDamageSource;
     private DeathSettings deathSettings;
 
     public DeathStorage() {
@@ -125,11 +134,26 @@ public class DeathStorageCapability {
     }
 
     @Override
+    public void buildSettings() {
+      deathSettings = DeathSettingManager.buildSettings(this);
+    }
+
+    @Override
     public DeathSettings getSettings() {
       if (deathSettings == null) {
-        deathSettings = DeathSettingManager.buildSettings(this.player);
+        this.buildSettings();
       }
       return deathSettings;
+    }
+
+    @Override
+    public void setDeathDamageSource(DeathDamageSource deathDamageSource) {
+      this.deathDamageSource = deathDamageSource;
+    }
+
+    @Override
+    public DeathDamageSource getDeathDamageSource() {
+      return this.deathDamageSource;
     }
 
     @Override

@@ -90,10 +90,13 @@ public class CorpseComplex {
   private void config(final ModConfigEvent evt) {
 
     if (evt.getConfig().getModId().equals(MODID)) {
-      CorpseComplexConfig.bakeConfigs(evt.getConfig().getConfigData());
-      DeathSettings.setConfigDefault();
-      DeathConditionManager.importConfig();
-      DeathOverrideManager.importConfig();
+
+      if (evt.getConfig().getSpec() == CorpseComplexConfig.overridesSpec) {
+        CorpseComplexConfig.transform(evt.getConfig().getConfigData());
+        DeathConditionManager.importConfig();
+        DeathOverrideManager.importConfig();
+      }
+      CorpseComplexConfig.bakeConfigs();
     }
   }
 }

@@ -4,26 +4,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nullable;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
 import top.theillusivec4.corpsecomplex.common.DeathCondition;
 import top.theillusivec4.corpsecomplex.common.DeathCondition.Builder;
+import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability.IDeathStorage;
 import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 
 public class DeathConditionManager {
 
   public static final Map<String, DeathCondition> CONDITIONS = new HashMap<>();
 
-  public static boolean matches(DeathCondition deathCondition, LivingDeathEvent evt) {
-    DamageSource source = evt.getSource();
+  public static boolean matches(DeathCondition deathCondition, IDeathStorage deathStorage) {
+    DeathDamageSource source = deathStorage.getDeathDamageSource();
+
+    if (source == null) {
+      return false;
+    }
     Optional<String> damageTypeOpt = deathCondition.getDamageType();
     boolean matchesDamage = damageTypeOpt.map(damageType -> {
-      if (source.damageType.equals(damageType)) {
+      if (source.getDamageType().equals(damageType)) {
         return true;
       } else if (source.isFireDamage() && damageType.equals("fire")) {
         return true;
@@ -41,8 +43,8 @@ public class DeathConditionManager {
     }
     Optional<EntityType<?>> imSrcOpt = deathCondition.getImmediateSource();
     boolean matchesImSrc = imSrcOpt.map(immediateSource -> {
-      Entity imSrc = source.getImmediateSource();
-      return imSrc != null && imSrc.getType() == immediateSource;
+      EntityType<?> imSrc = source.getImmediateSource();
+      return imSrc == immediateSource;
     }).orElse(true);
 
     if (!matchesImSrc) {
@@ -51,8 +53,8 @@ public class DeathConditionManager {
 
     Optional<EntityType<?>> trueSrcOpt = deathCondition.getTrueSource();
     return trueSrcOpt.map(trueSource -> {
-      Entity trueSrc = source.getTrueSource();
-      return trueSrc != null && trueSrc.getType() == trueSource;
+      EntityType<?> trueSrc = source.getTrueSource();
+      return trueSrc == trueSource;
     }).orElse(true);
   }
 

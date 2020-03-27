@@ -2,10 +2,10 @@ package top.theillusivec4.corpsecomplex.common;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
 import top.theillusivec4.corpsecomplex.common.modules.effects.EffectsOverride;
 import top.theillusivec4.corpsecomplex.common.modules.experience.ExperienceOverride;
 import top.theillusivec4.corpsecomplex.common.modules.hunger.HungerOverride;
+import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryOverride;
 import top.theillusivec4.corpsecomplex.common.modules.mementomori.MementoMoriOverride;
 import top.theillusivec4.corpsecomplex.common.modules.miscellaneous.MiscellaneousOverride;
 
@@ -16,84 +16,10 @@ public class DeathOverride {
 
   private final ExperienceOverride experience;
   private final HungerOverride hunger;
+  private final InventoryOverride inventory;
   private final EffectsOverride effects;
   private final MementoMoriOverride mementoMori;
   private final MiscellaneousOverride miscellaneous;
-
-  @Nullable
-  private Double mainhandKeepChance;
-  @Nullable
-  private Double mainhandDestroyChance;
-  @Nullable
-  private Double mainhandKeepDurabilityLoss;
-  @Nullable
-  private Double mainhandDropDurabilityLoss;
-
-  @Nullable
-  private Double hotbarKeepChance;
-  @Nullable
-  private Double hotbarDestroyChance;
-  @Nullable
-  private Double hotbarKeepDurabilityLoss;
-  @Nullable
-  private Double hotbarDropDurabilityLoss;
-
-  @Nullable
-  private Double offhandKeepChance;
-  @Nullable
-  private Double offhandDestroyChance;
-  @Nullable
-  private Double offhandKeepDurabilityLoss;
-  @Nullable
-  private Double offhandDropDurabilityLoss;
-
-  @Nullable
-  private Double mainKeepChance;
-  @Nullable
-  private Double mainDestroyChance;
-  @Nullable
-  private Double mainKeepDurabilityLoss;
-  @Nullable
-  private Double mainDropDurabilityLoss;
-
-  @Nullable
-  private Double headKeepChance;
-  @Nullable
-  private Double headDestroyChance;
-  @Nullable
-  private Double headKeepDurabilityLoss;
-  @Nullable
-  private Double headDropDurabilityLoss;
-
-  @Nullable
-  private Double chestKeepChance;
-  @Nullable
-  private Double chestDestroyChance;
-  @Nullable
-  private Double chestKeepDurabilityLoss;
-  @Nullable
-  private Double chestDropDurabilityLoss;
-
-  @Nullable
-  private Double legsKeepChance;
-  @Nullable
-  private Double legsDestroyChance;
-  @Nullable
-  private Double legsKeepDurabilityLoss;
-  @Nullable
-  private Double legsDropDurabilityLoss;
-
-  @Nullable
-  private Double feetKeepChance;
-  @Nullable
-  private Double feetDestroyChance;
-  @Nullable
-  private Double feetKeepDurabilityLoss;
-  @Nullable
-  private Double feetDropDurabilityLoss;
-
-  @Nullable
-  private List<? extends String> itemSettings;
 
   private DeathOverride(Builder builder) {
     this.priority = builder.priority;
@@ -104,6 +30,7 @@ public class DeathOverride {
     this.effects = builder.effects;
     this.miscellaneous = builder.miscellaneous;
     this.mementoMori = builder.mementoMori;
+    this.inventory = builder.inventory;
   }
 
   public int getPriority() {
@@ -126,6 +53,10 @@ public class DeathOverride {
     return this.effects;
   }
 
+  public InventoryOverride getInventoryOverride() {
+    return this.inventory;
+  }
+
   public MementoMoriOverride getMementoMoriOverride() {
     return this.mementoMori;
   }
@@ -140,6 +71,7 @@ public class DeathOverride {
     settings.getEffectsSettings().applyOverride(this.getEffectsOverride());
     settings.getMementoMoriSettings().applyOverride(this.getMementoMoriOverride());
     settings.getMiscellaneousSettings().applyOverride(this.getMiscellaneousOverride());
+    settings.getInventorySettings().applyOverride(this.getInventoryOverride());
   }
 
   public static class Builder {
@@ -150,6 +82,7 @@ public class DeathOverride {
     private ExperienceOverride experience;
     private HungerOverride hunger;
     private EffectsOverride effects;
+    private InventoryOverride inventory;
     private MementoMoriOverride mementoMori;
     private MiscellaneousOverride miscellaneous;
 
@@ -185,6 +118,11 @@ public class DeathOverride {
 
     public Builder miscellaneous(MiscellaneousOverride misc) {
       this.miscellaneous = misc;
+      return this;
+    }
+
+    public Builder inventory(InventoryOverride inventory) {
+      this.inventory = inventory;
       return this;
     }
 

@@ -2,6 +2,7 @@ package top.theillusivec4.corpsecomplex.common.config;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -510,7 +511,13 @@ public class CorpseComplexConfig {
     }
   }
 
-  public static void bakeConfigs(CommentedConfig configData) {
+  public static void transform(CommentedConfig configData) {
+    OVERRIDES.overrides = new ObjectConverter().toObject(configData, OverridesConfig::new);
+    overrides = OVERRIDES.overrides.overrides;
+    conditions = OVERRIDES.overrides.conditions;
+  }
+
+  public static void bakeConfigs() {
     mainhandKeepChance = SERVER.mainhandKeepChance.get();
     mainhandDestroyChance = SERVER.mainhandDestroyChance.get();
     mainhandKeepDurabilityLoss = SERVER.mainhandKeepDurabilityLoss.get();
@@ -585,9 +592,5 @@ public class CorpseComplexConfig {
 
     restrictRespawning = SERVER.restrictRespawning.get();
     respawnItems = SERVER.respawnItems.get();
-
-    OVERRIDES.overrides = new ObjectConverter().toObject(configData, OverridesConfig::new);
-    overrides = OVERRIDES.overrides.overrides;
-    conditions = OVERRIDES.overrides.conditions;
   }
 }
