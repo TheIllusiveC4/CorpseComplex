@@ -1,6 +1,5 @@
 package top.theillusivec4.corpsecomplex.common.modules.inventory.inventories;
 
-import java.util.function.Supplier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -9,9 +8,11 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.items.ItemHandlerHelper;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability.IDeathStorage;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryModule;
+import top.theillusivec4.corpsecomplex.common.modules.inventory.InventorySetting;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.InventorySetting.SectionSettings;
 import top.theillusivec4.corpsecomplex.common.util.Enums.DropMode;
 import top.theillusivec4.corpsecomplex.common.util.Enums.InventorySection;
+import top.theillusivec4.corpsecomplex.common.util.InventoryHelper;
 
 public class VanillaInventory implements Inventory {
 
@@ -42,25 +43,29 @@ public class VanillaInventory implements Inventory {
 
   private static void take(IDeathStorage deathStorage, PlayerInventory inventory, int index,
       ListNBT list, InventorySection section) {
-    take(deathStorage, inventory, index, list, () -> {
-      SectionSettings sectionSettings = deathStorage.getSettings().getInventorySettings()
-          .getInventorySettings().get(section);
-      if (sectionSettings.keepChance > InventoryModule.RANDOM.nextFloat()) {
-        return DropMode.KEEP;
-      } else if (sectionSettings.destroyChance > InventoryModule.RANDOM.nextFloat()) {
-        return DropMode.DESTROY;
-      }
-      return DropMode.DROP;
-    });
+    InventorySetting setting = deathStorage.getSettings().getInventorySettings();
+    take(deathStorage, inventory, index, list, section, setting);
   }
 
   private static void take(IDeathStorage deathStorage, PlayerInventory inventory, int index,
-      ListNBT list, Supplier<DropMode> ruleSupplier) {
+      ListNBT list, InventorySection section, InventorySetting setting) {
     ItemStack stack = inventory.getStackInSlot(index);
-    DropMode inventoryRule = deathStorage.getSettings().getInventorySettings().getItems()
-        .getOrDefault(stack.getItem(), ruleSupplier.get());
+    DropMode inventoryRule = setting.getItems().get(stack.getItem());
+    SectionSettings sectionSettings = setting.getInventorySettings().get(section);
 
+    if (inventoryRule == null) {
+      if (sectionSettings.keepChance > InventoryModule.RANDOM.nextFloat()) {
+        inventoryRule = DropMode.KEEP;
+      } else if (sectionSettings.destroyChance > InventoryModule.RANDOM.nextFloat()) {
+        inventoryRule = DropMode.DESTROY;
+      } else {
+        inventoryRule = DropMode.DROP;
+      }
+    }
+    boolean limit = setting.isLimitDurabilityLoss();
     if (inventoryRule == DropMode.KEEP) {
+      InventoryHelper
+          .applyDurabilityLoss(inventory.player, stack, sectionSettings.keepDurabilityLoss, limit);
       CompoundNBT compoundnbt = new CompoundNBT();
       compoundnbt.putInt("Slot", index);
       stack.write(compoundnbt);
@@ -69,6 +74,9 @@ public class VanillaInventory implements Inventory {
 
     if (inventoryRule != DropMode.DROP) {
       inventory.setInventorySlotContents(index, ItemStack.EMPTY);
+    } else {
+      InventoryHelper
+          .applyDurabilityLoss(inventory.player, stack, sectionSettings.dropDurabilityLoss, limit);
     }
   }
 

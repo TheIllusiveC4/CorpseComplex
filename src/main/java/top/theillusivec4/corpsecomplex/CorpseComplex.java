@@ -18,7 +18,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -28,7 +27,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import top.theillusivec4.corpsecomplex.common.CommonEventHandler;
-import top.theillusivec4.corpsecomplex.common.DeathSettings;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
 import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.modules.effects.EffectsModule;
@@ -46,8 +44,6 @@ public class CorpseComplex {
   public static final String MODID = "corpsecomplex";
   public static final Logger LOGGER = LogManager.getLogger();
 
-  public static ModConfig overrideConfig;
-
   public CorpseComplex() {
     ModLoadingContext.get().registerConfig(Type.SERVER, CorpseComplexConfig.serverSpec);
     ModLoadingContext.get().registerConfig(Type.SERVER, CorpseComplexConfig.overridesSpec,
@@ -59,7 +55,7 @@ public class CorpseComplex {
         FileUtils.copyInputStreamToFile(Objects.requireNonNull(CorpseComplex.class.getClassLoader()
             .getResourceAsStream("corpsecomplex-overrides.toml")), defaultOverrides);
       } catch (IOException e) {
-        LOGGER.error("can't config man");
+        LOGGER.error("Error creating default overrides config!");
       }
     }
     IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();

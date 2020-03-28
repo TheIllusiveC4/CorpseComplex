@@ -2,7 +2,6 @@ package top.theillusivec4.corpsecomplex.common.config;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -73,6 +72,7 @@ public class CorpseComplexConfig {
   public static double feetDropDurabilityLoss;
 
   public static List<? extends String> itemSettings;
+  public static boolean limitDurabilityLoss;
 
   public static List<? extends String> cures;
   public static List<? extends String> effects;
@@ -176,6 +176,7 @@ public class CorpseComplexConfig {
     public final DoubleValue feetDropDurabilityLoss;
 
     public final ConfigValue<List<? extends String>> itemSettings;
+    public final BooleanValue limitDurabilityLoss;
 
     public final ConfigValue<List<? extends String>> cures;
     public final ConfigValue<List<? extends String>> effects;
@@ -381,6 +382,10 @@ public class CorpseComplexConfig {
               "Format: modid:item;[keep/drop/destroy]").translation(CONFIG_PREFIX + "itemSettings")
           .defineList("itemSettings", new ArrayList<>(), s -> s instanceof String);
 
+      limitDurabilityLoss = builder.comment(
+          "Set to true to limit durability loss so that items do not break from death penalties")
+          .translation(CONFIG_PREFIX + "limitDurabilityLoss").define("limitDurabilityLoss", false);
+
       builder.pop();
 
       builder.push("effects");
@@ -559,6 +564,7 @@ public class CorpseComplexConfig {
     feetDropDurabilityLoss = SERVER.feetDropDurabilityLoss.get();
 
     itemSettings = SERVER.itemSettings.get();
+    limitDurabilityLoss = SERVER.limitDurabilityLoss.get();
 
     cures = SERVER.cures.get();
     effects = SERVER.effects.get();

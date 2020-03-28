@@ -13,10 +13,13 @@ public class InventoryOverride {
   private final Map<InventorySection, SectionSettings> inventorySettings;
   @Nullable
   private final Map<Item, DropMode> items;
+  @Nullable
+  private final Boolean limitDurabilityLoss;
 
   private InventoryOverride(Builder builder) {
     this.inventorySettings = builder.inventorySettings;
     this.items = builder.items;
+    this.limitDurabilityLoss = builder.limitDurabilityLoss;
   }
 
   public Optional<Map<InventorySection, SectionSettings>> getInventorySettings() {
@@ -27,10 +30,15 @@ public class InventoryOverride {
     return Optional.ofNullable(items);
   }
 
+  public Optional<Boolean> getLimitDurabilityLoss() {
+    return Optional.ofNullable(limitDurabilityLoss);
+  }
+
   public static class Builder {
 
     private Map<InventorySection, SectionSettings> inventorySettings;
     private Map<Item, DropMode> items;
+    private Boolean limitDurabilityLoss;
 
     public Builder inventorySettings(Map<InventorySection, SectionSettings> inventorySettings) {
       this.inventorySettings = inventorySettings;
@@ -39,6 +47,11 @@ public class InventoryOverride {
 
     public Builder items(Map<Item, DropMode> items) {
       this.items = items;
+      return this;
+    }
+
+    public Builder limitDurabilityLoss(Boolean limitDurabilityLoss) {
+      this.limitDurabilityLoss = limitDurabilityLoss;
       return this;
     }
 

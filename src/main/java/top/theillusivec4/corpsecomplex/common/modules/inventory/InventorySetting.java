@@ -14,6 +14,7 @@ public class InventorySetting implements Setting<InventoryOverride> {
 
   private Map<InventorySection, SectionSettings> inventorySettings = new HashMap<>();
   private Map<Item, DropMode> items = new HashMap<>();
+  private boolean limitDurabilityLoss;
 
   public Map<InventorySection, SectionSettings> getInventorySettings() {
     return inventorySettings;
@@ -29,6 +30,14 @@ public class InventorySetting implements Setting<InventoryOverride> {
 
   public void setItems(Map<Item, DropMode> items) {
     this.items = items;
+  }
+
+  public boolean isLimitDurabilityLoss() {
+    return limitDurabilityLoss;
+  }
+
+  public void setLimitDurabilityLoss(boolean limitDurabilityLoss) {
+    this.limitDurabilityLoss = limitDurabilityLoss;
   }
 
   @Override
@@ -68,6 +77,7 @@ public class InventorySetting implements Setting<InventoryOverride> {
             CorpseComplexConfig.feetDestroyChance, CorpseComplexConfig.feetKeepDurabilityLoss,
             CorpseComplexConfig.feetDropDurabilityLoss));
     this.setItems(ConfigParser.parseDrops(CorpseComplexConfig.itemSettings));
+    this.setLimitDurabilityLoss(CorpseComplexConfig.limitDurabilityLoss);
   }
 
   @Override
@@ -89,6 +99,7 @@ public class InventorySetting implements Setting<InventoryOverride> {
           }
         }));
     override.getItems().ifPresent(this::setItems);
+    override.getLimitDurabilityLoss().ifPresent(this::setLimitDurabilityLoss);
   }
 
   public static class SectionSettings {
