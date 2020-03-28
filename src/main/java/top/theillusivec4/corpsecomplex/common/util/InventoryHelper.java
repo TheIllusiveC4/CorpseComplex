@@ -1,5 +1,6 @@
 package top.theillusivec4.corpsecomplex.common.util;
 
+import java.util.Random;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
@@ -7,6 +8,8 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class InventoryHelper {
+
+  public static final Random RAND = new Random();
 
   public static void applyDurabilityLoss(PlayerEntity playerEntity, ItemStack stack,
       double durabilityLoss, boolean limit) {
@@ -26,5 +29,16 @@ public class InventoryHelper {
     int loss = (int) Math.round(stack.getMaxDamage() * durabilityLoss);
     stack.damageItem(Math.min(maxLoss, loss), playerEntity, damager -> {
     });
+  }
+
+  public static int getRandomAmount(int num, double chance) {
+    int amount = 0;
+
+    for (int i = 0; i < num; i++) {
+      if (RAND.nextDouble() < chance) {
+        amount++;
+      }
+    }
+    return amount;
   }
 }

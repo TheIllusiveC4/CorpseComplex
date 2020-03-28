@@ -44,11 +44,11 @@ public class VanillaInventory implements Inventory {
   private static void take(IDeathStorage deathStorage, PlayerInventory inventory, int index,
       ListNBT list, InventorySection section) {
     InventorySetting setting = deathStorage.getSettings().getInventorySettings();
-    take(deathStorage, inventory, index, list, section, setting);
+    take(inventory, index, list, section, setting);
   }
 
-  private static void take(IDeathStorage deathStorage, PlayerInventory inventory, int index,
-      ListNBT list, InventorySection section, InventorySetting setting) {
+  private static void take(PlayerInventory inventory, int index, ListNBT list,
+      InventorySection section, InventorySetting setting) {
     ItemStack stack = inventory.getStackInSlot(index);
     DropMode inventoryRule = setting.getItems().get(stack.getItem());
     SectionSettings sectionSettings = setting.getInventorySettings().get(section);
@@ -66,17 +66,19 @@ public class VanillaInventory implements Inventory {
     if (inventoryRule == DropMode.KEEP) {
       InventoryHelper
           .applyDurabilityLoss(inventory.player, stack, sectionSettings.keepDurabilityLoss, limit);
+      ItemStack keep = stack.split(sectionSettings.keepChance >= 1 ? stack.getCount()
+          : InventoryHelper.getRandomAmount(stack.getCount(), sectionSettings.keepChance));
       CompoundNBT compoundnbt = new CompoundNBT();
       compoundnbt.putInt("Slot", index);
-      stack.write(compoundnbt);
+      keep.write(compoundnbt);
       list.add(compoundnbt);
-    }
-
-    if (inventoryRule != DropMode.DROP) {
+    } else if (inventoryRule == DropMode.DESTROY) {
       inventory.setInventorySlotContents(index, ItemStack.EMPTY);
     } else {
       InventoryHelper
           .applyDurabilityLoss(inventory.player, stack, sectionSettings.dropDurabilityLoss, limit);
+      stack
+          .shrink(InventoryHelper.getRandomAmount(stack.getCount(), sectionSettings.destroyChance));
     }
   }
 

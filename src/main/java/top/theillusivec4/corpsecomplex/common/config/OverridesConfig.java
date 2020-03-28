@@ -53,6 +53,7 @@ public class OverridesConfig {
     public Double feetDropDurabilityLoss;
 
     public List<String> itemSettings;
+    public Boolean limitDurabilityLoss;
 
     public List<String> cures;
     public List<String> effects;

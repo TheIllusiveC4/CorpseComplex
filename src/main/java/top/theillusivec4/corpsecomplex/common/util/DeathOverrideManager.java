@@ -43,9 +43,9 @@ public class DeathOverrideManager {
 
     CorpseComplexConfig.overrides.forEach(override -> {
       List<DeathCondition> conditions = new ArrayList<>();
-      List<? extends String> conditionsConfig = override.conditions;
+      List<String> conditionsConfig = override.conditions;
 
-      if (conditionsConfig.isEmpty()) {
+      if (conditionsConfig == null || conditionsConfig.isEmpty()) {
         CorpseComplex.LOGGER.error("Found override with empty conditions! Skipping...");
         return;
       }
@@ -115,7 +115,8 @@ public class DeathOverrideManager {
       Map<Item, DropMode> itemSettings =
           override.itemSettings != null ? ConfigParser.parseDrops(override.itemSettings) : null;
       InventoryOverride inventory = new InventoryOverride.Builder()
-          .inventorySettings(inventorySettings).items(itemSettings).build();
+          .inventorySettings(inventorySettings).items(itemSettings)
+          .limitDurabilityLoss(override.limitDurabilityLoss).build();
 
       OVERRIDES.add((new DeathOverride.Builder().priority(override.priority).inventory(inventory)
           .conditions(conditions).experience(experience).hunger(hunger).effects(effects)
