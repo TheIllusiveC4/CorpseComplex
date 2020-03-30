@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.item.Item;
-import top.theillusivec4.corpsecomplex.common.modules.Setting;
 import top.theillusivec4.corpsecomplex.common.config.ConfigParser;
 import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
+import top.theillusivec4.corpsecomplex.common.modules.Setting;
 import top.theillusivec4.corpsecomplex.common.util.Enums.DropMode;
 import top.theillusivec4.corpsecomplex.common.util.Enums.InventorySection;
 
@@ -76,6 +76,10 @@ public class InventorySetting implements Setting<InventoryOverride> {
         new SectionSettings(CorpseComplexConfig.feetKeepChance,
             CorpseComplexConfig.feetDestroyChance, CorpseComplexConfig.feetKeepDurabilityLoss,
             CorpseComplexConfig.feetDropDurabilityLoss));
+    this.getInventorySettings().put(InventorySection.CURIOS,
+        new SectionSettings(CorpseComplexConfig.curioKeepChance,
+            CorpseComplexConfig.curioDestroyChance, CorpseComplexConfig.curioKeepDurabilityLoss,
+            CorpseComplexConfig.curioDropDurabilityLoss));
     this.setItems(ConfigParser.parseDrops(CorpseComplexConfig.itemSettings));
     this.setLimitDurabilityLoss(CorpseComplexConfig.limitDurabilityLoss);
   }

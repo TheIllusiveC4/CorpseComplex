@@ -62,10 +62,10 @@ public class VanillaInventory implements Inventory {
         inventoryRule = DropMode.DROP;
       }
     }
-    boolean limit = setting.isLimitDurabilityLoss();
+
     if (inventoryRule == DropMode.KEEP) {
-      InventoryHelper
-          .applyDurabilityLoss(inventory.player, stack, sectionSettings.keepDurabilityLoss, limit);
+      InventoryHelper.applyDurabilityLoss(inventory.player, stack, setting,
+          sectionSettings.keepDurabilityLoss);
       ItemStack keep = stack.split(sectionSettings.keepChance >= 1 ? stack.getCount()
           : InventoryHelper.getRandomAmount(stack.getCount(), sectionSettings.keepChance));
       CompoundNBT compoundnbt = new CompoundNBT();
@@ -75,8 +75,8 @@ public class VanillaInventory implements Inventory {
     } else if (inventoryRule == DropMode.DESTROY) {
       inventory.setInventorySlotContents(index, ItemStack.EMPTY);
     } else {
-      InventoryHelper
-          .applyDurabilityLoss(inventory.player, stack, sectionSettings.dropDurabilityLoss, limit);
+      InventoryHelper.applyDurabilityLoss(inventory.player, stack, setting,
+          sectionSettings.dropDurabilityLoss);
       stack
           .shrink(InventoryHelper.getRandomAmount(stack.getCount(), sectionSettings.destroyChance));
     }

@@ -6,13 +6,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import top.theillusivec4.corpsecomplex.common.modules.inventory.InventorySetting;
 
 public class InventoryHelper {
 
   public static final Random RAND = new Random();
 
   public static void applyDurabilityLoss(PlayerEntity playerEntity, ItemStack stack,
-      double durabilityLoss, boolean limit) {
+      InventorySetting setting, double durabilityLoss) {
 
     if (!stack.isDamageable()) {
       return;
@@ -25,7 +26,8 @@ public class InventoryHelper {
         energy.extractEnergy(energyLoss, false);
       }
     });
-    int maxLoss = limit ? stack.getMaxDamage() - stack.getDamage() - 1 : stack.getMaxDamage();
+    int maxLoss = setting.isLimitDurabilityLoss() ? stack.getMaxDamage() - stack.getDamage() - 1
+        : stack.getMaxDamage();
     int loss = (int) Math.round(stack.getMaxDamage() * durabilityLoss);
     stack.damageItem(Math.min(maxLoss, loss), playerEntity, damager -> {
     });

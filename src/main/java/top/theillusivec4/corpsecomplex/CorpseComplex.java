@@ -72,15 +72,6 @@ public class CorpseComplex {
 
   private void setup(final FMLCommonSetupEvent evt) {
     DeathStorageCapability.register();
-    InventoryModule.STORAGE_ADDONS.forEach((modid, clazz) -> {
-      if (ModList.get().isLoaded(modid)) {
-        try {
-          InventoryModule.STORAGE.add(clazz.newInstance());
-        } catch (InstantiationException | IllegalAccessException e) {
-          LOGGER.error("Error trying to instantiate storage module for mod " + modid);
-        }
-      }
-    });
   }
 
   private void config(final ModConfigEvent evt) {

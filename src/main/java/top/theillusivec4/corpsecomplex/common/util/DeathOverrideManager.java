@@ -111,6 +111,9 @@ public class DeathOverrideManager {
       inventorySettings.put(InventorySection.FEET,
           new SectionSettings(override.feetKeepChance, override.feetDestroyChance,
               override.feetKeepDurabilityLoss, override.feetDropDurabilityLoss));
+      inventorySettings.put(InventorySection.CURIOS,
+          new SectionSettings(override.curioKeepChance, override.curioDestroyChance,
+              override.curioKeepDurabilityLoss, override.curioDropDurabilityLoss));
 
       Map<Item, DropMode> itemSettings =
           override.itemSettings != null ? ConfigParser.parseDrops(override.itemSettings) : null;

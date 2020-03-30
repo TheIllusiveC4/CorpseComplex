@@ -1,5 +1,7 @@
 package top.theillusivec4.corpsecomplex.common.modules.inventory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -12,23 +14,31 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability.Provider;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.Inventory;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.VanillaInventory;
+import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.integration.CuriosInventory;
 
 public class InventoryModule {
 
-  public static final Map<String, Class<? extends Inventory>> STORAGE_ADDONS = new HashMap<>();
-  public static final List<Inventory> STORAGE = Collections.singletonList(new VanillaInventory());
+  public static final List<Inventory> STORAGE = new ArrayList<>();
   public static final Random RANDOM = new Random();
 
-  static {
-    //    STORAGE_ADDONS.put("curios", CuriosStorage.class);
+  @SubscribeEvent
+  public void serverStart(final FMLServerStartedEvent evt) {
+    STORAGE.add(new VanillaInventory());
+
+    if (ModList.get().isLoaded("curios")) {
+      STORAGE.add(new CuriosInventory());
+    }
   }
 
-  @SubscribeEvent
+  @SubscribeEvent(priority = EventPriority.HIGH)
   public void playerDeath(final LivingDeathEvent evt) {
 
     if (!(evt.getEntityLiving() instanceof PlayerEntity)) {
@@ -43,7 +53,7 @@ public class InventoryModule {
     }
   }
 
-  @SubscribeEvent
+  @SubscribeEvent(priority = EventPriority.LOW)
   public void playerRespawn(final PlayerEvent.Clone evt) {
 
     if (evt.isWasDeath()) {

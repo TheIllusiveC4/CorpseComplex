@@ -71,6 +71,11 @@ public class CorpseComplexConfig {
   public static double feetKeepDurabilityLoss;
   public static double feetDropDurabilityLoss;
 
+  public static double curioKeepChance;
+  public static double curioDestroyChance;
+  public static double curioKeepDurabilityLoss;
+  public static double curioDropDurabilityLoss;
+
   public static List<? extends String> itemSettings;
   public static boolean limitDurabilityLoss;
 
@@ -174,6 +179,11 @@ public class CorpseComplexConfig {
     public final DoubleValue feetDestroyChance;
     public final DoubleValue feetKeepDurabilityLoss;
     public final DoubleValue feetDropDurabilityLoss;
+
+    public final DoubleValue curioKeepChance;
+    public final DoubleValue curioDestroyChance;
+    public final DoubleValue curioKeepDurabilityLoss;
+    public final DoubleValue curioDropDurabilityLoss;
 
     public final ConfigValue<List<? extends String>> itemSettings;
     public final BooleanValue limitDurabilityLoss;
@@ -377,6 +387,26 @@ public class CorpseComplexConfig {
 
       builder.pop();
 
+      builder.push("curios");
+
+      curioKeepChance = builder.comment("Percent chance to keep curio item")
+          .translation(CONFIG_PREFIX + "curioKeepChance")
+          .defineInRange("curioKeepChance", 0.0D, 0.0D, 1.0D);
+
+      curioDestroyChance = builder.comment("Percent chance to destroy dropped curio item")
+          .translation(CONFIG_PREFIX + "curioDestroyChance")
+          .defineInRange("curioDestroyChance", 0.0D, 0.0D, 1.0D);
+
+      curioKeepDurabilityLoss = builder.comment("Percent durability loss on kept curio item")
+          .translation(CONFIG_PREFIX + "curioKeepDurabilityLoss")
+          .defineInRange("curioKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
+
+      curioDropDurabilityLoss = builder.comment("Percent durability loss on dropped curio item")
+          .translation(CONFIG_PREFIX + "curioDropDurabilityLoss")
+          .defineInRange("curioDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
+
+      builder.pop();
+
       itemSettings = builder
           .comment("List of items to always keep, drop, or destroy, regardless of other settings",
               "Format: modid:item;[keep/drop/destroy]").translation(CONFIG_PREFIX + "itemSettings")
@@ -562,6 +592,11 @@ public class CorpseComplexConfig {
     feetDestroyChance = SERVER.feetDestroyChance.get();
     feetKeepDurabilityLoss = SERVER.feetKeepDurabilityLoss.get();
     feetDropDurabilityLoss = SERVER.feetDropDurabilityLoss.get();
+
+    curioKeepChance = SERVER.curioKeepChance.get();
+    curioDestroyChance = SERVER.curioDestroyChance.get();
+    curioKeepDurabilityLoss = SERVER.curioKeepDurabilityLoss.get();
+    curioDropDurabilityLoss = SERVER.curioDropDurabilityLoss.get();
 
     itemSettings = SERVER.itemSettings.get();
     limitDurabilityLoss = SERVER.limitDurabilityLoss.get();

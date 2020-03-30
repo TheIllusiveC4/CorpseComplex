@@ -52,6 +52,11 @@ public class OverridesConfig {
     public Double feetKeepDurabilityLoss;
     public Double feetDropDurabilityLoss;
 
+    public Double curioKeepChance;
+    public Double curioDestroyChance;
+    public Double curioKeepDurabilityLoss;
+    public Double curioDropDurabilityLoss;
+
     public List<String> itemSettings;
     public Boolean limitDurabilityLoss;
 
