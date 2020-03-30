@@ -114,6 +114,9 @@ public class DeathOverrideManager {
       inventorySettings.put(InventorySection.CURIOS,
           new SectionSettings(override.curioKeepChance, override.curioDestroyChance,
               override.curioKeepDurabilityLoss, override.curioDropDurabilityLoss));
+      inventorySettings.put(InventorySection.COSMETIC_ARMOR,
+          new SectionSettings(override.cosmeticArmorKeepChance, override.cosmeticArmorDestroyChance,
+              override.cosmeticArmorKeepDurabilityLoss, override.cosmeticArmorDropDurabilityLoss));
 
       Map<Item, DropMode> itemSettings =
           override.itemSettings != null ? ConfigParser.parseDrops(override.itemSettings) : null;

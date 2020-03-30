@@ -57,6 +57,11 @@ public class OverridesConfig {
     public Double curioKeepDurabilityLoss;
     public Double curioDropDurabilityLoss;
 
+    public Double cosmeticArmorKeepChance;
+    public Double cosmeticArmorDestroyChance;
+    public Double cosmeticArmorKeepDurabilityLoss;
+    public Double cosmeticArmorDropDurabilityLoss;
+
     public List<String> itemSettings;
     public Boolean limitDurabilityLoss;
 

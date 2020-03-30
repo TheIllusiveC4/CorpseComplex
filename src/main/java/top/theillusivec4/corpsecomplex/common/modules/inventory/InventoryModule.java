@@ -22,6 +22,7 @@ import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability.Provider;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.Inventory;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.VanillaInventory;
+import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.integration.CosmeticArmorInventory;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.integration.CuriosInventory;
 
 public class InventoryModule {
@@ -35,6 +36,10 @@ public class InventoryModule {
 
     if (ModList.get().isLoaded("curios")) {
       STORAGE.add(new CuriosInventory());
+    }
+
+    if (ModList.get().isLoaded("cosmeticarmorreworked")) {
+      STORAGE.add(new CosmeticArmorInventory());
     }
   }
 

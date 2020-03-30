@@ -80,6 +80,11 @@ public class InventorySetting implements Setting<InventoryOverride> {
         new SectionSettings(CorpseComplexConfig.curioKeepChance,
             CorpseComplexConfig.curioDestroyChance, CorpseComplexConfig.curioKeepDurabilityLoss,
             CorpseComplexConfig.curioDropDurabilityLoss));
+    this.getInventorySettings().put(InventorySection.COSMETIC_ARMOR,
+        new SectionSettings(CorpseComplexConfig.cosmeticArmorKeepChance,
+            CorpseComplexConfig.cosmeticArmorDestroyChance,
+            CorpseComplexConfig.cosmeticArmorKeepDurabilityLoss,
+            CorpseComplexConfig.cosmeticArmorDropDurabilityLoss));
     this.setItems(ConfigParser.parseDrops(CorpseComplexConfig.itemSettings));
     this.setLimitDurabilityLoss(CorpseComplexConfig.limitDurabilityLoss);
   }

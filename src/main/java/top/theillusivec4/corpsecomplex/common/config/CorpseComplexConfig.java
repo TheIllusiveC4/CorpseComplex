@@ -76,6 +76,11 @@ public class CorpseComplexConfig {
   public static double curioKeepDurabilityLoss;
   public static double curioDropDurabilityLoss;
 
+  public static double cosmeticArmorKeepChance;
+  public static double cosmeticArmorDestroyChance;
+  public static double cosmeticArmorKeepDurabilityLoss;
+  public static double cosmeticArmorDropDurabilityLoss;
+
   public static List<? extends String> itemSettings;
   public static boolean limitDurabilityLoss;
 
@@ -184,6 +189,11 @@ public class CorpseComplexConfig {
     public final DoubleValue curioDestroyChance;
     public final DoubleValue curioKeepDurabilityLoss;
     public final DoubleValue curioDropDurabilityLoss;
+
+    public final DoubleValue cosmeticArmorKeepChance;
+    public final DoubleValue cosmeticArmorDestroyChance;
+    public final DoubleValue cosmeticArmorKeepDurabilityLoss;
+    public final DoubleValue cosmeticArmorDropDurabilityLoss;
 
     public final ConfigValue<List<? extends String>> itemSettings;
     public final BooleanValue limitDurabilityLoss;
@@ -407,6 +417,29 @@ public class CorpseComplexConfig {
 
       builder.pop();
 
+      builder.push("cosmetic_armor");
+
+      cosmeticArmorKeepChance = builder.comment("Percent chance to keep cosmetic armor item")
+          .translation(CONFIG_PREFIX + "cosmeticArmorKeepChance")
+          .defineInRange("cosmeticArmorKeepChance", 0.0D, 0.0D, 1.0D);
+
+      cosmeticArmorDestroyChance = builder
+          .comment("Percent chance to destroy dropped cosmetic armor item")
+          .translation(CONFIG_PREFIX + "cosmeticArmorDestroyChance")
+          .defineInRange("cosmeticArmorDestroyChance", 0.0D, 0.0D, 1.0D);
+
+      cosmeticArmorKeepDurabilityLoss = builder
+          .comment("Percent durability loss on kept cosmetic armor item")
+          .translation(CONFIG_PREFIX + "cosmeticArmorKeepDurabilityLoss")
+          .defineInRange("cosmeticArmorKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
+
+      cosmeticArmorDropDurabilityLoss = builder
+          .comment("Percent durability loss on dropped cosmetic armor item")
+          .translation(CONFIG_PREFIX + "cosmeticArmorDropDurabilityLoss")
+          .defineInRange("cosmeticArmorDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
+
+      builder.pop();
+
       itemSettings = builder
           .comment("List of items to always keep, drop, or destroy, regardless of other settings",
               "Format: modid:item;[keep/drop/destroy]").translation(CONFIG_PREFIX + "itemSettings")
@@ -597,6 +630,11 @@ public class CorpseComplexConfig {
     curioDestroyChance = SERVER.curioDestroyChance.get();
     curioKeepDurabilityLoss = SERVER.curioKeepDurabilityLoss.get();
     curioDropDurabilityLoss = SERVER.curioDropDurabilityLoss.get();
+
+    cosmeticArmorKeepChance = SERVER.cosmeticArmorKeepChance.get();
+    cosmeticArmorDestroyChance = SERVER.cosmeticArmorDestroyChance.get();
+    cosmeticArmorKeepDurabilityLoss = SERVER.cosmeticArmorKeepDurabilityLoss.get();
+    cosmeticArmorDropDurabilityLoss = SERVER.cosmeticArmorDropDurabilityLoss.get();
 
     itemSettings = SERVER.itemSettings.get();
     limitDurabilityLoss = SERVER.limitDurabilityLoss.get();
