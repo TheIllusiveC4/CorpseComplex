@@ -52,6 +52,9 @@ public class InventorySetting implements Setting<InventoryOverride> {
   @Override
   public void importConfig() {
     this.getInventorySettings().clear();
+    this.getInventorySettings().put(InventorySection.DEFAULT,
+        new SectionSettings(CorpseComplexConfig.keepChance, CorpseComplexConfig.destroyChance,
+            CorpseComplexConfig.keepDurabilityLoss, CorpseComplexConfig.dropDurabilityLoss));
     this.getInventorySettings().put(InventorySection.MAINHAND,
         new SectionSettings(CorpseComplexConfig.mainhandKeepChance,
             CorpseComplexConfig.mainhandDestroyChance,

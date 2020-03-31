@@ -32,6 +32,11 @@ public class CorpseComplexConfig {
     SERVER = specPair.getLeft();
   }
 
+  public static double keepChance;
+  public static double destroyChance;
+  public static double keepDurabilityLoss;
+  public static double dropDurabilityLoss;
+
   public static double mainhandKeepChance;
   public static double mainhandDestroyChance;
   public static double mainhandKeepDurabilityLoss;
@@ -157,6 +162,11 @@ public class CorpseComplexConfig {
 
   public static class Server {
 
+    public final DoubleValue keepChance;
+    public final DoubleValue destroyChance;
+    public final DoubleValue keepDurabilityLoss;
+    public final DoubleValue dropDurabilityLoss;
+
     public final DoubleValue mainhandKeepChance;
     public final DoubleValue mainhandDestroyChance;
     public final DoubleValue mainhandKeepDurabilityLoss;
@@ -257,24 +267,40 @@ public class CorpseComplexConfig {
     public Server(ForgeConfigSpec.Builder builder) {
       builder.push("inventory");
 
+      builder.comment("Default values if specific section value is -1").push("defaults");
+
+      keepChance = builder.comment("Default percent chance to keep item")
+          .translation(CONFIG_PREFIX + "keepChance").defineInRange("keepChance", 0.0D, 0.0D, 1.0D);
+      destroyChance = builder.comment("Default percent chance to destroy dropped item")
+          .translation(CONFIG_PREFIX + "destroyChance")
+          .defineInRange("destroyChance", 0.0D, 0.0D, 1.0D);
+      keepDurabilityLoss = builder.comment("Default percent durability loss on kept item")
+          .translation(CONFIG_PREFIX + "keepDurabilityLoss")
+          .defineInRange("keepDurabilityLoss", 0.0D, 0.0D, 1.0D);
+      dropDurabilityLoss = builder.comment("Default percent durability loss on dropped item")
+          .translation(CONFIG_PREFIX + "dropDurabilityLoss")
+          .defineInRange("dropDurabilityLoss", 0.0D, 0.0D, 1.0D);
+
+      builder.pop();
+
       builder.push("mainhand");
 
       mainhandKeepChance = builder.comment("Percent chance to keep mainhand item")
           .translation(CONFIG_PREFIX + "mainhandKeepChance")
-          .defineInRange("mainhandKeepChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("mainhandKeepChance", -1.0D, -1.0D, 1.0D);
 
       mainhandDestroyChance = builder.comment("Percent chance to destroy dropped mainhand item")
           .translation(CONFIG_PREFIX + "mainhandDestroyChance")
-          .defineInRange("mainhandDestroyChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("mainhandDestroyChance", -1.0D, -1.0D, 1.0D);
 
       mainhandKeepDurabilityLoss = builder.comment("Percent durability loss on kept mainhand item")
           .translation(CONFIG_PREFIX + "mainhandKeepDurabilityLoss")
-          .defineInRange("mainhandKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("mainhandKeepDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       mainhandDropDurabilityLoss = builder
           .comment("Percent durability loss on dropped mainhand item")
           .translation(CONFIG_PREFIX + "mainhandDropDurabilityLoss")
-          .defineInRange("mainhandDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("mainhandDropDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       builder.pop();
 
@@ -282,19 +308,19 @@ public class CorpseComplexConfig {
 
       hotbarKeepChance = builder.comment("Percent chance to keep hotbar items")
           .translation(CONFIG_PREFIX + "hotbarKeepChance")
-          .defineInRange("hotbarKeepChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("hotbarKeepChance", -1.0D, -1.0D, 1.0D);
 
       hotbarDestroyChance = builder.comment("Percent chance to destroy dropped hotbar items")
           .translation(CONFIG_PREFIX + "hotbarDestroyChance")
-          .defineInRange("hotbarDestroyChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("hotbarDestroyChance", -1.0D, -1.0D, 1.0D);
 
       hotbarKeepDurabilityLoss = builder.comment("Percent durability loss on kept hotbar items")
           .translation(CONFIG_PREFIX + "hotbarKeepDurabilityLoss")
-          .defineInRange("hotbarKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("hotbarKeepDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       hotbarDropDurabilityLoss = builder.comment("Percent durability loss on dropped hotbar items")
           .translation(CONFIG_PREFIX + "hotbarDropDurabilityLoss")
-          .defineInRange("hotbarDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("hotbarDropDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       builder.pop();
 
@@ -302,19 +328,19 @@ public class CorpseComplexConfig {
 
       offhandKeepChance = builder.comment("Percent chance to keep offhand item")
           .translation(CONFIG_PREFIX + "offhandKeepChance")
-          .defineInRange("offhandKeepChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("offhandKeepChance", -1.0D, -1.0D, 1.0D);
 
       offhandDestroyChance = builder.comment("Percent chance to destroy dropped offhand item")
           .translation(CONFIG_PREFIX + "offhandDestroyChance")
-          .defineInRange("offhandDestroyChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("offhandDestroyChance", -1.0D, -1.0D, 1.0D);
 
       offhandKeepDurabilityLoss = builder.comment("Percent durability loss on kept offhand item")
           .translation(CONFIG_PREFIX + "offhandKeepDurabilityLoss")
-          .defineInRange("offhandKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("offhandKeepDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       offhandDropDurabilityLoss = builder.comment("Percent durability loss on dropped offhand item")
           .translation(CONFIG_PREFIX + "offhandDropDurabilityLoss")
-          .defineInRange("offhandDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("offhandDropDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       builder.pop();
 
@@ -322,21 +348,21 @@ public class CorpseComplexConfig {
 
       mainKeepChance = builder.comment("Percent chance to keep main inventory items")
           .translation(CONFIG_PREFIX + "mainKeepChance")
-          .defineInRange("mainKeepChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("mainKeepChance", -1.0D, -1.0D, 1.0D);
 
       mainDestroyChance = builder.comment("Percent chance to destroy dropped main inventory items")
           .translation(CONFIG_PREFIX + "mainDestroyChance")
-          .defineInRange("mainDestroyChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("mainDestroyChance", -1.0D, -1.0D, 1.0D);
 
       mainKeepDurabilityLoss = builder
           .comment("Percent durability loss on kept main inventory items")
           .translation(CONFIG_PREFIX + "mainKeepDurabilityLoss")
-          .defineInRange("mainKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("mainKeepDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       mainDropDurabilityLoss = builder
           .comment("Percent durability loss on dropped main inventory items")
           .translation(CONFIG_PREFIX + "mainDropDurabilityLoss")
-          .defineInRange("mainDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("mainDropDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       builder.pop();
 
@@ -344,19 +370,19 @@ public class CorpseComplexConfig {
 
       headKeepChance = builder.comment("Percent chance to keep head item")
           .translation(CONFIG_PREFIX + "headKeepChance")
-          .defineInRange("headKeepChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("headKeepChance", -1.0D, -1.0D, 1.0D);
 
       headDestroyChance = builder.comment("Percent chance to destroy dropped head item")
           .translation(CONFIG_PREFIX + "headDestroyChance")
-          .defineInRange("headDestroyChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("headDestroyChance", -1.0D, -1.0D, 1.0D);
 
       headKeepDurabilityLoss = builder.comment("Percent durability loss on kept head item")
           .translation(CONFIG_PREFIX + "headKeepDurabilityLoss")
-          .defineInRange("headKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("headKeepDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       headDropDurabilityLoss = builder.comment("Percent durability loss on dropped head item")
           .translation(CONFIG_PREFIX + "headDropDurabilityLoss")
-          .defineInRange("headDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("headDropDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       builder.pop();
 
@@ -364,19 +390,19 @@ public class CorpseComplexConfig {
 
       chestKeepChance = builder.comment("Percent chance to keep chest item")
           .translation(CONFIG_PREFIX + "chestKeepChance")
-          .defineInRange("chestKeepChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("chestKeepChance", -1.0D, -1.0D, 1.0D);
 
       chestDestroyChance = builder.comment("Percent chance to destroy dropped chest item")
           .translation(CONFIG_PREFIX + "chestDestroyChance")
-          .defineInRange("chestDestroyChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("chestDestroyChance", -1.0D, -1.0D, 1.0D);
 
       chestKeepDurabilityLoss = builder.comment("Percent durability loss on kept chest item")
           .translation(CONFIG_PREFIX + "chestKeepDurabilityLoss")
-          .defineInRange("chestKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("chestKeepDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       chestDropDurabilityLoss = builder.comment("Percent durability loss on dropped chest item")
           .translation(CONFIG_PREFIX + "chestDropDurabilityLoss")
-          .defineInRange("chestDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("chestDropDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       builder.pop();
 
@@ -384,19 +410,19 @@ public class CorpseComplexConfig {
 
       legsKeepChance = builder.comment("Percent chance to keep legs item")
           .translation(CONFIG_PREFIX + "legsKeepChance")
-          .defineInRange("legsKeepChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("legsKeepChance", -1.0D, -1.0D, 1.0D);
 
       legsDestroyChance = builder.comment("Percent chance to destroy dropped legs item")
           .translation(CONFIG_PREFIX + "legsDestroyChance")
-          .defineInRange("legsDestroyChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("legsDestroyChance", -1.0D, -1.0D, 1.0D);
 
       legsKeepDurabilityLoss = builder.comment("Percent durability loss on kept legs item")
           .translation(CONFIG_PREFIX + "legsKeepDurabilityLoss")
-          .defineInRange("legsKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("legsKeepDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       legsDropDurabilityLoss = builder.comment("Percent durability loss on dropped legs item")
           .translation(CONFIG_PREFIX + "legsDropDurabilityLoss")
-          .defineInRange("legsDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("legsDropDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       builder.pop();
 
@@ -404,19 +430,19 @@ public class CorpseComplexConfig {
 
       feetKeepChance = builder.comment("Percent chance to keep feet item")
           .translation(CONFIG_PREFIX + "feetKeepChance")
-          .defineInRange("feetKeepChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("feetKeepChance", -1.0D, -1.0D, 1.0D);
 
       feetDestroyChance = builder.comment("Percent chance to destroy dropped feet item")
           .translation(CONFIG_PREFIX + "feetDestroyChance")
-          .defineInRange("feetDestroyChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("feetDestroyChance", -1.0D, -1.0D, 1.0D);
 
       feetKeepDurabilityLoss = builder.comment("Percent durability loss on kept feet item")
           .translation(CONFIG_PREFIX + "feetKeepDurabilityLoss")
-          .defineInRange("feetKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("feetKeepDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       feetDropDurabilityLoss = builder.comment("Percent durability loss on dropped head item")
           .translation(CONFIG_PREFIX + "feetDropDurabilityLoss")
-          .defineInRange("feetDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("feetDropDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       builder.pop();
 
@@ -424,19 +450,19 @@ public class CorpseComplexConfig {
 
       curioKeepChance = builder.comment("Percent chance to keep curio item")
           .translation(CONFIG_PREFIX + "curioKeepChance")
-          .defineInRange("curioKeepChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("curioKeepChance", -1.0D, -1.0D, 1.0D);
 
       curioDestroyChance = builder.comment("Percent chance to destroy dropped curio item")
           .translation(CONFIG_PREFIX + "curioDestroyChance")
-          .defineInRange("curioDestroyChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("curioDestroyChance", -1.0D, -1.0D, 1.0D);
 
       curioKeepDurabilityLoss = builder.comment("Percent durability loss on kept curio item")
           .translation(CONFIG_PREFIX + "curioKeepDurabilityLoss")
-          .defineInRange("curioKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("curioKeepDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       curioDropDurabilityLoss = builder.comment("Percent durability loss on dropped curio item")
           .translation(CONFIG_PREFIX + "curioDropDurabilityLoss")
-          .defineInRange("curioDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("curioDropDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       builder.pop();
 
@@ -444,22 +470,22 @@ public class CorpseComplexConfig {
 
       cosmeticArmorKeepChance = builder.comment("Percent chance to keep cosmetic armor item")
           .translation(CONFIG_PREFIX + "cosmeticArmorKeepChance")
-          .defineInRange("cosmeticArmorKeepChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("cosmeticArmorKeepChance", -1.0D, -1.0D, 1.0D);
 
       cosmeticArmorDestroyChance = builder
           .comment("Percent chance to destroy dropped cosmetic armor item")
           .translation(CONFIG_PREFIX + "cosmeticArmorDestroyChance")
-          .defineInRange("cosmeticArmorDestroyChance", 0.0D, 0.0D, 1.0D);
+          .defineInRange("cosmeticArmorDestroyChance", -1.0D, -1.0D, 1.0D);
 
       cosmeticArmorKeepDurabilityLoss = builder
           .comment("Percent durability loss on kept cosmetic armor item")
           .translation(CONFIG_PREFIX + "cosmeticArmorKeepDurabilityLoss")
-          .defineInRange("cosmeticArmorKeepDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("cosmeticArmorKeepDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       cosmeticArmorDropDurabilityLoss = builder
           .comment("Percent durability loss on dropped cosmetic armor item")
           .translation(CONFIG_PREFIX + "cosmeticArmorDropDurabilityLoss")
-          .defineInRange("cosmeticArmorDropDurabilityLoss", 0.0D, 0.0D, 1.0D);
+          .defineInRange("cosmeticArmorDropDurabilityLoss", -1.0D, -1.0D, 1.0D);
 
       builder.pop();
 
@@ -648,6 +674,11 @@ public class CorpseComplexConfig {
   }
 
   public static void bakeConfigs() {
+    keepChance = SERVER.keepChance.get();
+    destroyChance = SERVER.destroyChance.get();
+    keepDurabilityLoss = SERVER.keepDurabilityLoss.get();
+    dropDurabilityLoss = SERVER.dropDurabilityLoss.get();
+
     mainhandKeepChance = SERVER.mainhandKeepChance.get();
     mainhandDestroyChance = SERVER.mainhandDestroyChance.get();
     mainhandKeepDurabilityLoss = SERVER.mainhandKeepDurabilityLoss.get();

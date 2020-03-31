@@ -12,6 +12,11 @@ public class OverridesConfig {
   public static class OverrideConfig {
     public Integer priority;
 
+    public Double keepChance;
+    public Double destroyChance;
+    public Double keepDurabilityLoss;
+    public Double dropDurabilityLoss;
+
     public Double mainhandKeepChance;
     public Double mainhandDestroyChance;
     public Double mainhandKeepDurabilityLoss;

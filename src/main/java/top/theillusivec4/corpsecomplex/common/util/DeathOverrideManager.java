@@ -92,6 +92,9 @@ public class DeathOverrideManager {
           .build();
 
       Map<InventorySection, SectionSettings> inventorySettings = new HashMap<>();
+      inventorySettings.put(InventorySection.DEFAULT,
+          new SectionSettings(override.keepChance, override.destroyChance,
+              override.keepDurabilityLoss, override.dropDurabilityLoss));
       inventorySettings.put(InventorySection.MAINHAND,
           new SectionSettings(override.mainhandKeepChance, override.mainhandDestroyChance,
               override.mainhandKeepDurabilityLoss, override.mainhandDropDurabilityLoss));

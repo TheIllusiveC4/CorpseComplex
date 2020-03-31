@@ -80,12 +80,15 @@ public class CorpseComplex {
 
     if (evt.getConfig().getModId().equals(MODID)) {
 
+      if (evt.getConfig().getSpec() == CorpseComplexConfig.serverSpec) {
+        CorpseComplexConfig.bakeConfigs();
+      }
+
       if (evt.getConfig().getSpec() == CorpseComplexConfig.overridesSpec) {
         CorpseComplexConfig.transform(evt.getConfig().getConfigData());
         DeathConditionManager.importConfig();
         DeathOverrideManager.importConfig();
       }
-      CorpseComplexConfig.bakeConfigs();
     }
   }
 }

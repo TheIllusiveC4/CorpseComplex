@@ -22,7 +22,7 @@ public class VanillaInventory implements Inventory {
       InventorySetting setting = deathStorage.getSettings().getInventorySettings();
       ListNBT list = new ListNBT();
 
-      for (int i = 0; i < 41; i++) {
+      for (int i = 0; i < 9; i++) {
         InventoryHelper.process(player, inventory.getStackInSlot(i), i, list,
             i == inventory.currentItem ? InventorySection.MAINHAND : InventorySection.HOTBAR,
             setting);

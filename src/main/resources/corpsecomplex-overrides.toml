@@ -1,7 +1,7 @@
 [[overrides]]
-  mainhandKeepChance=1.0
-  mainhandDestroyChance=1.0
-  keepFood=true
+  priority = 100
+  mainhandKeepChance=-1.0
+  conditions = ["fireDamage"]
 [[conditions]]
-  identifier="fireDamage"
-  damageType="fire"
+  identifier = "fireDamage"
+  damageType = "fire"

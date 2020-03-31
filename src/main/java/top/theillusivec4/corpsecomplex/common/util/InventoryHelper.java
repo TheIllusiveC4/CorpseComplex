@@ -26,9 +26,12 @@ public class InventoryHelper {
   public static void process(PlayerEntity player, ItemStack stack, int index, ListNBT list,
       InventorySection section, InventorySetting setting) {
     DropMode inventoryRule = getDropModeOverride(stack, setting);
+    SectionSettings defaultSettings = setting.getInventorySettings().get(InventorySection.DEFAULT);
     SectionSettings sectionSettings = setting.getInventorySettings().get(section);
-    double keepChance = sectionSettings.keepChance;
-    double destroyChance = sectionSettings.destroyChance;
+    double keepChance =
+        sectionSettings.keepChance >= 0 ? sectionSettings.keepChance : defaultSettings.keepChance;
+    double destroyChance = sectionSettings.destroyChance >= 0 ? sectionSettings.destroyChance
+        : defaultSettings.destroyChance;
 
     if (inventoryRule != null) {
       if (inventoryRule == DropMode.KEEP) {
@@ -40,13 +43,17 @@ public class InventoryHelper {
     ItemStack keep = stack.split(getRandomAmount(stack.getCount(), keepChance));
 
     if (!keep.isEmpty()) {
-      applyDurabilityLoss(player, keep, setting, sectionSettings.keepDurabilityLoss);
+      applyDurabilityLoss(player, keep, setting,
+          sectionSettings.keepDurabilityLoss >= 0 ? sectionSettings.keepDurabilityLoss
+              : defaultSettings.keepDurabilityLoss);
       CompoundNBT compoundnbt = new CompoundNBT();
       compoundnbt.putInt("Slot", index);
       keep.write(compoundnbt);
       list.add(compoundnbt);
     }
-    applyDurabilityLoss(player, stack, setting, sectionSettings.dropDurabilityLoss);
+    applyDurabilityLoss(player, stack, setting,
+        sectionSettings.dropDurabilityLoss >= 0 ? sectionSettings.dropDurabilityLoss
+            : defaultSettings.dropDurabilityLoss);
     stack.shrink(getRandomAmount(stack.getCount(), destroyChance));
   }
 
