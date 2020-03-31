@@ -286,8 +286,6 @@ public class CorpseComplexConfig {
     public Server(ForgeConfigSpec.Builder builder) {
       builder.push("inventory");
 
-      builder.comment("Default values if specific section value is -1").push("defaults");
-
       keepChance = builder.comment("Default percent chance to keep item")
           .translation(CONFIG_PREFIX + "keepChance").defineInRange("keepChance", 0.0D, 0.0D, 1.0D);
       destroyChance = builder.comment("Default percent chance to destroy dropped item")
@@ -299,8 +297,6 @@ public class CorpseComplexConfig {
       dropDurabilityLoss = builder.comment("Default percent durability loss on dropped item")
           .translation(CONFIG_PREFIX + "dropDurabilityLoss")
           .defineInRange("dropDurabilityLoss", 0.0D, 0.0D, 1.0D);
-
-      builder.pop();
 
       builder.push("mainhand");
 
