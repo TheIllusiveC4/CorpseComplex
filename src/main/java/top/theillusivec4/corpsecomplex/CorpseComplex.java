@@ -1,11 +1,20 @@
 /*
- * Copyright (c) 2017. <C4>
+ * Copyright (c) 2017-2020 C4
  *
- * This Java class is distributed as a part of Corpse Complex.
- * Corpse Complex is open source and licensed under the GNU General Public
- * License v3.
- * A copy of the license can be found here: https://www.gnu.org/licenses/gpl
- * .text
+ * This file is part of Corpse Complex, a mod made for Minecraft.
+ *
+ * Corpse Complex is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Corpse Complex is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Corpse Complex.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package top.theillusivec4.corpsecomplex;
