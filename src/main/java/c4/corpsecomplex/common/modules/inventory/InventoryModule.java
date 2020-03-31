@@ -69,6 +69,7 @@ public class InventoryModule extends Module {
   static boolean keepMainInventory;
 
   private static boolean noDropDespawn;
+  private static int dropDespawnTimer;
   private static boolean cfgEnabled;
 
   {
@@ -137,6 +138,8 @@ public class InventoryModule extends Module {
 
     if (noDropDespawn) {
       e.getDrops().forEach(EntityItem::setNoDespawn);
+    } else if (dropDespawnTimer > 0) {
+      e.getDrops().forEach(item -> item.lifespan = dropDespawnTimer * 20);
     }
   }
 
@@ -183,6 +186,8 @@ public class InventoryModule extends Module {
         false);
     noDropDespawn = getBool("No Drop Despawn", false,
         "Set to true to " + "prevent death drops from despawning", false);
+    dropDespawnTimer = getInt("Drop Despawn Timer", -1, -1, 10000,
+        "Time (in seconds) to set for drop despawn timer, -1 for vanilla", false);
   }
 
   public void initPropOrder() {
