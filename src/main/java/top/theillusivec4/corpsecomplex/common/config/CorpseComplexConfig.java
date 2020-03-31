@@ -127,6 +127,7 @@ public class CorpseComplexConfig {
 
   public static boolean restrictRespawning;
   public static List<? extends String> respawnItems;
+  public static List<? extends String> mobSpawnsOnDeath;
 
   public static List<OverrideConfig> overrides;
   public static List<ConditionConfig> conditions;
@@ -251,6 +252,7 @@ public class CorpseComplexConfig {
 
     public final BooleanValue restrictRespawning;
     public final ConfigValue<List<? extends String>> respawnItems;
+    public final ConfigValue<List<? extends String>> mobSpawnsOnDeath;
 
     public Server(ForgeConfigSpec.Builder builder) {
       builder.push("inventory");
@@ -630,6 +632,11 @@ public class CorpseComplexConfig {
           .translation(CONFIG_PREFIX + "respawnItems")
           .defineList("respawnItems", new ArrayList<>(), s -> s instanceof String);
 
+      mobSpawnsOnDeath = builder
+          .comment("List of mobs to spawn on player death\nFormat: modid:name")
+          .translation(CONFIG_PREFIX + "mobSpawnsOnDeath")
+          .defineList("mobSpawnsOnDeath", new ArrayList<>(), s -> s instanceof String);
+
       builder.pop();
     }
   }
@@ -736,5 +743,6 @@ public class CorpseComplexConfig {
 
     restrictRespawning = SERVER.restrictRespawning.get();
     respawnItems = SERVER.respawnItems.get();
+    mobSpawnsOnDeath = SERVER.mobSpawnsOnDeath.get();
   }
 }

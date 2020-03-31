@@ -89,6 +89,7 @@ public class OverridesConfig {
 
     public Boolean restrictRespawning;
     public List<String> respawnItems;
+    public List<String> mobSpawnsOnDeath;
 
     public List<String> conditions;
   }

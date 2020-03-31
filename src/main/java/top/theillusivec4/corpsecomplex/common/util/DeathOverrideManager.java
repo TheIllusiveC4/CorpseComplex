@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.stream.Collectors;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
@@ -83,8 +84,12 @@ public class DeathOverrideManager {
       List<ItemStack> respawnItems =
           override.respawnItems != null ? ConfigParser.parseItems(override.respawnItems).keySet()
               .stream().map(ItemStack::new).collect(Collectors.toList()) : null;
+      List<EntityType<?>> mobSpawnsOnDeath =
+          override.mobSpawnsOnDeath != null ? ConfigParser.parseMobs(override.mobSpawnsOnDeath)
+              : null;
       MiscellaneousOverride misc = new MiscellaneousOverride.Builder().respawnItems(respawnItems)
-          .restrictRespawning(override.restrictRespawning).build();
+          .restrictRespawning(override.restrictRespawning).mobSpawnsOnDeath(mobSpawnsOnDeath)
+          .build();
 
       Map<InventorySection, SectionSettings> inventorySettings = new HashMap<>();
       inventorySettings.put(InventorySection.MAINHAND,

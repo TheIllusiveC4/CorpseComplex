@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
@@ -15,6 +16,18 @@ import top.theillusivec4.corpsecomplex.common.util.Enums;
 import top.theillusivec4.corpsecomplex.common.util.Enums.DropMode;
 
 public class ConfigParser {
+
+  public static List<EntityType<?>> parseMobs(@Nonnull List<? extends String> configList) {
+    List<EntityType<?>> list = new ArrayList<>();
+    configList.forEach(mob -> {
+      EntityType<?> entity = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(mob));
+
+      if (entity != null) {
+        list.add(entity);
+      }
+    });
+    return list;
+  }
 
   public static Map<Item, Integer> parseItems(@Nonnull List<? extends String> configList) {
     Map<Item, Integer> map = new HashMap<>();
