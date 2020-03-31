@@ -1,7 +1,9 @@
 package top.theillusivec4.corpsecomplex.common.util;
 
+import java.util.Map;
 import java.util.Random;
 import javax.annotation.Nullable;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -10,6 +12,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.InventorySetting;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.InventorySetting.SectionSettings;
 import top.theillusivec4.corpsecomplex.common.registry.CorpseComplexRegistry;
@@ -50,7 +53,7 @@ public class InventoryHelper {
   @Nullable
   public static DropMode getDropModeOverride(ItemStack stack, InventorySetting setting) {
 
-    if (EnchantmentHelper.getEnchantmentLevel(CorpseComplexRegistry.SOULBINDING, stack) > 0) {
+    if (saveSoulbound(stack)) {
       return DropMode.KEEP;
     } else if (EnchantmentHelper.hasVanishingCurse(stack)) {
       return DropMode.DESTROY;
@@ -94,5 +97,37 @@ public class InventoryHelper {
       }
     }
     return amount;
+  }
+
+  private static boolean saveSoulbound(ItemStack stack) {
+    int level = EnchantmentHelper.getEnchantmentLevel(CorpseComplexRegistry.SOULBINDING, stack);
+
+    if (level <= 0) {
+      return false;
+    }
+
+    double savePercent =
+        CorpseComplexConfig.baseSave + CorpseComplexConfig.extraSavePerLevel * (level - 1);
+    boolean activated = false;
+
+    if (RAND.nextDouble() < savePercent) {
+      activated = true;
+    }
+    double levelDropChance = CorpseComplexConfig.levelDropChance;
+
+    if (levelDropChance > 0 && activated) {
+      if (RAND.nextDouble() < levelDropChance) {
+        level = Math.max(0, level - 1);
+      }
+
+      Map<Enchantment, Integer> enchMap = EnchantmentHelper.getEnchantments(stack);
+      enchMap.remove(CorpseComplexRegistry.SOULBINDING);
+
+      if (level > 0) {
+        enchMap.put(CorpseComplexRegistry.SOULBINDING, level);
+      }
+      EnchantmentHelper.setEnchantments(enchMap, stack);
+    }
+    return activated;
   }
 }
