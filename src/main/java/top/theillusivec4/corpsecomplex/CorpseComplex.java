@@ -37,6 +37,7 @@ import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryModule;
 import top.theillusivec4.corpsecomplex.common.modules.mementomori.MementoMoriModule;
 import top.theillusivec4.corpsecomplex.common.util.DeathConditionManager;
 import top.theillusivec4.corpsecomplex.common.util.DeathOverrideManager;
+import top.theillusivec4.corpsecomplex.common.util.integration.IntegrationManager;
 
 @Mod(CorpseComplex.MODID)
 public class CorpseComplex {
@@ -72,6 +73,7 @@ public class CorpseComplex {
 
   private void setup(final FMLCommonSetupEvent evt) {
     DeathStorageCapability.register();
+    IntegrationManager.init();
   }
 
   private void config(final ModConfigEvent evt) {

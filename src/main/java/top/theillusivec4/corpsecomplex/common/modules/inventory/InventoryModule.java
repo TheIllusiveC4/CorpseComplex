@@ -1,6 +1,7 @@
 package top.theillusivec4.corpsecomplex.common.modules.inventory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import net.minecraft.entity.item.ItemEntity;
@@ -23,19 +24,9 @@ import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.inte
 public class InventoryModule {
 
   public static final List<Inventory> STORAGE = new ArrayList<>();
-  public static final Random RANDOM = new Random();
 
-  @SubscribeEvent
-  public void serverStart(final FMLServerStartedEvent evt) {
+  static {
     STORAGE.add(new VanillaInventory());
-
-    if (ModList.get().isLoaded("curios")) {
-      STORAGE.add(new CuriosInventory());
-    }
-
-    if (ModList.get().isLoaded("cosmeticarmorreworked")) {
-      STORAGE.add(new CosmeticArmorInventory());
-    }
   }
 
   @SubscribeEvent(priority = EventPriority.LOW)

@@ -24,7 +24,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
 import top.theillusivec4.corpsecomplex.common.DeathSettings;
-import top.theillusivec4.corpsecomplex.common.util.DeathDamageSource;
+import top.theillusivec4.corpsecomplex.common.util.DeathInfo;
 import top.theillusivec4.corpsecomplex.common.util.DeathSettingManager;
 
 public class DeathStorageCapability {
@@ -74,7 +74,7 @@ public class DeathStorageCapability {
           EffectInstance effectInstance = EffectInstance.read((CompoundNBT) effect);
           instance.addEffectInstance(effectInstance);
         });
-        DeathDamageSource deathDamageSource = new DeathDamageSource();
+        DeathInfo deathDamageSource = new DeathInfo();
         deathDamageSource.read(compound);
         instance.setDeathDamageSource(deathDamageSource);
       }
@@ -93,9 +93,9 @@ public class DeathStorageCapability {
 
     DeathSettings getSettings();
 
-    void setDeathDamageSource(DeathDamageSource deathDamageSource);
+    void setDeathDamageSource(DeathInfo deathDamageSource);
 
-    DeathDamageSource getDeathDamageSource();
+    DeathInfo getDeathDamageSource();
 
     void addInventory(String modid, INBT nbt);
 
@@ -116,7 +116,7 @@ public class DeathStorageCapability {
     private final List<EffectInstance> effects = new ArrayList<>();
     private final PlayerEntity player;
 
-    private DeathDamageSource deathDamageSource;
+    private DeathInfo deathDamageSource;
     private DeathSettings deathSettings;
 
     public DeathStorage() {
@@ -147,12 +147,12 @@ public class DeathStorageCapability {
     }
 
     @Override
-    public void setDeathDamageSource(DeathDamageSource deathDamageSource) {
+    public void setDeathDamageSource(DeathInfo deathDamageSource) {
       this.deathDamageSource = deathDamageSource;
     }
 
     @Override
-    public DeathDamageSource getDeathDamageSource() {
+    public DeathInfo getDeathDamageSource() {
       return this.deathDamageSource;
     }
 

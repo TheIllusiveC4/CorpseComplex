@@ -1,14 +1,20 @@
 package top.theillusivec4.corpsecomplex.common.util;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class DeathDamageSource {
+public class DeathInfo {
 
   private String damageType;
   private boolean isFireDamage;
@@ -20,22 +26,11 @@ public class DeathDamageSource {
   @Nullable
   private EntityType<?> trueSource;
   private int dimension;
+  private List<String> gameStages;
 
-  public DeathDamageSource() {
-  }
+  public DeathInfo() {}
 
-  public DeathDamageSource(DeathDamageSource deathDamageSource) {
-    this.damageType = deathDamageSource.getDamageType();
-    this.isFireDamage = deathDamageSource.isFireDamage();
-    this.isMagicDamage = deathDamageSource.isMagicDamage();
-    this.isExplosion = deathDamageSource.isExplosion();
-    this.isProjectile = deathDamageSource.isProjectile();
-    this.immediateSource = deathDamageSource.getImmediateSource();
-    this.trueSource = deathDamageSource.getTrueSource();
-    this.dimension = deathDamageSource.getDimension();
-  }
-
-  public DeathDamageSource(DamageSource source, World world) {
+  public DeathInfo(DamageSource source, World world, @Nonnull List<String> gameStages) {
     this.damageType = source.getDamageType();
     this.isFireDamage = source.isFireDamage();
     this.isMagicDamage = source.isMagicDamage();
@@ -45,6 +40,7 @@ public class DeathDamageSource {
         source.getImmediateSource() != null ? source.getImmediateSource().getType() : null;
     this.trueSource = source.getTrueSource() != null ? source.getTrueSource().getType() : null;
     this.dimension = world.getDimension().getType().getId();
+    this.gameStages = gameStages;
   }
 
   public String getDamageType() {
@@ -81,6 +77,10 @@ public class DeathDamageSource {
     return dimension;
   }
 
+  public List<String> getGameStages() {
+    return gameStages;
+  }
+
   public CompoundNBT write(CompoundNBT compoundNBT) {
     CompoundNBT tag = new CompoundNBT();
     tag.putString("DamageType", this.damageType);
@@ -95,6 +95,9 @@ public class DeathDamageSource {
       tag.putString("TrueSource", this.trueSource.getRegistryName().toString());
     }
     tag.putInt("Dimension", this.dimension);
+    ListNBT list = new ListNBT();
+    this.gameStages.forEach(stage -> list.add(new StringNBT(stage)));
+    tag.put("GameStages", list);
     compoundNBT.put("DeathDamageSource", tag);
     return compoundNBT;
   }
@@ -115,5 +118,8 @@ public class DeathDamageSource {
           .getValue(new ResourceLocation(tag.getString("TrueSource")));
     }
     this.dimension = tag.getInt("Dimension");
+    this.gameStages = new ArrayList<>();
+    ListNBT list = tag.getList("GameStages", NBT.TAG_STRING);
+    list.forEach(stage -> this.gameStages.add(stage.getString()));
   }
 }

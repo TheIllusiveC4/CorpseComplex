@@ -101,5 +101,6 @@ public class OverridesConfig {
     public String immediateSource;
     public String trueSource;
     public Integer dimension;
+    public List<String> gameStages;
   }
 }

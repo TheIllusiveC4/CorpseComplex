@@ -1,8 +1,11 @@
 package top.theillusivec4.corpsecomplex.common.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import javax.annotation.Nullable;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
@@ -16,12 +19,19 @@ import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 public class DeathConditionManager {
 
   public static final Map<String, DeathCondition> CONDITIONS = new HashMap<>();
+  public static final List<BiFunction<DeathInfo, DeathCondition, Boolean>> CONDITION_ADDONS = new ArrayList<>();
 
   public static boolean matches(DeathCondition deathCondition, IDeathStorage deathStorage) {
-    DeathDamageSource source = deathStorage.getDeathDamageSource();
+    DeathInfo source = deathStorage.getDeathDamageSource();
 
     if (source == null) {
       return false;
+    }
+
+    for (BiFunction<DeathInfo, DeathCondition, Boolean> conditionAddon : CONDITION_ADDONS) {
+      if (!conditionAddon.apply(source, deathCondition)) {
+        return false;
+      }
     }
     Optional<String> damageTypeOpt = deathCondition.getDamageType();
     boolean matchesDamage = damageTypeOpt.map(damageType -> {
@@ -76,7 +86,8 @@ public class DeathConditionManager {
       }
       Builder builder = new Builder().damageType(condition.damageType)
           .immediateSource(getEntityType(condition.immediateSource))
-          .trueSource(getEntityType(condition.trueSource)).dimension(condition.dimension);
+          .trueSource(getEntityType(condition.trueSource)).dimension(condition.dimension)
+          .gameStages(condition.gameStages);
       CONDITIONS.put(identifier, builder.build());
     });
   }

@@ -57,11 +57,16 @@ repositories {
     maven {
         url = "https://maven.theillusivec4.top/"
     }
+    maven {
+        url 'https://maven.mcmoddev.com'
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${version_forge}"
     compile fg.deobf("top.theillusivec4.curios:curios:${version_curios}")
+    compile fg.deobf("net.darkhax.bookshelf:Bookshelf-1.14.4:${version_bookshelf}")
+    compile fg.deobf("net.darkhax.gamestages:GameStages-1.14.4:${version_gamestages}")
     compile fg.deobf("curse.maven:cosmetic-armor-reworked:2883500")
 }
 
