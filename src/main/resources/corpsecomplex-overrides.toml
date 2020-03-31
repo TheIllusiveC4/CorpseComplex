@@ -1,6 +1,5 @@
 [[overrides]]
   priority = 100
-  mainhandKeepChance=-1.0
   conditions = ["fireDamage"]
 [[conditions]]
   identifier = "fireDamage"
