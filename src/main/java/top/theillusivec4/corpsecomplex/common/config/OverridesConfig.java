@@ -100,5 +100,6 @@ public class OverridesConfig {
     public String damageType;
     public String immediateSource;
     public String trueSource;
+    public Integer dimension;
   }
 }

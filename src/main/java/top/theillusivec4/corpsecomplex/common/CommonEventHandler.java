@@ -33,7 +33,7 @@ public class CommonEventHandler {
 
     if (!world.isRemote()) {
       DeathStorageCapability.getCapability(playerEntity).ifPresent(deathStorage -> {
-        deathStorage.setDeathDamageSource(new DeathDamageSource(evt.getSource()));
+        deathStorage.setDeathDamageSource(new DeathDamageSource(evt.getSource(), world));
         deathStorage.buildSettings();
       });
     }

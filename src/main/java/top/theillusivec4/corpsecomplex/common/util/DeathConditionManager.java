@@ -41,6 +41,13 @@ public class DeathConditionManager {
     if (!matchesDamage) {
       return false;
     }
+    Optional<Integer> dimensionOpt = deathCondition.getDimension();
+    boolean matchesDimension = dimensionOpt.map(dimension -> source.getDimension() == dimension)
+        .orElse(true);
+
+    if (!matchesDimension) {
+      return false;
+    }
     Optional<EntityType<?>> imSrcOpt = deathCondition.getImmediateSource();
     boolean matchesImSrc = imSrcOpt.map(immediateSource -> {
       EntityType<?> imSrc = source.getImmediateSource();
@@ -69,7 +76,7 @@ public class DeathConditionManager {
       }
       Builder builder = new Builder().damageType(condition.damageType)
           .immediateSource(getEntityType(condition.immediateSource))
-          .trueSource(getEntityType(condition.trueSource));
+          .trueSource(getEntityType(condition.trueSource)).dimension(condition.dimension);
       CONDITIONS.put(identifier, builder.build());
     });
   }

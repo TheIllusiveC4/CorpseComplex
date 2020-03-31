@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class DeathDamageSource {
@@ -18,6 +19,7 @@ public class DeathDamageSource {
   private EntityType<?> immediateSource;
   @Nullable
   private EntityType<?> trueSource;
+  private int dimension;
 
   public DeathDamageSource() {
   }
@@ -30,9 +32,10 @@ public class DeathDamageSource {
     this.isProjectile = deathDamageSource.isProjectile();
     this.immediateSource = deathDamageSource.getImmediateSource();
     this.trueSource = deathDamageSource.getTrueSource();
+    this.dimension = deathDamageSource.getDimension();
   }
 
-  public DeathDamageSource(DamageSource source) {
+  public DeathDamageSource(DamageSource source, World world) {
     this.damageType = source.getDamageType();
     this.isFireDamage = source.isFireDamage();
     this.isMagicDamage = source.isMagicDamage();
@@ -41,6 +44,7 @@ public class DeathDamageSource {
     this.immediateSource =
         source.getImmediateSource() != null ? source.getImmediateSource().getType() : null;
     this.trueSource = source.getTrueSource() != null ? source.getTrueSource().getType() : null;
+    this.dimension = world.getDimension().getType().getId();
   }
 
   public String getDamageType() {
@@ -73,6 +77,10 @@ public class DeathDamageSource {
     return trueSource;
   }
 
+  public int getDimension() {
+    return dimension;
+  }
+
   public CompoundNBT write(CompoundNBT compoundNBT) {
     CompoundNBT tag = new CompoundNBT();
     tag.putString("DamageType", this.damageType);
@@ -86,6 +94,7 @@ public class DeathDamageSource {
     if (this.trueSource != null && this.trueSource.getRegistryName() != null) {
       tag.putString("TrueSource", this.trueSource.getRegistryName().toString());
     }
+    tag.putInt("Dimension", this.dimension);
     compoundNBT.put("DeathDamageSource", tag);
     return compoundNBT;
   }
@@ -105,5 +114,6 @@ public class DeathDamageSource {
       this.trueSource = ForgeRegistries.ENTITIES
           .getValue(new ResourceLocation(tag.getString("TrueSource")));
     }
+    this.dimension = tag.getInt("Dimension");
   }
 }
