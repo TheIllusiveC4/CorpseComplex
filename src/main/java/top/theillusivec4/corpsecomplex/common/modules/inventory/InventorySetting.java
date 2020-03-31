@@ -15,6 +15,7 @@ public class InventorySetting implements Setting<InventoryOverride> {
   private Map<InventorySection, SectionSettings> inventorySettings = new HashMap<>();
   private Map<Item, DropMode> items = new HashMap<>();
   private boolean limitDurabilityLoss;
+  private int dropDespawnTime;
 
   public Map<InventorySection, SectionSettings> getInventorySettings() {
     return inventorySettings;
@@ -38,6 +39,14 @@ public class InventorySetting implements Setting<InventoryOverride> {
 
   public void setLimitDurabilityLoss(boolean limitDurabilityLoss) {
     this.limitDurabilityLoss = limitDurabilityLoss;
+  }
+
+  public int getDropDespawnTime() {
+    return dropDespawnTime;
+  }
+
+  public void setDropDespawnTime(int dropDespawnTime) {
+    this.dropDespawnTime = dropDespawnTime;
   }
 
   @Override
@@ -87,6 +96,7 @@ public class InventorySetting implements Setting<InventoryOverride> {
             CorpseComplexConfig.cosmeticArmorDropDurabilityLoss));
     this.setItems(ConfigParser.parseDrops(CorpseComplexConfig.itemSettings));
     this.setLimitDurabilityLoss(CorpseComplexConfig.limitDurabilityLoss);
+    this.setDropDespawnTime(CorpseComplexConfig.dropDespawnTime);
   }
 
   @Override
@@ -109,6 +119,7 @@ public class InventorySetting implements Setting<InventoryOverride> {
         }));
     override.getItems().ifPresent(this::setItems);
     override.getLimitDurabilityLoss().ifPresent(this::setLimitDurabilityLoss);
+    override.getDropDespawnTime().ifPresent(this::setDropDespawnTime);
   }
 
   public static class SectionSettings {

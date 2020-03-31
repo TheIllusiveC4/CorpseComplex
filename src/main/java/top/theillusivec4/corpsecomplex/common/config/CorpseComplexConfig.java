@@ -84,6 +84,7 @@ public class CorpseComplexConfig {
 
   public static List<? extends String> itemSettings;
   public static boolean limitDurabilityLoss;
+  public static int dropDespawnTime;
 
   public static Rarity rarity;
   public static double levelDropChance;
@@ -207,6 +208,7 @@ public class CorpseComplexConfig {
 
     public final ConfigValue<List<? extends String>> itemSettings;
     public final BooleanValue limitDurabilityLoss;
+    public final IntValue dropDespawnTime;
 
     public final ConfigValue<Rarity> rarity;
     public final DoubleValue levelDropChance;
@@ -468,6 +470,11 @@ public class CorpseComplexConfig {
           "Set to true to limit durability loss so that items do not break from death penalties")
           .translation(CONFIG_PREFIX + "limitDurabilityLoss").define("limitDurabilityLoss", false);
 
+      dropDespawnTime = builder.comment(
+          "Time (in seconds) that dropped items will take to despawn, -1 to disable despawning")
+          .translation(CONFIG_PREFIX + "dropDespawnTime")
+          .defineInRange("dropDespawnTime", 300, -1, Integer.MAX_VALUE);
+
       builder.pop();
 
       builder.push("soulbinding");
@@ -686,6 +693,7 @@ public class CorpseComplexConfig {
 
     itemSettings = SERVER.itemSettings.get();
     limitDurabilityLoss = SERVER.limitDurabilityLoss.get();
+    dropDespawnTime = SERVER.dropDespawnTime.get();
 
     rarity = SERVER.rarity.get();
     levelDropChance = SERVER.levelDropChance.get();

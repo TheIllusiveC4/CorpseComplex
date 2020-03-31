@@ -122,7 +122,8 @@ public class DeathOverrideManager {
           override.itemSettings != null ? ConfigParser.parseDrops(override.itemSettings) : null;
       InventoryOverride inventory = new InventoryOverride.Builder()
           .inventorySettings(inventorySettings).items(itemSettings)
-          .limitDurabilityLoss(override.limitDurabilityLoss).build();
+          .limitDurabilityLoss(override.limitDurabilityLoss)
+          .dropDespawnTime(override.dropDespawnTime).build();
 
       OVERRIDES.add((new DeathOverride.Builder().priority(override.priority).inventory(inventory)
           .conditions(conditions).experience(experience).hunger(hunger).effects(effects)

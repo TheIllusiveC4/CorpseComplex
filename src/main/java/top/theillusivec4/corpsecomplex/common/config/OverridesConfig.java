@@ -64,6 +64,7 @@ public class OverridesConfig {
 
     public List<String> itemSettings;
     public Boolean limitDurabilityLoss;
+    public Integer dropDespawnTime;
 
     public List<String> cures;
     public List<String> effects;
