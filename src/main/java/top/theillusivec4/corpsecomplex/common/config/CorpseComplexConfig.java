@@ -5,6 +5,7 @@ import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.enchantment.Enchantment.Rarity;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -83,6 +84,15 @@ public class CorpseComplexConfig {
 
   public static List<? extends String> itemSettings;
   public static boolean limitDurabilityLoss;
+
+  public static Rarity rarity;
+  public static double levelDropChance;
+  public static double baseSave;
+  public static double extraSavePerLevel;
+  public static boolean allowedOnBooks;
+  public static boolean canApplyEnchantingTable;
+  public static int maxSoulbindingLevel;
+  public static boolean isTreasure;
 
   public static List<? extends String> cures;
   public static List<? extends String> effects;
@@ -197,6 +207,15 @@ public class CorpseComplexConfig {
 
     public final ConfigValue<List<? extends String>> itemSettings;
     public final BooleanValue limitDurabilityLoss;
+
+    public final ConfigValue<Rarity> rarity;
+    public final DoubleValue levelDropChance;
+    public final DoubleValue baseSave;
+    public final DoubleValue extraSavePerLevel;
+    public final BooleanValue allowedOnBooks;
+    public final BooleanValue canApplyEnchantingTable;
+    public final IntValue maxSoulbindingLevel;
+    public final BooleanValue isTreasure;
 
     public final ConfigValue<List<? extends String>> cures;
     public final ConfigValue<List<? extends String>> effects;
@@ -451,6 +470,35 @@ public class CorpseComplexConfig {
 
       builder.pop();
 
+      builder.push("soulbinding");
+
+      rarity = builder.comment("The rarity of the enchantment")
+          .translation(CONFIG_PREFIX + "rarity").defineEnum("rarity", Rarity.VERY_RARE);
+      levelDropChance = builder.comment(
+          "Percent chance that the item will drop a level in the enchantment on death when kept")
+          .translation(CONFIG_PREFIX + "levelDropChance")
+          .defineInRange("levelDropChance", 0.0D, 0.0D, 1.0D);
+      baseSave = builder
+          .comment("Base percent chance that the enchantment will save an item on death")
+          .translation(CONFIG_PREFIX + "baseSave").defineInRange("baseSave", 1.0D, 0.0D, 1.0D);
+      extraSavePerLevel = builder.comment(
+          "Percent chance increase with each level in the enchantment that the item will be saved on death")
+          .translation(CONFIG_PREFIX + "extraSavePerLevel")
+          .defineInRange("extraSavePerLevel", 0.0D, 0.0D, 1.0D);
+      allowedOnBooks = builder.comment("Set to true to allow enchanting Soulbinding on books")
+          .translation(CONFIG_PREFIX + "allowedOnBooks").define("allowedOnBooks", false);
+      canApplyEnchantingTable = builder
+          .comment("Set to true to allow enchanting Soulbinding at the enchantment table")
+          .translation(CONFIG_PREFIX + "canApplyEnchantingTable")
+          .define("canApplyEnchantingTable", false);
+      maxSoulbindingLevel = builder.comment("Maximum level of the enchantment")
+          .translation(CONFIG_PREFIX + "maxSoulbindingLevel")
+          .defineInRange("maxSoulbindingLevel", 1, 1, 5);
+      isTreasure = builder.comment("Set to true to consider as a treasure enchantment")
+          .translation(CONFIG_PREFIX + "isTreasure").define("isTreasure", false);
+
+      builder.pop();
+
       builder.push("effects");
 
       cures = builder.comment("List of valid items to cure curable effects")
@@ -638,6 +686,15 @@ public class CorpseComplexConfig {
 
     itemSettings = SERVER.itemSettings.get();
     limitDurabilityLoss = SERVER.limitDurabilityLoss.get();
+
+    rarity = SERVER.rarity.get();
+    levelDropChance = SERVER.levelDropChance.get();
+    baseSave = SERVER.baseSave.get();
+    extraSavePerLevel = SERVER.extraSavePerLevel.get();
+    allowedOnBooks = SERVER.allowedOnBooks.get();
+    canApplyEnchantingTable = SERVER.canApplyEnchantingTable.get();
+    maxSoulbindingLevel = SERVER.maxSoulbindingLevel.get();
+    isTreasure = SERVER.isTreasure.get();
 
     cures = SERVER.cures.get();
     effects = SERVER.effects.get();
