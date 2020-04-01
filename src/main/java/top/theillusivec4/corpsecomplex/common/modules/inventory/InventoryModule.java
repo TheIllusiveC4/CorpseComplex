@@ -20,9 +20,7 @@
 package top.theillusivec4.corpsecomplex.common.modules.inventory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
@@ -32,13 +30,9 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.Inventory;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.VanillaInventory;
-import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.integration.CosmeticArmorInventory;
-import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.integration.CuriosInventory;
 
 public class InventoryModule {
 
@@ -78,6 +72,23 @@ public class InventoryModule {
     if (!world.isRemote() && !world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
       DeathStorageCapability.getCapability(playerEntity).ifPresent(
           deathStorage -> STORAGE.forEach(storage -> storage.storeInventory(deathStorage)));
+    }
+  }
+
+  @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
+  public void canceledDeath(final LivingDeathEvent evt) {
+
+    if (!(evt.getEntityLiving() instanceof PlayerEntity) || !evt.isCanceled()) {
+      return;
+    }
+    PlayerEntity playerEntity = (PlayerEntity) evt.getEntityLiving();
+    World world = playerEntity.getEntityWorld();
+
+    if (!world.isRemote() && !world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
+      DeathStorageCapability.getCapability(playerEntity).ifPresent(deathStorage -> {
+        STORAGE.forEach(storage -> storage.retrieveInventory(deathStorage, deathStorage));
+        deathStorage.getDeathInventory().clear();
+      });
     }
   }
 

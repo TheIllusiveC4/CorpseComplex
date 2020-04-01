@@ -77,7 +77,15 @@ public class ExperienceModule {
   public void playerRespawn(final PlayerEvent.Clone evt) {
 
     if (evt.isWasDeath()) {
-      evt.getPlayer().giveExperiencePoints(evt.getOriginal().experienceTotal);
+      PlayerEntity playerEntity = evt.getPlayer();
+      DeathStorageCapability.getCapability(playerEntity).ifPresent(deathStorage -> {
+        PlayerEntity original = evt.getOriginal();
+        if (deathStorage.getSettings().getExperienceSettings().getLostXp() < 1) {
+          playerEntity.experience = original.experience;
+          playerEntity.experienceLevel = original.experienceLevel;
+          playerEntity.experienceTotal = original.experienceTotal;
+        }
+      });
     }
   }
 
