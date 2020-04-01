@@ -78,7 +78,10 @@ public class DeathStorageCapability {
           effects.add(effect);
         });
         compound.put(EFFECTS, effects);
-        instance.getDeathDamageSource().write(compound);
+        DeathInfo info = instance.getDeathInfo();
+        if (info != null) {
+          info.write(compound);
+        }
         return compound;
       }
 
@@ -114,7 +117,7 @@ public class DeathStorageCapability {
 
     void setDeathDamageSource(DeathInfo deathDamageSource);
 
-    DeathInfo getDeathDamageSource();
+    DeathInfo getDeathInfo();
 
     void addInventory(String modid, INBT nbt);
 
@@ -171,7 +174,7 @@ public class DeathStorageCapability {
     }
 
     @Override
-    public DeathInfo getDeathDamageSource() {
+    public DeathInfo getDeathInfo() {
       return this.deathDamageSource;
     }
 

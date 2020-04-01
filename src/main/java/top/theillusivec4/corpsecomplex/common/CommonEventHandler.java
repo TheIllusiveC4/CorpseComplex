@@ -74,7 +74,7 @@ public class CommonEventHandler {
       DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(
           deathStorage -> DeathStorageCapability.getCapability(evt.getOriginal()).ifPresent(
               oldDeathStorage -> deathStorage
-                  .setDeathDamageSource(oldDeathStorage.getDeathDamageSource())));
+                  .setDeathDamageSource(oldDeathStorage.getDeathInfo())));
     }
   }
 }

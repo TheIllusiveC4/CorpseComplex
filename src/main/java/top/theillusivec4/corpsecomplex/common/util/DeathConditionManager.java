@@ -41,7 +41,7 @@ public class DeathConditionManager {
   public static final List<BiFunction<DeathInfo, DeathCondition, Boolean>> CONDITION_ADDONS = new ArrayList<>();
 
   public static boolean matches(DeathCondition deathCondition, IDeathStorage deathStorage) {
-    DeathInfo source = deathStorage.getDeathDamageSource();
+    DeathInfo source = deathStorage.getDeathInfo();
 
     if (source == null) {
       return false;
