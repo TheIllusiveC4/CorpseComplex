@@ -127,7 +127,6 @@ public final class DeathStackHelper {
 
     if (store) {
       loss = (int) Math.round(stack.getMaxDamage() * InventoryModule.keptLoss);
-      stack.damageItem(Math.min(loss, limit), player);
     } else {
       loss = (int) Math.round(stack.getMaxDamage() * InventoryModule.dropLoss);
     }
