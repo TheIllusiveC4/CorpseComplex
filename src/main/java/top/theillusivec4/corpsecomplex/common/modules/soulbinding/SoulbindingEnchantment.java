@@ -39,12 +39,12 @@ public class SoulbindingEnchantment extends Enchantment {
   @Nonnull
   @Override
   public Rarity getRarity() {
-    return CorpseComplexConfig.rarity;
+    return CorpseComplexConfig.rarity != null ? CorpseComplexConfig.rarity : super.getRarity();
   }
 
   @Override
   public int getMaxLevel() {
-    return CorpseComplexConfig.maxSoulbindingLevel;
+    return CorpseComplexConfig.maxSoulbindingLevel > 0 ? CorpseComplexConfig.maxSoulbindingLevel : super.getMaxLevel();
   }
 
   @Override
