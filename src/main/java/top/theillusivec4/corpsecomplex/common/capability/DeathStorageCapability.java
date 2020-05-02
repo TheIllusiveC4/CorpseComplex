@@ -90,7 +90,7 @@ public class DeathStorageCapability {
           Direction side, INBT nbt) {
         CompoundNBT compound = (CompoundNBT) nbt;
         CompoundNBT inventories = compound.getCompound(INVENTORIES);
-        inventories.keySet().forEach(modid -> instance.addInventory(modid, compound.get(modid)));
+        inventories.keySet().forEach(modid -> instance.addInventory(modid, inventories.get(modid)));
         ListNBT effects = compound.getList(EFFECTS, NBT.TAG_COMPOUND);
         effects.forEach(effect -> {
           EffectInstance effectInstance = EffectInstance.read((CompoundNBT) effect);
