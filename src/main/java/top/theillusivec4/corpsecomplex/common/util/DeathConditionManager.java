@@ -28,6 +28,7 @@ import java.util.function.BiFunction;
 import javax.annotation.Nullable;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.Difficulty;
 import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
 import top.theillusivec4.corpsecomplex.common.DeathCondition;
@@ -51,6 +52,14 @@ public class DeathConditionManager {
       if (!conditionAddon.apply(source, deathCondition)) {
         return false;
       }
+    }
+    Optional<Difficulty> difficultyOpt = deathCondition.getDifficulty();
+    boolean matchesDifficulty = difficultyOpt
+        .map(difficulty -> deathStorage.getPlayer().getEntityWorld().getDifficulty() == difficulty)
+        .orElse(true);
+
+    if (!matchesDifficulty) {
+      return false;
     }
     Optional<String> damageTypeOpt = deathCondition.getDamageType();
     boolean matchesDamage = damageTypeOpt.map(damageType -> {
@@ -106,9 +115,13 @@ public class DeathConditionManager {
       Builder builder = new Builder().damageType(condition.damageType)
           .immediateSource(getEntityType(condition.immediateSource))
           .trueSource(getEntityType(condition.trueSource)).dimension(condition.dimension)
-          .gameStages(condition.gameStages);
+          .gameStages(condition.gameStages).difficulty(getDifficulty(condition.difficulty));
       CONDITIONS.put(identifier, builder.build());
     });
+  }
+
+  public static Difficulty getDifficulty(@Nullable String difficulty) {
+    return difficulty == null ? null : Difficulty.byName(difficulty);
   }
 
   public static EntityType<?> getEntityType(@Nullable String name) {

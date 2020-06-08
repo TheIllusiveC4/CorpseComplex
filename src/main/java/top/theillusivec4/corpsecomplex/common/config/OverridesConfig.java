@@ -126,5 +126,6 @@ public class OverridesConfig {
     public String trueSource;
     public Integer dimension;
     public List<String> gameStages;
+    public String difficulty;
   }
 }

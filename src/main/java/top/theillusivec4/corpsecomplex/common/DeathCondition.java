@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import net.minecraft.entity.EntityType;
+import net.minecraft.world.Difficulty;
 
 public class DeathCondition {
 
@@ -36,6 +37,8 @@ public class DeathCondition {
   private final Integer dimension;
   @Nullable
   private final List<String> gameStages;
+  @Nullable
+  private final Difficulty difficulty;
 
   private DeathCondition(Builder builder) {
     this.damageType = builder.damageType;
@@ -43,6 +46,7 @@ public class DeathCondition {
     this.trueSource = builder.trueSource;
     this.dimension = builder.dimension;
     this.gameStages = builder.gameStages;
+    this.difficulty = builder.difficulty;
   }
 
   public Optional<String> getDamageType() {
@@ -57,9 +61,17 @@ public class DeathCondition {
     return Optional.ofNullable(this.trueSource);
   }
 
-  public Optional<Integer> getDimension() { return Optional.ofNullable(this.dimension); }
+  public Optional<Integer> getDimension() {
+    return Optional.ofNullable(this.dimension);
+  }
 
-  public Optional<List<String>> getGameStages() { return Optional.ofNullable(this.gameStages); }
+  public Optional<List<String>> getGameStages() {
+    return Optional.ofNullable(this.gameStages);
+  }
+
+  public Optional<Difficulty> getDifficulty() {
+    return Optional.ofNullable(this.difficulty);
+  }
 
   public static class Builder {
 
@@ -68,6 +80,7 @@ public class DeathCondition {
     private EntityType<?> trueSource;
     private Integer dimension;
     private List<String> gameStages;
+    private Difficulty difficulty;
 
     public Builder damageType(String damageType) {
       this.damageType = damageType;
@@ -91,6 +104,11 @@ public class DeathCondition {
 
     public Builder gameStages(List<String> gameStages) {
       this.gameStages = gameStages;
+      return this;
+    }
+
+    public Builder difficulty(Difficulty difficulty) {
+      this.difficulty = difficulty;
       return this;
     }
 
