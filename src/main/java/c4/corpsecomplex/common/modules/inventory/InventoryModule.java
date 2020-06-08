@@ -17,6 +17,8 @@ import c4.corpsecomplex.common.modules.compatibility.advinv.AdvHandler;
 import c4.corpsecomplex.common.modules.compatibility.advinv.AdvModule;
 import c4.corpsecomplex.common.modules.compatibility.baubles.BaublesHandler;
 import c4.corpsecomplex.common.modules.compatibility.baubles.BaublesModule;
+import c4.corpsecomplex.common.modules.compatibility.galacticraftcore.GalacticraftHandler;
+import c4.corpsecomplex.common.modules.compatibility.galacticraftcore.GalacticraftModule;
 import c4.corpsecomplex.common.modules.compatibility.camping.CampingHandler;
 import c4.corpsecomplex.common.modules.compatibility.camping.CampingModule;
 import c4.corpsecomplex.common.modules.compatibility.cosmeticarmorreworked.CosmeticHandler;
@@ -82,6 +84,7 @@ public class InventoryModule extends Module {
     addSubmodule("rpginventory", RPGModule.class, RPGHandler.class);
     addSubmodule("powerinventory", OPModule.class, OPHandler.class);
     addSubmodule("baubles", BaublesModule.class, BaublesHandler.class);
+    addSubmodule("galacticraftcore", GalacticraftModule.class, GalacticraftHandler.class);
     addSubmodule("cosmeticarmorreworked", CosmeticModule.class, CosmeticHandler.class);
     addSubmodule("toolbelt", ToolbeltModule.class, ToolbeltHandler.class);
     addSubmodule("advinv", AdvModule.class, AdvHandler.class);

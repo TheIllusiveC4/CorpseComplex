@@ -32,6 +32,7 @@ import org.apache.logging.log4j.Logger;
                 "after:baubles;" +
                 "after:rpginventory;" +
                 "after:cosmeticarmorreworked;" +
+                "after:galacticraftcore;" +
                 "after:tombstone;after:advinv",
         guiFactory = "c4." + CorpseComplex.MODID + ".client.gui.GuiFactory",
         acceptedMinecraftVersions = "[1.12, 1.13)",

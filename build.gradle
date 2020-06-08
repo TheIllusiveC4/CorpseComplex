@@ -32,6 +32,9 @@ minecraft {
 }
 
 dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+    // 1. make a directory at the CorpseComplex root named 'libs'
+    // 2. Copy the GalacticraftCore-${minecraft_version}-${galacticraftcore_version}.jar into the 'libs' directory
     deobfProvided "curse.maven:tough-as-nails:2710969"
     deobfProvided "curse.maven:wearable-backpacks:2576699"
     deobfProvided "curse.maven:thut-wearables:2721121";
