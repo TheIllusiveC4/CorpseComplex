@@ -17,16 +17,18 @@ import c4.corpsecomplex.common.modules.compatibility.advinv.AdvHandler;
 import c4.corpsecomplex.common.modules.compatibility.advinv.AdvModule;
 import c4.corpsecomplex.common.modules.compatibility.baubles.BaublesHandler;
 import c4.corpsecomplex.common.modules.compatibility.baubles.BaublesModule;
-import c4.corpsecomplex.common.modules.compatibility.galacticraftcore.GalacticraftHandler;
-import c4.corpsecomplex.common.modules.compatibility.galacticraftcore.GalacticraftModule;
 import c4.corpsecomplex.common.modules.compatibility.camping.CampingHandler;
 import c4.corpsecomplex.common.modules.compatibility.camping.CampingModule;
 import c4.corpsecomplex.common.modules.compatibility.cosmeticarmorreworked.CosmeticHandler;
 import c4.corpsecomplex.common.modules.compatibility.cosmeticarmorreworked.CosmeticModule;
+import c4.corpsecomplex.common.modules.compatibility.galacticraftcore.GalacticraftHandler;
+import c4.corpsecomplex.common.modules.compatibility.galacticraftcore.GalacticraftModule;
 import c4.corpsecomplex.common.modules.compatibility.powerinventory.OPHandler;
 import c4.corpsecomplex.common.modules.compatibility.powerinventory.OPModule;
 import c4.corpsecomplex.common.modules.compatibility.rpginventory.RPGHandler;
 import c4.corpsecomplex.common.modules.compatibility.rpginventory.RPGModule;
+import c4.corpsecomplex.common.modules.compatibility.thebetweenlands.BetweenlandsHandler;
+import c4.corpsecomplex.common.modules.compatibility.thebetweenlands.BetweenlandsModule;
 import c4.corpsecomplex.common.modules.compatibility.thut_wearables.ThutHandler;
 import c4.corpsecomplex.common.modules.compatibility.thut_wearables.ThutModule;
 import c4.corpsecomplex.common.modules.compatibility.toolbelt.ToolbeltHandler;
@@ -89,6 +91,7 @@ public class InventoryModule extends Module {
     addSubmodule("toolbelt", ToolbeltModule.class, ToolbeltHandler.class);
     addSubmodule("advinv", AdvModule.class, AdvHandler.class);
     addSubmodule("camping", CampingModule.class, CampingHandler.class);
+    addSubmodule("thebetweenlands", BetweenlandsModule.class, BetweenlandsHandler.class);
 
     handlerClasses.add(InventoryHandler.class);
   }
