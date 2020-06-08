@@ -161,7 +161,7 @@ public class DeathOverrideManager {
   public static void apply(DeathSettings settings, IDeathStorage deathStorage) {
     OVERRIDES.forEach(override -> {
       if (override.getConditions().stream()
-          .anyMatch(condition -> DeathConditionManager.matches(condition, deathStorage))) {
+          .allMatch(condition -> DeathConditionManager.matches(condition, deathStorage))) {
         override.apply(settings);
       }
     });
