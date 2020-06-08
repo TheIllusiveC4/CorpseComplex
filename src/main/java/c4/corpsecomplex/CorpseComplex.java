@@ -33,6 +33,7 @@ import org.apache.logging.log4j.Logger;
                 "after:rpginventory;" +
                 "after:cosmeticarmorreworked;" +
                 "after:galacticraftcore;" +
+                "after:thebetweenlands;" +
                 "after:tombstone;after:advinv",
         guiFactory = "c4." + CorpseComplex.MODID + ".client.gui.GuiFactory",
         acceptedMinecraftVersions = "[1.12, 1.13)",
@@ -42,7 +43,7 @@ public class CorpseComplex {
 
   public static final String MODID = "corpsecomplex";
   public static final String MODNAME = "Corpse Complex";
-  public static final String MODVER = "1.0.10.1";
+  public static final String MODVER = "1.0.11";
 
   @SidedProxy(clientSide = "c4.corpsecomplex.proxy.ClientProxy", serverSide =
           "c4.corpsecomplex.proxy.CommonProxy")
