@@ -39,6 +39,8 @@ public class DeathCondition {
   private final List<String> gameStages;
   @Nullable
   private final Difficulty difficulty;
+  @Nullable
+  private final List<String> players;
 
   private DeathCondition(Builder builder) {
     this.damageType = builder.damageType;
@@ -47,6 +49,7 @@ public class DeathCondition {
     this.dimension = builder.dimension;
     this.gameStages = builder.gameStages;
     this.difficulty = builder.difficulty;
+    this.players = builder.players;
   }
 
   public Optional<String> getDamageType() {
@@ -73,6 +76,10 @@ public class DeathCondition {
     return Optional.ofNullable(this.difficulty);
   }
 
+  public Optional<List<String>> getPlayers() {
+    return Optional.ofNullable(this.players);
+  }
+
   public static class Builder {
 
     private String damageType;
@@ -81,6 +88,7 @@ public class DeathCondition {
     private Integer dimension;
     private List<String> gameStages;
     private Difficulty difficulty;
+    private List<String> players;
 
     public Builder damageType(String damageType) {
       this.damageType = damageType;
@@ -109,6 +117,11 @@ public class DeathCondition {
 
     public Builder difficulty(Difficulty difficulty) {
       this.difficulty = difficulty;
+      return this;
+    }
+
+    public Builder players(List<String> players) {
+      this.players = players;
       return this;
     }
 

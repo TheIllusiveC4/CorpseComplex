@@ -127,5 +127,6 @@ public class OverridesConfig {
     public Integer dimension;
     public List<String> gameStages;
     public String difficulty;
+    public List<String> players;
   }
 }

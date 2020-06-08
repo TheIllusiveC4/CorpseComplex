@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import javax.annotation.Nullable;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.Difficulty;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -53,9 +54,19 @@ public class DeathConditionManager {
         return false;
       }
     }
+    PlayerEntity playerEntity = deathStorage.getPlayer();
+    Optional<List<String>> playersOpt = deathCondition.getPlayers();
+    String name = playerEntity.getName().getFormattedText();
+    String uuid = playerEntity.getUniqueID().toString();
+    boolean matchesPlayer = playersOpt.map(players -> players.stream().anyMatch(
+        player -> name.equals(player) || uuid.equals(player))).orElse(true);
+
+    if (!matchesPlayer) {
+      return false;
+    }
     Optional<Difficulty> difficultyOpt = deathCondition.getDifficulty();
     boolean matchesDifficulty = difficultyOpt
-        .map(difficulty -> deathStorage.getPlayer().getEntityWorld().getDifficulty() == difficulty)
+        .map(difficulty -> playerEntity.getEntityWorld().getDifficulty() == difficulty)
         .orElse(true);
 
     if (!matchesDifficulty) {
@@ -115,7 +126,8 @@ public class DeathConditionManager {
       Builder builder = new Builder().damageType(condition.damageType)
           .immediateSource(getEntityType(condition.immediateSource))
           .trueSource(getEntityType(condition.trueSource)).dimension(condition.dimension)
-          .gameStages(condition.gameStages).difficulty(getDifficulty(condition.difficulty));
+          .gameStages(condition.gameStages).difficulty(getDifficulty(condition.difficulty))
+          .players(condition.players);
       CONDITIONS.put(identifier, builder.build());
     });
   }
