@@ -4,7 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
-## [2.0-beta3](https://github.com/TheIllusiveC4/CorpseComplex/compare/147d0d940bb1b7c359a3eb41be1e37d84c0f2ffb...master) - 2020.05.02
+## [2.0-beta4](https://github.com/TheIllusiveC4/CorpseComplex/compare/396ea2a0606ec0e5cc0ee2b3c8c05b52646601cf...master) - 2020.06.14
+### Added
+- Added difficulty as a condition for overrides [#31](https://github.com/TheIllusiveC4/CorpseComplex/issues/31)
+- Added player name or UUID as a condition for overrides [#35](https://github.com/TheIllusiveC4/CorpseComplex/issues/35)
+### Changed
+- Overrides now must meet all conditions instead of just one
+
+## [2.0-beta3](https://github.com/TheIllusiveC4/CorpseComplex/compare/147d0d940bb1b7c359a3eb41be1e37d84c0f2ffb...396ea2a0606ec0e5cc0ee2b3c8c05b52646601cf) - 2020.05.02
 ### Fixed
 - Fixed NPE crash when relogging before respawning [#34](https://github.com/TheIllusiveC4/CorpseComplex/issues/34)
 
