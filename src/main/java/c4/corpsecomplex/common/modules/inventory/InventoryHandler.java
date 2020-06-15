@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class InventoryHandler extends DeathStackHandler {
 
@@ -65,7 +66,7 @@ public class InventoryHandler extends DeathStackHandler {
       }
 
       if (!inventoryPlayer.getStackInSlot(slot).isEmpty()) {
-        inventoryPlayer.addItemStackToInventory(stack);
+        ItemHandlerHelper.giveItemToPlayer(inventoryPlayer.player, stack);
       } else {
         inventoryPlayer.setInventorySlotContents(slot, stack);
       }
