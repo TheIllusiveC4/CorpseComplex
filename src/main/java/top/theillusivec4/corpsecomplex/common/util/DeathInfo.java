@@ -115,7 +115,7 @@ public class DeathInfo {
     }
     tag.putInt("Dimension", this.dimension);
     ListNBT list = new ListNBT();
-    this.gameStages.forEach(stage -> list.add(new StringNBT(stage)));
+    this.gameStages.forEach(stage -> list.add(StringNBT.valueOf(stage)));
     tag.put("GameStages", list);
     compoundNBT.put("DeathDamageSource", tag);
     return compoundNBT;

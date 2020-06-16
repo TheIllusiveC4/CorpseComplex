@@ -20,8 +20,10 @@
 package top.theillusivec4.corpsecomplex.common.util.integration;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.function.BiFunction;
 import net.darkhax.gamestages.GameStageHelper;
+import net.darkhax.gamestages.data.IStageData;
 import net.minecraft.entity.player.PlayerEntity;
 import top.theillusivec4.corpsecomplex.common.DeathCondition;
 import top.theillusivec4.corpsecomplex.common.util.DeathInfo;
@@ -39,6 +41,7 @@ public class GameStagesIntegration {
       }).orElse(true);
 
   public static Collection<String> getGameStages(PlayerEntity playerEntity) {
-    return GameStageHelper.getPlayerData(playerEntity).getStages();
+    IStageData data = GameStageHelper.getPlayerData(playerEntity);
+    return data != null ? data.getStages() : Collections.emptyList();
   }
 }
