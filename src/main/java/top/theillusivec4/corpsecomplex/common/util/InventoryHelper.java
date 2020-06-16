@@ -37,6 +37,7 @@ import top.theillusivec4.corpsecomplex.common.modules.inventory.InventorySetting
 import top.theillusivec4.corpsecomplex.common.registry.CorpseComplexRegistry;
 import top.theillusivec4.corpsecomplex.common.util.Enums.DropMode;
 import top.theillusivec4.corpsecomplex.common.util.Enums.InventorySection;
+import top.theillusivec4.corpsecomplex.common.util.manager.ItemOverrideManager;
 
 public class InventoryHelper {
 
@@ -62,17 +63,27 @@ public class InventoryHelper {
     ItemStack keep = stack.split(getRandomAmount(stack.getCount(), keepChance));
 
     if (!keep.isEmpty()) {
-      applyDurabilityLoss(player, keep, setting,
+      double keepDurabilityLoss =
           sectionSettings.keepDurabilityLoss >= 0 ? sectionSettings.keepDurabilityLoss
-              : defaultSettings.keepDurabilityLoss);
+              : defaultSettings.keepDurabilityLoss;
+      double finalKeepDurabilityLoss = keepDurabilityLoss;
+      keepDurabilityLoss = ItemOverrideManager.getOverride(keep.getItem())
+          .map(override -> override.getKeepDurabilityLoss().orElse(finalKeepDurabilityLoss))
+          .orElse(keepDurabilityLoss);
+      applyDurabilityLoss(player, keep, setting, keepDurabilityLoss);
       CompoundNBT compoundnbt = new CompoundNBT();
       compoundnbt.putInt("Slot", index);
       keep.write(compoundnbt);
       list.add(compoundnbt);
     }
-    applyDurabilityLoss(player, stack, setting,
+    double dropDurabilityLoss =
         sectionSettings.dropDurabilityLoss >= 0 ? sectionSettings.dropDurabilityLoss
-            : defaultSettings.dropDurabilityLoss);
+            : defaultSettings.dropDurabilityLoss;
+    double finalDropDurabilityLoss = dropDurabilityLoss;
+    dropDurabilityLoss = ItemOverrideManager.getOverride(stack.getItem())
+        .map(override -> override.getDropDurabilityLoss().orElse(finalDropDurabilityLoss))
+        .orElse(dropDurabilityLoss);
+    applyDurabilityLoss(player, stack, setting, dropDurabilityLoss);
     stack.shrink(getRandomAmount(stack.getCount(), destroyChance));
   }
 

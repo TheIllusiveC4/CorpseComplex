@@ -33,6 +33,7 @@ import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import org.apache.commons.lang3.tuple.Pair;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
+import top.theillusivec4.corpsecomplex.common.config.ItemOverridesConfig.ItemOverrideConfig;
 import top.theillusivec4.corpsecomplex.common.config.OverridesConfig.ConditionConfig;
 import top.theillusivec4.corpsecomplex.common.config.OverridesConfig.OverrideConfig;
 import top.theillusivec4.corpsecomplex.common.util.Enums.PermissionMode;
@@ -155,6 +156,7 @@ public class CorpseComplexConfig {
 
   public static List<OverrideConfig> overrides;
   public static List<ConditionConfig> conditions;
+  public static List<ItemOverrideConfig> itemOverrides;
 
   public static final ForgeConfigSpec overridesSpec;
   public static final Overrides OVERRIDES;
@@ -175,6 +177,27 @@ public class CorpseComplexConfig {
           .define("overrides", new ArrayList<>());
       builder.comment("List of possible conditions for overrides")
           .define("conditions", new ArrayList<>());
+      builder.build();
+    }
+  }
+
+  public static final ForgeConfigSpec itemOverridesSpec;
+  public static final ItemOverrides ITEM_OVERRIDES;
+
+  static {
+    final Pair<ItemOverrides, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
+        .configure(ItemOverrides::new);
+    itemOverridesSpec = specPair.getRight();
+    ITEM_OVERRIDES = specPair.getLeft();
+  }
+
+  public static class ItemOverrides {
+
+    public ItemOverridesConfig itemOverrides;
+
+    public ItemOverrides(ForgeConfigSpec.Builder builder) {
+      builder.comment("List of overridden settings based on items")
+          .define("itemOverrides", new ArrayList<>());
       builder.build();
     }
   }
@@ -682,10 +705,16 @@ public class CorpseComplexConfig {
     }
   }
 
-  public static void transform(CommentedConfig configData) {
+  public static void transformOverrides(CommentedConfig configData) {
     OVERRIDES.overrides = new ObjectConverter().toObject(configData, OverridesConfig::new);
     overrides = OVERRIDES.overrides.overrides;
     conditions = OVERRIDES.overrides.conditions;
+  }
+
+  public static void transformItemOverrides(CommentedConfig configData) {
+    ITEM_OVERRIDES.itemOverrides = new ObjectConverter()
+        .toObject(configData, ItemOverridesConfig::new);
+    itemOverrides = ITEM_OVERRIDES.itemOverrides.itemOverrides;
   }
 
   public static void bakeConfigs() {

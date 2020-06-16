@@ -22,11 +22,12 @@ package top.theillusivec4.corpsecomplex;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -41,12 +42,13 @@ import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.modules.effects.EffectsModule;
 import top.theillusivec4.corpsecomplex.common.modules.experience.ExperienceModule;
 import top.theillusivec4.corpsecomplex.common.modules.hunger.HungerModule;
-import top.theillusivec4.corpsecomplex.common.modules.miscellaneous.MiscellaneousModule;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryModule;
 import top.theillusivec4.corpsecomplex.common.modules.mementomori.MementoMoriModule;
-import top.theillusivec4.corpsecomplex.common.util.DeathConditionManager;
-import top.theillusivec4.corpsecomplex.common.util.DeathOverrideManager;
+import top.theillusivec4.corpsecomplex.common.modules.miscellaneous.MiscellaneousModule;
+import top.theillusivec4.corpsecomplex.common.util.manager.DeathConditionManager;
+import top.theillusivec4.corpsecomplex.common.util.manager.DeathOverrideManager;
 import top.theillusivec4.corpsecomplex.common.util.integration.IntegrationManager;
+import top.theillusivec4.corpsecomplex.common.util.manager.ItemOverrideManager;
 
 @Mod(CorpseComplex.MODID)
 public class CorpseComplex {
@@ -56,18 +58,8 @@ public class CorpseComplex {
 
   public CorpseComplex() {
     ModLoadingContext.get().registerConfig(Type.SERVER, CorpseComplexConfig.serverSpec);
-    ModLoadingContext.get().registerConfig(Type.SERVER, CorpseComplexConfig.overridesSpec,
-        "corpsecomplex-overrides.toml");
-    File defaultOverrides = new File(
-        FMLPaths.GAMEDIR.get() + "/defaultconfigs/corpsecomplex-overrides.toml");
-    if (!defaultOverrides.exists()) {
-      try {
-        FileUtils.copyInputStreamToFile(Objects.requireNonNull(CorpseComplex.class.getClassLoader()
-            .getResourceAsStream("corpsecomplex-overrides.toml")), defaultOverrides);
-      } catch (IOException e) {
-        LOGGER.error("Error creating default overrides config!");
-      }
-    }
+    createServerConfig(CorpseComplexConfig.overridesSpec, "overrides");
+    createServerConfig(CorpseComplexConfig.itemOverridesSpec, "itemoverrides");
     IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
     eventBus.addListener(this::setup);
     eventBus.addListener(this::config);
@@ -86,17 +78,36 @@ public class CorpseComplex {
   }
 
   private void config(final ModConfigEvent evt) {
+    ModConfig modConfig = evt.getConfig();
 
-    if (evt.getConfig().getModId().equals(MODID)) {
+    if (modConfig.getModId().equals(MODID)) {
+      ForgeConfigSpec spec = modConfig.getSpec();
 
-      if (evt.getConfig().getSpec() == CorpseComplexConfig.serverSpec) {
+      if (spec == CorpseComplexConfig.serverSpec) {
         CorpseComplexConfig.bakeConfigs();
-      }
-
-      if (evt.getConfig().getSpec() == CorpseComplexConfig.overridesSpec) {
-        CorpseComplexConfig.transform(evt.getConfig().getConfigData());
+      } else if (spec == CorpseComplexConfig.overridesSpec) {
+        CorpseComplexConfig.transformOverrides(modConfig.getConfigData());
         DeathConditionManager.importConfig();
         DeathOverrideManager.importConfig();
+      } else if (spec == CorpseComplexConfig.itemOverridesSpec) {
+        CorpseComplexConfig.transformItemOverrides(modConfig.getConfigData());
+        ItemOverrideManager.importConfig();
+      }
+    }
+  }
+
+  private static void createServerConfig(ForgeConfigSpec spec, String suffix) {
+    String fileName = "corpsecomplex-" + suffix + ".toml";
+    ModLoadingContext.get().registerConfig(Type.SERVER, spec, fileName);
+    File defaults = new File(FMLPaths.GAMEDIR.get() + "/defaultconfigs/" + fileName);
+
+    if (!defaults.exists()) {
+      try {
+        FileUtils.copyInputStreamToFile(
+            Objects.requireNonNull(CorpseComplex.class.getClassLoader().getResourceAsStream(fileName)),
+            defaults);
+      } catch (IOException e) {
+        LOGGER.error("Error creating default config for " + fileName);
       }
     }
   }

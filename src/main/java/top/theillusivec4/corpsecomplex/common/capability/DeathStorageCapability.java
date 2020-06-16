@@ -44,7 +44,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import top.theillusivec4.corpsecomplex.CorpseComplex;
 import top.theillusivec4.corpsecomplex.common.DeathSettings;
 import top.theillusivec4.corpsecomplex.common.util.DeathInfo;
-import top.theillusivec4.corpsecomplex.common.util.DeathSettingManager;
+import top.theillusivec4.corpsecomplex.common.util.manager.DeathSettingManager;
 
 public class DeathStorageCapability {
 

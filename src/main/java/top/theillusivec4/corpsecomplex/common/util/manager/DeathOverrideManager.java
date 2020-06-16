@@ -17,7 +17,7 @@
  * License along with Corpse Complex.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package top.theillusivec4.corpsecomplex.common.util;
+package top.theillusivec4.corpsecomplex.common.util.manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
