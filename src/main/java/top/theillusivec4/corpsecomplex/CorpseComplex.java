@@ -45,9 +45,9 @@ import top.theillusivec4.corpsecomplex.common.modules.hunger.HungerModule;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryModule;
 import top.theillusivec4.corpsecomplex.common.modules.mementomori.MementoMoriModule;
 import top.theillusivec4.corpsecomplex.common.modules.miscellaneous.MiscellaneousModule;
+import top.theillusivec4.corpsecomplex.common.util.integration.IntegrationManager;
 import top.theillusivec4.corpsecomplex.common.util.manager.DeathConditionManager;
 import top.theillusivec4.corpsecomplex.common.util.manager.DeathOverrideManager;
-import top.theillusivec4.corpsecomplex.common.util.integration.IntegrationManager;
 import top.theillusivec4.corpsecomplex.common.util.manager.ItemOverrideManager;
 
 @Mod(CorpseComplex.MODID)
@@ -83,15 +83,17 @@ public class CorpseComplex {
     if (modConfig.getModId().equals(MODID)) {
       ForgeConfigSpec spec = modConfig.getSpec();
 
-      if (spec == CorpseComplexConfig.serverSpec) {
+      if (modConfig.getType() == Type.SERVER) {
         CorpseComplexConfig.bakeConfigs();
-      } else if (spec == CorpseComplexConfig.overridesSpec) {
-        CorpseComplexConfig.transformOverrides(modConfig.getConfigData());
-        DeathConditionManager.importConfig();
-        DeathOverrideManager.importConfig();
-      } else if (spec == CorpseComplexConfig.itemOverridesSpec) {
-        CorpseComplexConfig.transformItemOverrides(modConfig.getConfigData());
-        ItemOverrideManager.importConfig();
+
+        if (spec == CorpseComplexConfig.overridesSpec) {
+          CorpseComplexConfig.transformOverrides(modConfig.getConfigData());
+          DeathConditionManager.importConfig();
+          DeathOverrideManager.importConfig();
+        } else if (spec == CorpseComplexConfig.itemOverridesSpec) {
+          CorpseComplexConfig.transformItemOverrides(modConfig.getConfigData());
+          ItemOverrideManager.importConfig();
+        }
       }
     }
   }
@@ -103,8 +105,8 @@ public class CorpseComplex {
 
     if (!defaults.exists()) {
       try {
-        FileUtils.copyInputStreamToFile(
-            Objects.requireNonNull(CorpseComplex.class.getClassLoader().getResourceAsStream(fileName)),
+        FileUtils.copyInputStreamToFile(Objects
+                .requireNonNull(CorpseComplex.class.getClassLoader().getResourceAsStream(fileName)),
             defaults);
       } catch (IOException e) {
         LOGGER.error("Error creating default config for " + fileName);
