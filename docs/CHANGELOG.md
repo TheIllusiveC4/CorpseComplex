@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
-## [2.0-beta6](https://github.com/TheIllusiveC4/CorpseComplex/compare/c11bdd6383a98fa9dbc8e9968879ab318f59ad74...master) - 2020.06.16
+## [2.0-beta7](https://github.com/TheIllusiveC4/CorpseComplex/compare/2b3055b7fe6a9dc305eb4c2b7fb9d0e133b55de4...aa0503aad19a2a661cb255cc86e023a55694d6b9) - 2020.06.28
+### Fixed
+- Fixed NPE errors for config settings [#41](https://github.com/TheIllusiveC4/CorpseComplex/issues/41)
+
+## [2.0-beta6](https://github.com/TheIllusiveC4/CorpseComplex/compare/c11bdd6383a98fa9dbc8e9968879ab318f59ad74...2b3055b7fe6a9dc305eb4c2b7fb9d0e133b55de4) - 2020.06.16
 ### Changed
 - Ported to 1.15.2
 
