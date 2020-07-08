@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [2.0-beta8](https://github.com/TheIllusiveC4/CorpseComplex/compare/aa0503aad19a2a661cb255cc86e023a55694d6b9...1.15.x) - 2020.07.08
+### Removed
+- Removed coremod for MilkBucketItem
+
 ## [2.0-beta7](https://github.com/TheIllusiveC4/CorpseComplex/compare/2b3055b7fe6a9dc305eb4c2b7fb9d0e133b55de4...aa0503aad19a2a661cb255cc86e023a55694d6b9) - 2020.06.28
 ### Fixed
 - Fixed NPE errors for config settings [#41](https://github.com/TheIllusiveC4/CorpseComplex/issues/41)
