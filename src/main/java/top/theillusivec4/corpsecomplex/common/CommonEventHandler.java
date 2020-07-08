@@ -20,7 +20,6 @@
 package top.theillusivec4.corpsecomplex.common;
 
 import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
@@ -29,11 +28,9 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability.Provider;
 import top.theillusivec4.corpsecomplex.common.util.DeathInfo;
-import top.theillusivec4.corpsecomplex.common.util.integration.GameStagesIntegration;
 
 public class CommonEventHandler {
 
@@ -56,12 +53,8 @@ public class CommonEventHandler {
 
     if (!world.isRemote()) {
       DeathStorageCapability.getCapability(playerEntity).ifPresent(deathStorage -> {
-        List<String> gameStages = new ArrayList<>();
-        if (ModList.get().isLoaded("gamestages")) {
-          gameStages.addAll(GameStagesIntegration.getGameStages(playerEntity));
-        }
         deathStorage
-            .setDeathDamageSource(new DeathInfo(evt.getSource(), world, gameStages));
+            .setDeathDamageSource(new DeathInfo(evt.getSource(), world, new ArrayList<>()));
         deathStorage.buildSettings();
       });
     }

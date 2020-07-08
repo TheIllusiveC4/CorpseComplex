@@ -57,7 +57,7 @@ public class DeathConditionManager {
     }
     PlayerEntity playerEntity = deathStorage.getPlayer();
     Optional<List<String>> playersOpt = deathCondition.getPlayers();
-    String name = playerEntity.getName().getFormattedText();
+    String name = playerEntity.getName().getString();
     String uuid = playerEntity.getUniqueID().toString();
     boolean matchesPlayer = playersOpt.map(players -> players.stream().anyMatch(
         player -> name.equals(player) || uuid.equals(player))).orElse(true);
