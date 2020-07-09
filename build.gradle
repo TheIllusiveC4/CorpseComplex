@@ -15,7 +15,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'com.wynprice.cursemaven'
 
-version = "FORGE-${version_minecraft}-${mod_version}"
+version = "${version_minecraft}-${mod_version}"
 group = "${mod_group}"
 archivesBaseName = "${mod_id}"
 
