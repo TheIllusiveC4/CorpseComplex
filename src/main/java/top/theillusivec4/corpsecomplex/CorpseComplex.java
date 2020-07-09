@@ -57,9 +57,9 @@ public class CorpseComplex {
   public static final Logger LOGGER = LogManager.getLogger();
 
   public CorpseComplex() {
-    ModLoadingContext.get().registerConfig(Type.SERVER, CorpseComplexConfig.serverSpec);
-    createServerConfig(CorpseComplexConfig.overridesSpec, "overrides");
-    createServerConfig(CorpseComplexConfig.itemOverridesSpec, "itemoverrides");
+    ModLoadingContext.get().registerConfig(Type.SERVER, CorpseComplexConfig.SERVER_SPEC);
+    createServerConfig(CorpseComplexConfig.OVERRIDES_SPEC, "overrides");
+    createServerConfig(CorpseComplexConfig.ITEM_OVERRIDES_SPEC, "itemoverrides");
     IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
     eventBus.addListener(this::setup);
     eventBus.addListener(this::config);
@@ -86,11 +86,11 @@ public class CorpseComplex {
       if (modConfig.getType() == Type.SERVER) {
         CorpseComplexConfig.bakeConfigs();
 
-        if (spec == CorpseComplexConfig.overridesSpec) {
+        if (spec == CorpseComplexConfig.OVERRIDES_SPEC) {
           CorpseComplexConfig.transformOverrides(modConfig.getConfigData());
           DeathConditionManager.importConfig();
           DeathOverrideManager.importConfig();
-        } else if (spec == CorpseComplexConfig.itemOverridesSpec) {
+        } else if (spec == CorpseComplexConfig.ITEM_OVERRIDES_SPEC) {
           CorpseComplexConfig.transformItemOverrides(modConfig.getConfigData());
           ItemOverrideManager.importConfig();
         }

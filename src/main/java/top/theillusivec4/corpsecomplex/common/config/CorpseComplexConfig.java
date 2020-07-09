@@ -41,14 +41,14 @@ import top.theillusivec4.corpsecomplex.common.util.Enums.XpDropMode;
 
 public class CorpseComplexConfig {
 
-  public static final ForgeConfigSpec serverSpec;
+  public static final ForgeConfigSpec SERVER_SPEC;
   public static final Server SERVER;
   private static final String CONFIG_PREFIX = "gui." + CorpseComplex.MODID + ".config.";
 
   static {
     final Pair<Server, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
         .configure(Server::new);
-    serverSpec = specPair.getRight();
+    SERVER_SPEC = specPair.getRight();
     SERVER = specPair.getLeft();
   }
 
@@ -158,13 +158,13 @@ public class CorpseComplexConfig {
   public static List<ConditionConfig> conditions;
   public static List<ItemOverrideConfig> itemOverrides;
 
-  public static final ForgeConfigSpec overridesSpec;
+  public static final ForgeConfigSpec OVERRIDES_SPEC;
   public static final Overrides OVERRIDES;
 
   static {
     final Pair<Overrides, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
         .configure(Overrides::new);
-    overridesSpec = specPair.getRight();
+    OVERRIDES_SPEC = specPair.getRight();
     OVERRIDES = specPair.getLeft();
   }
 
@@ -181,13 +181,13 @@ public class CorpseComplexConfig {
     }
   }
 
-  public static final ForgeConfigSpec itemOverridesSpec;
+  public static final ForgeConfigSpec ITEM_OVERRIDES_SPEC;
   public static final ItemOverrides ITEM_OVERRIDES;
 
   static {
     final Pair<ItemOverrides, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
         .configure(ItemOverrides::new);
-    itemOverridesSpec = specPair.getRight();
+    ITEM_OVERRIDES_SPEC = specPair.getRight();
     ITEM_OVERRIDES = specPair.getLeft();
   }
 
