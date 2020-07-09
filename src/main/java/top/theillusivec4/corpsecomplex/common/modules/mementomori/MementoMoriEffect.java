@@ -25,11 +25,11 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AbstractAttributeMap;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.AttributeModifier.Operation;
-import net.minecraft.entity.ai.attributes.IAttribute;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.ai.attributes.AttributeModifierManager;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
@@ -43,7 +43,7 @@ public class MementoMoriEffect extends Effect {
   private static final double PERCENT_CHANGE = 0.05D;
   private static final String NAME = "Memento Mori";
 
-  public static final Map<IAttribute, AttributeInfo> ATTRIBUTES = new HashMap<>();
+  public static final Map<Attribute, AttributeInfo> ATTRIBUTES = new HashMap<>();
 
   public MementoMoriEffect() {
     super(EffectType.HARMFUL, 0);
@@ -58,14 +58,18 @@ public class MementoMoriEffect extends Effect {
     if (effect != null) {
       int duration = effect.getDuration();
       ATTRIBUTES.forEach((attribute, info) -> {
-        if (info.modifier.getAmount() != 0 && duration % info.tick == 0) {
-          IAttributeInstance instance = entityLivingBaseIn.getAttribute(attribute);
-          AttributeModifier modifier = instance.getModifier(info.modifier.getID());
 
-          if (modifier != null) {
-            instance.removeModifier(modifier);
-            instance.applyModifier(new AttributeModifier(modifier.getID(), modifier.getName(),
-                modifier.getAmount() + info.tickAmount, modifier.getOperation()));
+        if (info.modifier.getAmount() != 0 && duration % info.tick == 0) {
+          ModifiableAttributeInstance instance = entityLivingBaseIn.getAttribute(attribute);
+
+          if (instance != null) {
+            AttributeModifier modifier = instance.getModifier(info.modifier.getID());
+
+            if (modifier != null) {
+              instance.removeModifier(modifier);
+              instance.func_233767_b_(new AttributeModifier(modifier.getID(), modifier.getName(),
+                  modifier.getAmount() + info.tickAmount, modifier.getOperation()));
+            }
           }
         }
       });
@@ -93,11 +97,11 @@ public class MementoMoriEffect extends Effect {
 
   @Override
   public void removeAttributesModifiersFromEntity(LivingEntity entityLivingBaseIn,
-      @Nonnull AbstractAttributeMap attributeMapIn, int amplifier) {
+      @Nonnull AttributeModifierManager attributeMapIn, int amplifier) {
 
-    for (Entry<IAttribute, AttributeInfo> attribute : ATTRIBUTES.entrySet()) {
-      IAttributeInstance iattributeinstance = attributeMapIn
-          .getAttributeInstance(attribute.getKey());
+    for (Entry<Attribute, AttributeInfo> attribute : ATTRIBUTES.entrySet()) {
+      ModifiableAttributeInstance iattributeinstance = attributeMapIn
+          .func_233779_a_(attribute.getKey());
 
       if (iattributeinstance != null) {
         AttributeModifier modifier = iattributeinstance
@@ -112,16 +116,16 @@ public class MementoMoriEffect extends Effect {
 
   @Override
   public void applyAttributesModifiersToEntity(LivingEntity entityLivingBaseIn,
-      @Nonnull AbstractAttributeMap attributeMapIn, int amplifier) {
+      @Nonnull AttributeModifierManager attributeMapIn, int amplifier) {
 
-    for (Entry<IAttribute, AttributeInfo> attribute : ATTRIBUTES.entrySet()) {
-      IAttributeInstance iattributeinstance = attributeMapIn
-          .getAttributeInstance(attribute.getKey());
+    for (Entry<Attribute, AttributeInfo> attribute : ATTRIBUTES.entrySet()) {
+      ModifiableAttributeInstance iattributeinstance = attributeMapIn
+          .func_233779_a_(attribute.getKey());
 
       if (iattributeinstance != null) {
         AttributeModifier attributemodifier = attribute.getValue().modifier;
         iattributeinstance.removeModifier(attributemodifier);
-        iattributeinstance.applyModifier(
+        iattributeinstance.func_233767_b_(
             new AttributeModifier(attributemodifier.getID(), NAME, attributemodifier.getAmount(),
                 attributemodifier.getOperation()));
       }

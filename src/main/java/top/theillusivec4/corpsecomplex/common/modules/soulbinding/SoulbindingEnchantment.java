@@ -32,7 +32,8 @@ import top.theillusivec4.corpsecomplex.common.registry.RegistryReference;
 public class SoulbindingEnchantment extends Enchantment {
 
   public SoulbindingEnchantment() {
-    super(Rarity.VERY_RARE, EnchantmentType.ALL, EquipmentSlotType.values());
+    super(Rarity.VERY_RARE, EnchantmentType.create("ANY", (item) -> true),
+        EquipmentSlotType.values());
     this.setRegistryName(RegistryReference.SOULBINDING);
   }
 
@@ -44,7 +45,8 @@ public class SoulbindingEnchantment extends Enchantment {
 
   @Override
   public int getMaxLevel() {
-    return CorpseComplexConfig.maxSoulbindingLevel > 0 ? CorpseComplexConfig.maxSoulbindingLevel : super.getMaxLevel();
+    return CorpseComplexConfig.maxSoulbindingLevel > 0 ? CorpseComplexConfig.maxSoulbindingLevel
+        : super.getMaxLevel();
   }
 
   @Override

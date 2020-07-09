@@ -69,7 +69,7 @@ public class MiscellaneousModule {
       DeathStorageCapability.getCapability(playerEntity).ifPresent(
           deathStorage -> deathStorage.getSettings().getMiscellaneousSettings()
               .getMobSpawnsOnDeath()
-              .forEach(mob -> spawnMob(mob, playerEntity.getPosition(), world)));
+              .forEach(mob -> spawnMob(mob, playerEntity.func_233580_cy_(), world)));
     }
   }
 
@@ -80,10 +80,10 @@ public class MiscellaneousModule {
     double d2 =
         (double) blockPos.getZ() + (world.rand.nextDouble() - world.rand.nextDouble()) * 4 + 0.5D;
 
-    if (world.hasNoCollisions(type.getBoundingBoxWithSizeApplied(d0, d1, d2))) {
+    if (world.hasNoCollisions(type.func_220328_a(d0, d1, d2))) {
       CompoundNBT compoundnbt = new CompoundNBT();
       compoundnbt.putString("id", Objects.requireNonNull(type.getRegistryName()).toString());
-      Entity entity = EntityType.loadEntityAndExecute(compoundnbt, world, (entity1) -> {
+      Entity entity = EntityType.func_220335_a(compoundnbt, world, (entity1) -> {
         entity1.setLocationAndAngles(d0, d1, d2, entity1.rotationYaw, entity1.rotationPitch);
         return entity1;
       });
@@ -94,7 +94,7 @@ public class MiscellaneousModule {
 
         if (entity instanceof MobEntity) {
           ((MobEntity) entity)
-              .onInitialSpawn(world, world.getDifficultyForLocation(new BlockPos(entity)),
+              .onInitialSpawn(world, world.getDifficultyForLocation(entity.func_233580_cy_()),
                   SpawnReason.TRIGGERED, null, null);
         }
         addEntity(entity, world);

@@ -59,8 +59,9 @@ public class DeathConditionManager {
     Optional<List<String>> playersOpt = deathCondition.getPlayers();
     String name = playerEntity.getName().getString();
     String uuid = playerEntity.getUniqueID().toString();
-    boolean matchesPlayer = playersOpt.map(players -> players.stream().anyMatch(
-        player -> name.equals(player) || uuid.equals(player))).orElse(true);
+    boolean matchesPlayer = playersOpt.map(
+        players -> players.stream().anyMatch(player -> name.equals(player) || uuid.equals(player)))
+        .orElse(true);
 
     if (!matchesPlayer) {
       return false;
@@ -91,9 +92,9 @@ public class DeathConditionManager {
     if (!matchesDamage) {
       return false;
     }
-    Optional<Integer> dimensionOpt = deathCondition.getDimension();
-    boolean matchesDimension = dimensionOpt.map(dimension -> source.getDimension() == dimension)
-        .orElse(true);
+    Optional<ResourceLocation> dimensionOpt = deathCondition.getDimension();
+    boolean matchesDimension = dimensionOpt
+        .map(dimension -> source.getDimension().equals(dimension)).orElse(true);
 
     if (!matchesDimension) {
       return false;
@@ -124,9 +125,14 @@ public class DeathConditionManager {
         CorpseComplex.LOGGER.error("Missing identifier in conditions! Skipping...");
         return;
       }
+      ResourceLocation dimensionLocation = null;
+
+      if (condition.dimension != null && !condition.dimension.isEmpty()) {
+        dimensionLocation = new ResourceLocation(condition.dimension);
+      }
       Builder builder = new Builder().damageType(condition.damageType)
           .immediateSource(getEntityType(condition.immediateSource))
-          .trueSource(getEntityType(condition.trueSource)).dimension(condition.dimension)
+          .trueSource(getEntityType(condition.trueSource)).dimension(dimensionLocation)
           .gameStages(condition.gameStages).difficulty(getDifficulty(condition.difficulty))
           .players(condition.players);
       CONDITIONS.put(identifier, builder.build());

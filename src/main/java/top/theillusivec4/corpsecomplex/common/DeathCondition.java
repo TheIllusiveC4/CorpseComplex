@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import net.minecraft.entity.EntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.Difficulty;
 
 public class DeathCondition {
@@ -34,7 +35,7 @@ public class DeathCondition {
   @Nullable
   private final EntityType<?> trueSource;
   @Nullable
-  private final Integer dimension;
+  private final ResourceLocation dimension;
   @Nullable
   private final List<String> gameStages;
   @Nullable
@@ -64,7 +65,7 @@ public class DeathCondition {
     return Optional.ofNullable(this.trueSource);
   }
 
-  public Optional<Integer> getDimension() {
+  public Optional<ResourceLocation> getDimension() {
     return Optional.ofNullable(this.dimension);
   }
 
@@ -85,7 +86,7 @@ public class DeathCondition {
     private String damageType;
     private EntityType<?> immediateSource;
     private EntityType<?> trueSource;
-    private Integer dimension;
+    private ResourceLocation dimension;
     private List<String> gameStages;
     private Difficulty difficulty;
     private List<String> players;
@@ -105,7 +106,7 @@ public class DeathCondition {
       return this;
     }
 
-    public Builder dimension(Integer dimension) {
+    public Builder dimension(ResourceLocation dimension) {
       this.dimension = dimension;
       return this;
     }

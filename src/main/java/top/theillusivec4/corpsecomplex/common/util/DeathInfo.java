@@ -44,10 +44,11 @@ public class DeathInfo {
   private EntityType<?> immediateSource;
   @Nullable
   private EntityType<?> trueSource;
-  private int dimension;
+  private ResourceLocation dimension;
   private List<String> gameStages;
 
-  public DeathInfo() {}
+  public DeathInfo() {
+  }
 
   public DeathInfo(DamageSource source, World world, @Nonnull List<String> gameStages) {
     this.damageType = source.getDamageType();
@@ -58,7 +59,7 @@ public class DeathInfo {
     this.immediateSource =
         source.getImmediateSource() != null ? source.getImmediateSource().getType() : null;
     this.trueSource = source.getTrueSource() != null ? source.getTrueSource().getType() : null;
-    this.dimension = world.getDimension().getType().getId();
+    this.dimension = world.func_234922_V_().func_240901_a_();
     this.gameStages = gameStages;
   }
 
@@ -92,7 +93,7 @@ public class DeathInfo {
     return trueSource;
   }
 
-  public int getDimension() {
+  public ResourceLocation getDimension() {
     return dimension;
   }
 
@@ -113,7 +114,7 @@ public class DeathInfo {
     if (this.trueSource != null && this.trueSource.getRegistryName() != null) {
       tag.putString("TrueSource", this.trueSource.getRegistryName().toString());
     }
-    tag.putInt("Dimension", this.dimension);
+    tag.putString("Dimension", this.dimension.toString());
     ListNBT list = new ListNBT();
     this.gameStages.forEach(stage -> list.add(StringNBT.valueOf(stage)));
     tag.put("GameStages", list);
@@ -136,7 +137,7 @@ public class DeathInfo {
       this.trueSource = ForgeRegistries.ENTITIES
           .getValue(new ResourceLocation(tag.getString("TrueSource")));
     }
-    this.dimension = tag.getInt("Dimension");
+    this.dimension = new ResourceLocation(tag.getString("Dimension"));
     this.gameStages = new ArrayList<>();
     ListNBT list = tag.getList("GameStages", NBT.TAG_STRING);
     list.forEach(stage -> this.gameStages.add(stage.getString()));
