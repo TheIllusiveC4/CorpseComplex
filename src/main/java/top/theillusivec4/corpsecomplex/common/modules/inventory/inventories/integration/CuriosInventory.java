@@ -85,7 +85,7 @@ public class CuriosInventory implements Inventory {
                 if (existing.isEmpty()) {
                   stacksHandler.getStacks().setStackInSlot(slot, itemstack);
                   CuriosApi.getCuriosHelper().getCurio(itemstack).ifPresent((curio) -> {
-                    player.getAttributeManager().func_233793_b_(curio.getAttributeModifiers(id));
+                    player.getAttributeManager().reapplyModifiers(curio.getAttributeModifiers(id));
                     curio.onEquip(id, slot, player);
                   });
                 } else {

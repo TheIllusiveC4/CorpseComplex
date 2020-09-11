@@ -67,7 +67,7 @@ public class MementoMoriEffect extends Effect {
 
             if (modifier != null) {
               instance.removeModifier(modifier);
-              instance.func_233767_b_(new AttributeModifier(modifier.getID(), modifier.getName(),
+              instance.applyNonPersistentModifier(new AttributeModifier(modifier.getID(), modifier.getName(),
                   modifier.getAmount() + info.tickAmount, modifier.getOperation()));
             }
           }
@@ -101,7 +101,7 @@ public class MementoMoriEffect extends Effect {
 
     for (Entry<Attribute, AttributeInfo> attribute : ATTRIBUTES.entrySet()) {
       ModifiableAttributeInstance iattributeinstance = attributeMapIn
-          .func_233779_a_(attribute.getKey());
+          .createInstanceIfAbsent(attribute.getKey());
 
       if (iattributeinstance != null) {
         AttributeModifier modifier = iattributeinstance
@@ -120,12 +120,12 @@ public class MementoMoriEffect extends Effect {
 
     for (Entry<Attribute, AttributeInfo> attribute : ATTRIBUTES.entrySet()) {
       ModifiableAttributeInstance iattributeinstance = attributeMapIn
-          .func_233779_a_(attribute.getKey());
+          .createInstanceIfAbsent(attribute.getKey());
 
       if (iattributeinstance != null) {
         AttributeModifier attributemodifier = attribute.getValue().modifier;
         iattributeinstance.removeModifier(attributemodifier);
-        iattributeinstance.func_233767_b_(
+        iattributeinstance.applyNonPersistentModifier(
             new AttributeModifier(attributemodifier.getID(), NAME, attributemodifier.getAmount(),
                 attributemodifier.getOperation()));
       }

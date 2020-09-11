@@ -28,6 +28,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.event.entity.player.PlayerSetSpawnEvent;
@@ -69,7 +70,7 @@ public class MiscellaneousModule {
       DeathStorageCapability.getCapability(playerEntity).ifPresent(
           deathStorage -> deathStorage.getSettings().getMiscellaneousSettings()
               .getMobSpawnsOnDeath()
-              .forEach(mob -> spawnMob(mob, playerEntity.func_233580_cy_(), world)));
+              .forEach(mob -> spawnMob(mob, playerEntity.getPosition(), world)));
     }
   }
 
@@ -80,10 +81,10 @@ public class MiscellaneousModule {
     double d2 =
         (double) blockPos.getZ() + (world.rand.nextDouble() - world.rand.nextDouble()) * 4 + 0.5D;
 
-    if (world.hasNoCollisions(type.func_220328_a(d0, d1, d2))) {
+    if (world.hasNoCollisions(type.getBoundingBoxWithSizeApplied(d0, d1, d2))) {
       CompoundNBT compoundnbt = new CompoundNBT();
       compoundnbt.putString("id", Objects.requireNonNull(type.getRegistryName()).toString());
-      Entity entity = EntityType.func_220335_a(compoundnbt, world, (entity1) -> {
+      Entity entity = EntityType.loadEntityAndExecute(compoundnbt, world, (entity1) -> {
         entity1.setLocationAndAngles(d0, d1, d2, entity1.rotationYaw, entity1.rotationPitch);
         return entity1;
       });
@@ -92,10 +93,10 @@ public class MiscellaneousModule {
         entity.setLocationAndAngles(entity.getPosX(), entity.getPosY(), entity.getPosZ(),
             world.rand.nextFloat() * 360.0F, 0.0F);
 
-        if (entity instanceof MobEntity) {
-          ((MobEntity) entity)
-              .onInitialSpawn(world, world.getDifficultyForLocation(entity.func_233580_cy_()),
-                  SpawnReason.TRIGGERED, null, null);
+        if (entity instanceof MobEntity && world instanceof ServerWorld) {
+          ((MobEntity) entity).onInitialSpawn((ServerWorld) world,
+              world.getDifficultyForLocation(entity.getPosition()), SpawnReason.TRIGGERED, null,
+              null);
         }
         addEntity(entity, world);
         world.playEvent(2004, blockPos, 0);

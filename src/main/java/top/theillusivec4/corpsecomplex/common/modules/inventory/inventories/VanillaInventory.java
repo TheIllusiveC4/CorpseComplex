@@ -73,19 +73,22 @@ public class VanillaInventory implements Inventory {
 
     if (player != null && oldPlayer != null) {
       ListNBT list = (ListNBT) oldStorage.getInventory("vanilla");
-      PlayerInventory inventory = player.inventory;
 
-      for (int i = 0; i < list.size(); ++i) {
-        CompoundNBT compoundnbt = list.getCompound(i);
-        int slot = compoundnbt.getInt("Slot");
-        ItemStack itemstack = ItemStack.read(compoundnbt);
-        if (!itemstack.isEmpty()) {
-          ItemStack existing = inventory.getStackInSlot(slot);
+      if (list != null) {
+        PlayerInventory inventory = player.inventory;
 
-          if (existing.isEmpty()) {
-            inventory.setInventorySlotContents(slot, itemstack);
-          } else {
-            ItemHandlerHelper.giveItemToPlayer(inventory.player, itemstack);
+        for (int i = 0; i < list.size(); ++i) {
+          CompoundNBT compoundnbt = list.getCompound(i);
+          int slot = compoundnbt.getInt("Slot");
+          ItemStack itemstack = ItemStack.read(compoundnbt);
+          if (!itemstack.isEmpty()) {
+            ItemStack existing = inventory.getStackInSlot(slot);
+
+            if (existing.isEmpty()) {
+              inventory.setInventorySlotContents(slot, itemstack);
+            } else {
+              ItemHandlerHelper.giveItemToPlayer(inventory.player, itemstack);
+            }
           }
         }
       }
