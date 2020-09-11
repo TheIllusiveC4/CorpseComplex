@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [2.0-beta9] - 2020.09.11
+### Fixed
+- Fixed NPE while keepInventory is true [#46](https://github.com/TheIllusiveC4/CorpseComplex/issues/46)
+
 ## [2.0-beta8](https://github.com/TheIllusiveC4/CorpseComplex/compare/aa0503aad19a2a661cb255cc86e023a55694d6b9...1.15.x) - 2020.07.08
 ### Removed
 - Removed coremod for MilkBucketItem
