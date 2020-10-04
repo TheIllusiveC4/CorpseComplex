@@ -59,7 +59,7 @@ public class DeathInfo {
     this.immediateSource =
         source.getImmediateSource() != null ? source.getImmediateSource().getType() : null;
     this.trueSource = source.getTrueSource() != null ? source.getTrueSource().getType() : null;
-    this.dimension = world.func_234923_W_().getRegistryName();
+    this.dimension = world.getDimensionKey().getRegistryName();
     this.gameStages = gameStages;
   }
 
