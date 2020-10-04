@@ -56,19 +56,22 @@ public class CosmeticArmorInventory implements Inventory {
 
     if (player != null && oldPlayer != null) {
       ListNBT tagList = (ListNBT) oldStorage.getInventory("cosmeticarmorreworked");
-      CAStacksBase stacks = CosArmorAPI.getCAStacks(player.getUniqueID());
 
-      for (int i = 0; i < tagList.size(); ++i) {
-        CompoundNBT tag = tagList.getCompound(i);
-        int slot = tag.getInt("Slot");
-        ItemStack itemstack = ItemStack.read(tag);
-        if (!itemstack.isEmpty()) {
-          ItemStack existing = stacks.getStackInSlot(slot);
+      if (tagList != null) {
+        CAStacksBase stacks = CosArmorAPI.getCAStacks(player.getUniqueID());
 
-          if (existing.isEmpty()) {
-            stacks.setStackInSlot(slot, itemstack);
-          } else {
-            ItemHandlerHelper.giveItemToPlayer(player, itemstack);
+        for (int i = 0; i < tagList.size(); ++i) {
+          CompoundNBT tag = tagList.getCompound(i);
+          int slot = tag.getInt("Slot");
+          ItemStack itemstack = ItemStack.read(tag);
+          if (!itemstack.isEmpty()) {
+            ItemStack existing = stacks.getStackInSlot(slot);
+
+            if (existing.isEmpty()) {
+              stacks.setStackInSlot(slot, itemstack);
+            } else {
+              ItemHandlerHelper.giveItemToPlayer(player, itemstack);
+            }
           }
         }
       }
