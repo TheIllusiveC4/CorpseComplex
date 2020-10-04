@@ -66,53 +66,57 @@ public class CuriosInventory implements Inventory {
 
     if (player != null && oldPlayer != null) {
       ListNBT list = (ListNBT) oldStorage.getInventory("curios");
-      CuriosApi.getCuriosHelper().getCuriosHandler(player).ifPresent(newHandler -> {
 
-        for (int i = 0; i < list.size(); i++) {
-          CompoundNBT tag = list.getCompound(i);
-          String id = tag.getString("Identifier");
-          newHandler.getStacksHandler(id).ifPresent(stacksHandler -> {
-            ListNBT stacks = tag.getList("Stacks", NBT.TAG_COMPOUND);
+      if (list != null) {
+        CuriosApi.getCuriosHelper().getCuriosHandler(player).ifPresent(newHandler -> {
 
-            for (int j = 0; j < stacks.size(); j++) {
-              CompoundNBT compoundnbt = stacks.getCompound(j);
-              int slot = compoundnbt.getInt("Slot");
-              ItemStack itemstack = ItemStack.read(compoundnbt);
+          for (int i = 0; i < list.size(); i++) {
+            CompoundNBT tag = list.getCompound(i);
+            String id = tag.getString("Identifier");
+            newHandler.getStacksHandler(id).ifPresent(stacksHandler -> {
+              ListNBT stacks = tag.getList("Stacks", NBT.TAG_COMPOUND);
 
-              if (!itemstack.isEmpty()) {
-                ItemStack existing = stacksHandler.getStacks().getStackInSlot(slot);
+              for (int j = 0; j < stacks.size(); j++) {
+                CompoundNBT compoundnbt = stacks.getCompound(j);
+                int slot = compoundnbt.getInt("Slot");
+                ItemStack itemstack = ItemStack.read(compoundnbt);
 
-                if (existing.isEmpty()) {
-                  stacksHandler.getStacks().setStackInSlot(slot, itemstack);
-                  CuriosApi.getCuriosHelper().getCurio(itemstack).ifPresent((curio) -> {
-                    player.getAttributeManager().reapplyModifiers(curio.getAttributeModifiers(id));
-                    curio.onEquip(id, slot, player);
-                  });
-                } else {
-                  ItemHandlerHelper.giveItemToPlayer(player, itemstack);
+                if (!itemstack.isEmpty()) {
+                  ItemStack existing = stacksHandler.getStacks().getStackInSlot(slot);
+
+                  if (existing.isEmpty()) {
+                    stacksHandler.getStacks().setStackInSlot(slot, itemstack);
+                    CuriosApi.getCuriosHelper().getCurio(itemstack).ifPresent((curio) -> {
+                      player.getAttributeManager()
+                          .reapplyModifiers(curio.getAttributeModifiers(id));
+                      curio.onEquip(id, slot, player);
+                    });
+                  } else {
+                    ItemHandlerHelper.giveItemToPlayer(player, itemstack);
+                  }
                 }
               }
-            }
-            ListNBT cosmeticStacks = tag.getList("CosmeticStacks", NBT.TAG_COMPOUND);
+              ListNBT cosmeticStacks = tag.getList("CosmeticStacks", NBT.TAG_COMPOUND);
 
-            for (int j = 0; j < cosmeticStacks.size(); j++) {
-              CompoundNBT compoundnbt = stacks.getCompound(j);
-              int slot = compoundnbt.getInt("Slot");
-              ItemStack itemstack = ItemStack.read(compoundnbt);
+              for (int j = 0; j < cosmeticStacks.size(); j++) {
+                CompoundNBT compoundnbt = stacks.getCompound(j);
+                int slot = compoundnbt.getInt("Slot");
+                ItemStack itemstack = ItemStack.read(compoundnbt);
 
-              if (!itemstack.isEmpty()) {
-                ItemStack existing = stacksHandler.getCosmeticStacks().getStackInSlot(slot);
+                if (!itemstack.isEmpty()) {
+                  ItemStack existing = stacksHandler.getCosmeticStacks().getStackInSlot(slot);
 
-                if (existing.isEmpty()) {
-                  stacksHandler.getCosmeticStacks().setStackInSlot(slot, itemstack);
-                } else {
-                  ItemHandlerHelper.giveItemToPlayer(player, itemstack);
+                  if (existing.isEmpty()) {
+                    stacksHandler.getCosmeticStacks().setStackInSlot(slot, itemstack);
+                  } else {
+                    ItemHandlerHelper.giveItemToPlayer(player, itemstack);
+                  }
                 }
               }
-            }
-          });
-        }
-      });
+            });
+          }
+        });
+      }
     }
   }
 }

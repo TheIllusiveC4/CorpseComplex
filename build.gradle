@@ -65,7 +65,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${version_forge}"
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${version_curios}")
-    compileOnly fg.deobf("curse.maven:cosmetic-armor-reworked:3033357")
+    compileOnly fg.deobf("curse.maven:cosmetic-armor-reworked:3056451")
 }
 
 sourceSets {
