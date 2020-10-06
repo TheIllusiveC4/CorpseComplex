@@ -58,6 +58,8 @@ public class InventoryHelper {
         keepChance = 1.0D;
       } else if (inventoryRule == DropMode.DESTROY) {
         destroyChance = 1.0D;
+      } else if (inventoryRule == DropMode.DROP) {
+        keepChance = 0.0D;
       }
     }
     ItemStack keep = stack.split(getRandomAmount(stack.getCount(), keepChance));
