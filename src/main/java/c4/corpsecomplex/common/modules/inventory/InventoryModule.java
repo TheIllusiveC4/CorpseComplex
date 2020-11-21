@@ -60,8 +60,19 @@ public class InventoryModule extends Module {
   public static String[] essentialItems;
   public static String[] cursedItems;
   public static double randomDestroy;
+
   public static double dropLoss;
+  public static boolean difficultyDropLoss;
+  public static double dropLossEasy;
+  public static double dropLossNormal;
+  public static double dropLossHard;
+
   public static double keptLoss;
+  public static boolean difficultyKeptLoss;
+  public static double keptLossEasy;
+  public static double keptLossNormal;
+  public static double keptLossHard;
+
   public static double dropDrain;
   public static double keptDrain;
   public static boolean durabilityLossLimiter;
@@ -181,8 +192,25 @@ public class InventoryModule extends Module {
         "List of items that are always dropped", false);
     dropLoss = getDouble("Durability Loss on Drops", 0, 0, 1,
         "Percent of durability lost on death for drops", false);
+    difficultyDropLoss = getBool("Durability Loss Dependent on Difficulty", false, "Set to true to make the durability loss on drops dependent on world difficulty",
+            false);
+    dropLossEasy = getDouble("Durability Loss on Drops on Easy", 0, 0, 1,
+            "Percent of durability lost on death for drops on easy difficulty", false);
+    dropLossNormal = getDouble("Durability Loss on Drops on Normal", 0, 0, 1,
+            "Percent of durability lost on death for drops on normal difficulty", false);
+    dropLossHard = getDouble("Durability Loss on Drops Hard", 0, 0, 1,
+            "Percent of durability lost on death for drops on hard difficulty", false);
     keptLoss = getDouble("Durability Loss on Kept Items", 0, 0, 1,
         "Percent of durability lost on death for kept items", false);
+    difficultyKeptLoss = getBool("Kept Durability Loss Dependent on Difficulty", false,
+            "Set to true to make the durability loss on kept items dependent on world difficulty",
+            false);
+    keptLossEasy = getDouble("Durability Loss on Kept Items on Easy", 0, 0, 1,
+            "Percent of durability lost on death for Kept Items on easy difficulty", false);
+    keptLossNormal = getDouble("Durability Loss on Kept Items on Normal", 0, 0, 1,
+            "Percent of durability lost on death for Kept Items on normal difficulty", false);
+    keptLossHard = getDouble("Durability Loss on Kept Items Hard", 0, 0, 1,
+            "Percent of durability lost on death for Kept Items on hard difficulty", false);
     dropDrain = getDouble("Energy Drain on Drops", 0, 0, 1,
         "Percent of energy drained on death for drops", false);
     keptDrain = getDouble("Energy Drain on Kept Items", 0, 0, 1,
@@ -199,8 +227,11 @@ public class InventoryModule extends Module {
   public void initPropOrder() {
     propOrder = new ArrayList<>(Arrays
         .asList("Enable Inventory Module", "Keep Armor", "Keep Hotbar", "Keep Mainhand",
-            "Keep Offhand", "Keep Main Inventory", "Durability Loss on Drops",
-            "Durability Loss on Kept Items", "Energy Drain on Drops", "Energy Drain on Kept Items",
+            "Keep Offhand", "Keep Main Inventory", "Durability Loss on Drops", "Durability Loss on Drops on Difficulty",
+            "Durability Loss on Drops on Easy", "Durability Loss on Drops on Normal", "Durability Loss on Drops on Hard",
+            "Durability Loss on Kept Items", "Durability Loss on Drops on Difficulty",
+            "Durability Loss on Kept Items on Easy", "Durability Loss on Kept Items on Normal", "Durability Loss on Kept Items on Hard",
+            "Energy Drain on Drops", "Energy Drain on Kept Items",
             "Random Drop Chance", "Random Drop Only Main Inventory", "Random Destroy Chance",
             "Essential Items", "Cursed Items", "Destroy Cursed Items"));
   }
