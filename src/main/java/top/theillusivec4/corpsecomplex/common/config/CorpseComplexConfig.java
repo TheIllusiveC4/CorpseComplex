@@ -119,6 +119,8 @@ public class CorpseComplexConfig {
   public static boolean canApplyEnchantingTable;
   public static int maxSoulbindingLevel;
   public static boolean isTreasure;
+  public static boolean isVillagerTrade;
+  public static boolean isLootable;
 
   public static List<? extends String> cures;
   public static List<? extends String> effects;
@@ -271,6 +273,8 @@ public class CorpseComplexConfig {
     public final BooleanValue canApplyEnchantingTable;
     public final IntValue maxSoulbindingLevel;
     public final BooleanValue isTreasure;
+    public final BooleanValue isVillagerTrade;
+    public final BooleanValue isLootable;
 
     public final ConfigValue<List<? extends String>> cures;
     public final ConfigValue<List<? extends String>> effects;
@@ -569,6 +573,12 @@ public class CorpseComplexConfig {
           .defineInRange("maxSoulbindingLevel", 1, 1, 5);
       isTreasure = builder.comment("Set to true to consider as a treasure enchantment")
           .translation(CONFIG_PREFIX + "isTreasure").define("isTreasure", false);
+      isVillagerTrade =
+          builder.comment("Set to true to allow this enchantment to be found in villager trades")
+              .translation(CONFIG_PREFIX + "isVillagerTrade").define("isVillagerTrade", false);
+      isLootable =
+          builder.comment("Set to true to allow this enchantment to be found in loot chests")
+              .translation(CONFIG_PREFIX + "isLootable").define("isLootable", false);
 
       builder.pop();
 
@@ -785,6 +795,8 @@ public class CorpseComplexConfig {
     canApplyEnchantingTable = SERVER.canApplyEnchantingTable.get();
     maxSoulbindingLevel = SERVER.maxSoulbindingLevel.get();
     isTreasure = SERVER.isTreasure.get();
+    isVillagerTrade = SERVER.isVillagerTrade.get();
+    isLootable = SERVER.isLootable.get();
 
     cures = SERVER.cures.get();
     effects = SERVER.effects.get();

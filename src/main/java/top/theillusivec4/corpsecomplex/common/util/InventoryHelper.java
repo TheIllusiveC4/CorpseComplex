@@ -28,9 +28,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeTagHandler;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.InventorySetting;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.InventorySetting.SectionSettings;
@@ -44,7 +48,7 @@ public class InventoryHelper {
   public static final Random RAND = new Random();
 
   public static void process(PlayerEntity player, ItemStack stack, int index, ListNBT list,
-      InventorySection section, InventorySetting setting) {
+                             InventorySection section, InventorySetting setting) {
     DropMode inventoryRule = getDropModeOverride(stack, setting);
     SectionSettings defaultSettings = setting.getInventorySettings().get(InventorySection.DEFAULT);
     SectionSettings sectionSettings = setting.getInventorySettings().get(section);
@@ -101,7 +105,7 @@ public class InventoryHelper {
   }
 
   public static void applyDurabilityLoss(PlayerEntity playerEntity, ItemStack stack,
-      InventorySetting setting, double durabilityLoss) {
+                                         InventorySetting setting, double durabilityLoss) {
 
     if (!stack.isDamageable()) {
       return;
@@ -138,10 +142,24 @@ public class InventoryHelper {
     return amount;
   }
 
-  private static boolean saveSoulbound(ItemStack stack) {
-    int level = EnchantmentHelper.getEnchantmentLevel(CorpseComplexRegistry.SOULBINDING, stack);
+  private static final ITag<Enchantment> SOULBOUND = ForgeTagHandler
+      .createOptionalTag(ForgeRegistries.ENCHANTMENTS, new ResourceLocation("forge:soulbound"));
 
-    if (level <= 0) {
+  private static boolean saveSoulbound(ItemStack stack) {
+    int level = 0;
+    Enchantment enchantment = null;
+
+    for (Map.Entry<Enchantment, Integer> enchantmentIntegerEntry : EnchantmentHelper
+        .getEnchantments(stack).entrySet()) {
+
+      if (enchantmentIntegerEntry.getKey().isIn(SOULBOUND)) {
+        level = enchantmentIntegerEntry.getValue();
+        enchantment = enchantmentIntegerEntry.getKey();
+        break;
+      }
+    }
+
+    if (level <= 0 || enchantment == null) {
       return false;
     }
 
@@ -160,10 +178,10 @@ public class InventoryHelper {
       }
 
       Map<Enchantment, Integer> enchMap = EnchantmentHelper.getEnchantments(stack);
-      enchMap.remove(CorpseComplexRegistry.SOULBINDING);
+      enchMap.remove(enchantment);
 
       if (level > 0) {
-        enchMap.put(CorpseComplexRegistry.SOULBINDING, level);
+        enchMap.put(enchantment, level);
       }
       EnchantmentHelper.setEnchantments(enchMap, stack);
     }

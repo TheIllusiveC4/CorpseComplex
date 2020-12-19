@@ -81,6 +81,16 @@ public class SoulbindingEnchantment extends Enchantment {
   }
 
   @Override
+  public boolean canVillagerTrade() {
+    return CorpseComplexConfig.isVillagerTrade;
+  }
+
+  @Override
+  public boolean canGenerateInLoot() {
+    return CorpseComplexConfig.isLootable;
+  }
+
+  @Override
   public boolean isAllowedOnBooks() {
     return CorpseComplexConfig.allowedOnBooks;
   }
