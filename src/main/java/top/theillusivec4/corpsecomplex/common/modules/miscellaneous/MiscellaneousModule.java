@@ -35,6 +35,7 @@ import net.minecraftforge.event.entity.player.PlayerSetSpawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
 import top.theillusivec4.corpsecomplex.common.capability.DeathStorageCapability;
+import top.theillusivec4.corpsecomplex.common.config.CorpseComplexConfig;
 
 public class MiscellaneousModule {
 
@@ -52,9 +53,15 @@ public class MiscellaneousModule {
 
   @SubscribeEvent
   public void playerRespawn(final PlayerRespawnEvent evt) {
-    DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(
+    PlayerEntity player = evt.getPlayer();
+
+    DeathStorageCapability.getCapability(player).ifPresent(
         deathStorage -> deathStorage.getSettings().getMiscellaneousSettings().getRespawnItems()
             .forEach(item -> ItemHandlerHelper.giveItemToPlayer(evt.getPlayer(), item.copy())));
+
+    if (CorpseComplexConfig.respawnHealth > 0) {
+      player.setHealth((float) CorpseComplexConfig.respawnHealth);
+    }
   }
 
   @SubscribeEvent

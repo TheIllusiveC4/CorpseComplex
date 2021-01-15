@@ -152,6 +152,7 @@ public class CorpseComplexConfig {
   public static double percentXp;
   public static boolean beneficial;
 
+  public static double respawnHealth;
   public static boolean restrictRespawning;
   public static List<? extends String> respawnItems;
   public static List<? extends String> mobSpawnsOnDeath;
@@ -307,6 +308,7 @@ public class CorpseComplexConfig {
     public final BooleanValue beneficial;
 
     public final BooleanValue restrictRespawning;
+    public final DoubleValue respawnHealth;
     public final ConfigValue<List<? extends String>> respawnItems;
     public final ConfigValue<List<? extends String>> mobSpawnsOnDeath;
 
@@ -697,6 +699,11 @@ public class CorpseComplexConfig {
 
       builder.push("miscellaneous");
 
+      respawnHealth = builder.comment(
+          "The amount of health that players have on respawn, 0.0 to default to the maximum health")
+          .translation(CONFIG_PREFIX + "respawnHealth")
+          .defineInRange("respawnHealth", 0.0D, 0.0D, 1024.0D);
+
       restrictRespawning = builder.comment(
           "Set to true to restrict respawning to the world spawn, players cannot set new spawn points")
           .translation(CONFIG_PREFIX + "restrictRespawning").define("restrictRespawning", false);
@@ -828,6 +835,7 @@ public class CorpseComplexConfig {
     percentXp = SERVER.percentXp.get();
     beneficial = SERVER.beneficial.get();
 
+    respawnHealth = SERVER.respawnHealth.get();
     restrictRespawning = SERVER.restrictRespawning.get();
     respawnItems = SERVER.respawnItems.get();
     mobSpawnsOnDeath = SERVER.mobSpawnsOnDeath.get();
