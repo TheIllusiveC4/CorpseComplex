@@ -21,6 +21,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
@@ -120,16 +121,42 @@ public final class DeathStackHelper {
     if (!stack.isItemStackDamageable()) {
       return;
     }
-    int limit =
-        InventoryModule.durabilityLossLimiter ? stack.getMaxDamage() - stack.getItemDamage() - 1
-            : stack.getMaxDamage();
+    int limit = InventoryModule.durabilityLossLimiter ? stack.getMaxDamage() - stack.getItemDamage() - 1 : stack.getMaxDamage();
     int loss;
+    double actualLoss = 0;
 
+    // Check if item stored or dropped
     if (store) {
-      loss = (int) Math.round(stack.getMaxDamage() * InventoryModule.keptLoss);
+      // Check if difficulty is relevant in the loss calculation
+      if (InventoryModule.difficultyKeptLoss) {
+        // Select proper setting
+        if (player.world.getDifficulty() == EnumDifficulty.EASY) {
+          actualLoss = InventoryModule.keptLossEasy;
+        } else if (player.world.getDifficulty() == EnumDifficulty.NORMAL) {
+          actualLoss = InventoryModule.keptLossNormal;
+        } else if (player.world.getDifficulty() == EnumDifficulty.HARD) {
+          actualLoss = InventoryModule.keptLossHard;
+        }
+      } else {
+        actualLoss = InventoryModule.keptLoss;
+      }
     } else {
-      loss = (int) Math.round(stack.getMaxDamage() * InventoryModule.dropLoss);
+      if (InventoryModule.difficultyDropLoss) {
+        // Select proper setting
+        if (player.world.getDifficulty() == EnumDifficulty.EASY) {
+          actualLoss = InventoryModule.dropLossEasy;
+        } else if (player.world.getDifficulty() == EnumDifficulty.NORMAL) {
+          actualLoss = InventoryModule.dropLossNormal;
+        } else if (player.world.getDifficulty() == EnumDifficulty.HARD) {
+          actualLoss = InventoryModule.dropLossHard;
+        }
+      } else {
+        actualLoss = InventoryModule.dropLoss;
+      }
     }
+
+    loss = (int) Math.round(stack.getMaxDamage() * actualLoss);
+
     stack.damageItem(Math.min(loss, limit), player);
   }
 
