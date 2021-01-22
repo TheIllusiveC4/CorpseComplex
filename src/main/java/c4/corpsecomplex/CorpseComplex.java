@@ -43,7 +43,7 @@ public class CorpseComplex {
 
   public static final String MODID = "corpsecomplex";
   public static final String MODNAME = "Corpse Complex";
-  public static final String MODVER = "1.0.11.1";
+  public static final String MODVER = "1.0.12.0";
 
   @SidedProxy(clientSide = "c4.corpsecomplex.proxy.ClientProxy", serverSide =
           "c4.corpsecomplex.proxy.CommonProxy")
