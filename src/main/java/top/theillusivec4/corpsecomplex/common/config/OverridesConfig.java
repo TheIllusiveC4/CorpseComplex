@@ -87,6 +87,9 @@ public class OverridesConfig {
     public Double cosmeticArmorKeepDurabilityLoss;
     public Double cosmeticArmorDropDurabilityLoss;
 
+    public Double toolBeltKeepChance;
+    public Double toolBeltDestroyChance;
+
     public List<String> itemSettings;
     public Boolean limitDurabilityLoss;
     public Integer dropDespawnTime;

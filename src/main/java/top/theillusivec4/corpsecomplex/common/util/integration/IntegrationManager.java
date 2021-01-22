@@ -23,6 +23,7 @@ import net.minecraftforge.fml.ModList;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.InventoryModule;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.integration.CosmeticArmorInventory;
 import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.integration.CuriosInventory;
+import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.integration.ToolBeltInventory;
 
 public class IntegrationManager {
 
@@ -34,6 +35,10 @@ public class IntegrationManager {
 
     if (ModList.get().isLoaded("cosmeticarmorreworked")) {
       InventoryModule.STORAGE.add(new CosmeticArmorInventory());
+    }
+
+    if (ModList.get().isLoaded("toolbelt")) {
+      InventoryModule.STORAGE.add(new ToolBeltInventory());
     }
   }
 }

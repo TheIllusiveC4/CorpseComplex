@@ -8,12 +8,10 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
-        classpath 'com.wynprice.cursemaven:CurseMaven:2.1.1'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'com.matthewprenger.cursegradle'
-apply plugin: 'com.wynprice.cursemaven'
 
 version = "${mod_version}"
 group = "${mod_group}"
@@ -60,12 +58,17 @@ repositories {
     maven {
         url 'https://maven.mcmoddev.com'
     }
+    maven {
+        name = "CurseMaven"
+        url = "https://www.cursemaven.com"
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${version_forge}"
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${version_curios}")
-    compileOnly fg.deobf("curse.maven:cosmetic-armor-reworked:3056451")
+    compileOnly fg.deobf("curse.maven:cosmeticarmorreworked-237307:3056451")
+    compile fg.deobf("curse.maven:toolbelt-260262:3086049")
 }
 
 sourceSets {
