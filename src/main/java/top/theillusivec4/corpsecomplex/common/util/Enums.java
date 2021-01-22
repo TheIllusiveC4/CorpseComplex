@@ -34,7 +34,8 @@ public class Enums {
   }
 
   public enum InventorySection {
-    DEFAULT, MAINHAND, HOTBAR, OFFHAND, MAIN, HEAD, CHEST, LEGS, FEET, CURIOS, COSMETIC_ARMOR
+    DEFAULT, MAINHAND, HOTBAR, OFFHAND, MAIN, HEAD, CHEST, LEGS, FEET, CURIOS, COSMETIC_ARMOR,
+    TOOL_BELT
   }
 
   public enum ModuleType {

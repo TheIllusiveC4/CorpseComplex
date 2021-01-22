@@ -107,6 +107,11 @@ public class CorpseComplexConfig {
   public static double cosmeticArmorKeepDurabilityLoss;
   public static double cosmeticArmorDropDurabilityLoss;
 
+  public static double toolBeltKeepChance;
+  public static double toolBeltDestroyChance;
+  public static double toolBeltKeepDurabilityLoss;
+  public static double toolBeltDropDurabilityLoss;
+
   public static List<? extends String> itemSettings;
   public static boolean limitDurabilityLoss;
   public static int dropDespawnTime;
@@ -258,6 +263,9 @@ public class CorpseComplexConfig {
     public final DoubleValue cosmeticArmorDestroyChance;
     public final DoubleValue cosmeticArmorKeepDurabilityLoss;
     public final DoubleValue cosmeticArmorDropDurabilityLoss;
+
+    public final DoubleValue toolBeltKeepChance;
+    public final DoubleValue toolBeltDestroyChance;
 
     public final ConfigValue<List<? extends String>> itemSettings;
     public final BooleanValue limitDurabilityLoss;
@@ -527,6 +535,19 @@ public class CorpseComplexConfig {
 
       builder.pop();
 
+      builder.push("toolbelt");
+
+      toolBeltKeepChance = builder.comment("Percent chance to keep tool belt item")
+          .translation(CONFIG_PREFIX + "toolBeltKeepChance")
+          .defineInRange("toolBeltKeepChance", -1.0D, -1.0D, 1.0D);
+
+      toolBeltDestroyChance = builder
+          .comment("Percent chance to destroy dropped tool belt item")
+          .translation(CONFIG_PREFIX + "toolBeltDestroyChance")
+          .defineInRange("toolBeltDestroyChance", -1.0D, -1.0D, 1.0D);
+
+      builder.pop();
+
       itemSettings = builder
           .comment("List of items to always keep, drop, or destroy, regardless of other settings",
               "Format: modid:item;[keep/drop/destroy]").translation(CONFIG_PREFIX + "itemSettings")
@@ -772,6 +793,9 @@ public class CorpseComplexConfig {
     cosmeticArmorDestroyChance = SERVER.cosmeticArmorDestroyChance.get();
     cosmeticArmorKeepDurabilityLoss = SERVER.cosmeticArmorKeepDurabilityLoss.get();
     cosmeticArmorDropDurabilityLoss = SERVER.cosmeticArmorDropDurabilityLoss.get();
+
+    toolBeltKeepChance = SERVER.toolBeltKeepChance.get();
+    toolBeltDestroyChance = SERVER.toolBeltDestroyChance.get();
 
     itemSettings = SERVER.itemSettings.get();
     limitDurabilityLoss = SERVER.limitDurabilityLoss.get();

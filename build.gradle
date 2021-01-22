@@ -58,7 +58,7 @@ repositories {
         url = "https://maven.theillusivec4.top/"
     }
     maven {
-        url 'https://maven.mcmoddev.com'
+        url 'https://mmdmaven.blamejared.com/'
     }
 }
 
@@ -68,6 +68,7 @@ dependencies {
     runtimeOnly fg.deobf("net.darkhax.bookshelf:Bookshelf-${version_minecraft}:${version_bookshelf}")
     compileOnly fg.deobf("net.darkhax.gamestages:GameStages-${version_minecraft}:${version_gamestages}")
     compileOnly fg.deobf("curse.maven:cosmetic-armor-reworked:2943768")
+    compile fg.deobf("curse.maven:tool-belt:3086055")
 }
 
 sourceSets {

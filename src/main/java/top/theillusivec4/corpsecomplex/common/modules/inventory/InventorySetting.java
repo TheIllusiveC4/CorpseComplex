@@ -116,6 +116,11 @@ public class InventorySetting implements Setting<InventoryOverride> {
             CorpseComplexConfig.cosmeticArmorDestroyChance,
             CorpseComplexConfig.cosmeticArmorKeepDurabilityLoss,
             CorpseComplexConfig.cosmeticArmorDropDurabilityLoss));
+    this.getInventorySettings().put(InventorySection.TOOL_BELT,
+        new SectionSettings(CorpseComplexConfig.toolBeltKeepChance,
+            CorpseComplexConfig.toolBeltDestroyChance,
+            CorpseComplexConfig.toolBeltKeepDurabilityLoss,
+            CorpseComplexConfig.toolBeltDropDurabilityLoss));
     this.setItems(ConfigParser.parseDrops(CorpseComplexConfig.itemSettings));
     this.setLimitDurabilityLoss(CorpseComplexConfig.limitDurabilityLoss);
     this.setDropDespawnTime(CorpseComplexConfig.dropDespawnTime);

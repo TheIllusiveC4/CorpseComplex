@@ -144,6 +144,9 @@ public class DeathOverrideManager {
       inventorySettings.put(InventorySection.COSMETIC_ARMOR,
           new SectionSettings(override.cosmeticArmorKeepChance, override.cosmeticArmorDestroyChance,
               override.cosmeticArmorKeepDurabilityLoss, override.cosmeticArmorDropDurabilityLoss));
+      inventorySettings.put(InventorySection.TOOL_BELT,
+          new SectionSettings(override.toolBeltKeepChance, override.toolBeltDestroyChance, 0.0D,
+              0.0D));
 
       Map<Item, DropMode> itemSettings =
           override.itemSettings != null ? ConfigParser.parseDrops(override.itemSettings) : null;
