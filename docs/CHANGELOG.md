@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.16.5-4.0.2.1] - 2021.01.25
+### Fixed
+- Fixed server crash when dying [#57](https://github.com/TheIllusiveC4/CorpseComplex/issues/57)
+
 ## [1.16.5-4.0.2.0] - 2021.01.21
 ### Added
 - Added Tool Belt integration [#55](https://github.com/TheIllusiveC4/CorpseComplex/issues/55)
