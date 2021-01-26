@@ -87,7 +87,7 @@ public class InventoryModule {
     if (!world.isRemote() && !world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
       DeathStorageCapability.getCapability(playerEntity).ifPresent(deathStorage -> {
         STORAGE.forEach(storage -> storage.retrieveInventory(deathStorage, deathStorage));
-        deathStorage.getDeathInventory().clear();
+        deathStorage.clearDeathInventory();
       });
     }
   }

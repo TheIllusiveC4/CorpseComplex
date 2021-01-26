@@ -125,6 +125,8 @@ public class DeathStorageCapability {
 
     Map<String, INBT> getDeathInventory();
 
+    void clearDeathInventory();
+
     void addEffectInstance(EffectInstance effectInstance);
 
     void clearEffects();
@@ -191,6 +193,11 @@ public class DeathStorageCapability {
     @Override
     public Map<String, INBT> getDeathInventory() {
       return ImmutableMap.copyOf(this.storage);
+    }
+
+    @Override
+    public void clearDeathInventory() {
+      this.storage.clear();
     }
 
     @Override
