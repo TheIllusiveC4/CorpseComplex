@@ -120,5 +120,8 @@ curseforge {
         changelogType = 'markdown'
         changelog = file('docs/CHANGELOG.md')
         addArtifact(sourcesJar)
+        "${curse_versions}".split(',').each {
+            addGameVersion "${it}"
+        }
     }
 }
