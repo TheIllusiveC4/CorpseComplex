@@ -67,9 +67,7 @@ public class EffectsModule {
             EffectsSetting setting = deathStorage.getSettings().getEffectsSettings();
             List<Effect> keepEffects = setting.getKeepEffects();
 
-            if (keepEffects.isEmpty()) {
-              flag = true;
-            } else if (setting.getKeepEffectsMode() == PermissionMode.BLACKLIST) {
+            if (setting.getKeepEffectsMode() == PermissionMode.BLACKLIST) {
               flag = !keepEffects.contains(effectInstance.getPotion());
             } else {
               flag = keepEffects.contains(effectInstance.getPotion());
