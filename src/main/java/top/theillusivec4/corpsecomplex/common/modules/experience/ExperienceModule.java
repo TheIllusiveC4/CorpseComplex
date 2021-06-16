@@ -20,7 +20,6 @@
 package top.theillusivec4.corpsecomplex.common.modules.experience;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -42,33 +41,17 @@ public class ExperienceModule {
           evt.setCanceled(true);
           return;
         }
-        int lostXp = (int) (lose * player.experienceTotal);
-        int droppedXp = getExperiencePoints(player, lostXp, deathStorage);
-        evt.setDroppedExperience(droppedXp);
-        int keptXp = player.experienceTotal - lostXp;
+        int totalPoints = getExperiencePoints(player);
+        int level = player.experienceLevel;
+        int lostPoints = (int) (lose * totalPoints);
+        int keptXp = totalPoints - lostPoints;
         player.experience = 0;
         player.experienceTotal = 0;
         player.experienceLevel = 0;
-        player.experience += (float) keptXp / (float) player.xpBarCap();
-        player.experienceTotal = MathHelper
-            .clamp(player.experienceTotal + keptXp, 0, Integer.MAX_VALUE);
-
-        while (player.experience < 0.0F) {
-          float f = player.experience * (float) player.xpBarCap();
-          if (player.experienceLevel > 0) {
-            player.addExperienceLevel(-1);
-            player.experience = 1.0F + f / (float) player.xpBarCap();
-          } else {
-            player.addExperienceLevel(-1);
-            player.experience = 0.0F;
-          }
-        }
-
-        while (player.experience >= 1.0F) {
-          player.experience = (player.experience - 1.0F) * (float) player.xpBarCap();
-          player.addExperienceLevel(1);
-          player.experience /= (float) player.xpBarCap();
-        }
+        player.giveExperiencePoints(keptXp);
+        int lostLevels = player.experienceLevel - level;
+        int droppedXp = getDroppedExperiencePoints(player, lostLevels, lostPoints, deathStorage);
+        evt.setDroppedExperience(droppedXp);
       });
     }
   }
@@ -89,29 +72,48 @@ public class ExperienceModule {
     }
   }
 
-  private static int getExperiencePoints(PlayerEntity player, int lostXp,
-      IDeathStorage deathStorage) {
+  private static int getExperiencePointsFromLevel(int levels) {
+    int points = 0;
+
+    if (levels <= 16) {
+      points += levels * levels + 6 * levels;
+    } else if (levels <= 31) {
+      points += levels * levels * 2.5f - levels * 40.5f + 360;
+    } else {
+      points += levels * levels * 4.5f - levels * 162.5f + 2220;
+    }
+    return points;
+  }
+
+  private static float getLevelsFromExperiencePoints(int points) {
+    int levels;
+
+    if (points < 394) {
+      levels = (int) (-3 + Math.sqrt(points + 9));
+    } else if (points < 1628) {
+      levels = (int) (8.1 + 0.1 * Math.sqrt(40 * points - 7839));
+    } else {
+      levels = (int) (18.0556 + 0.0555556 * Math.sqrt(72 * points - 54215));
+    }
+    return levels;
+  }
+
+  private static int getExperiencePoints(PlayerEntity player) {
+    int points = (int) (player.xpBarCap() * player.experience);
+    return points + getExperiencePointsFromLevel(player.experienceLevel);
+  }
+
+  private static int getDroppedExperiencePoints(PlayerEntity player, int lostLevels, int lostPoints,
+                                                IDeathStorage deathStorage) {
 
     if (!player.isSpectator()) {
       int i;
       ExperienceSetting setting = deathStorage.getSettings().getExperienceSettings();
 
       if (setting.getXpDropMode() == XpDropMode.PER_LEVEL) {
-        int newTotal = player.experienceTotal - lostXp;
-        int lostLevels;
-
-        if (player.experienceTotal >= 1628) {
-          lostLevels = (int) (player.experienceLevel - (18.0556D + 0.0555556D * Math
-              .sqrt(72 * newTotal - 54215)));
-        } else if (player.experienceTotal >= 394) {
-          lostLevels = (int) (player.experienceLevel - (8.1 + 0.1 * Math
-              .sqrt(40 * newTotal - 7839)));
-        } else {
-          lostLevels = (int) (player.experienceLevel - (-3 + Math.sqrt(newTotal + 9)));
-        }
         i = lostLevels * setting.getDroppedXpPerLevel();
       } else {
-        i = (int) (lostXp * setting.getDroppedXpPercent());
+        i = (int) (lostPoints * setting.getDroppedXpPercent());
       }
       return Math.min(i, setting.getMaxDroppedXp());
     } else {

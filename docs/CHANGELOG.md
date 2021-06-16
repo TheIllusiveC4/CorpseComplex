@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.16.5-4.0.2.4] - 2021.06.15
+### Fixed
+- Fixed experience module sometimes using incorrect values [#56](https://github.com/TheIllusiveC4/CorpseComplex/issues/56)
+
 ## [1.16.5-4.0.2.3] - 2021.02.01
 ### Fixed
 - Fixed keep effects always being active
