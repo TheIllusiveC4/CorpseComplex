@@ -49,7 +49,7 @@ public class ExperienceModule {
         player.experienceTotal = 0;
         player.experienceLevel = 0;
         player.giveExperiencePoints(keptXp);
-        int lostLevels = player.experienceLevel - level;
+        int lostLevels = level - player.experienceLevel;
         int droppedXp = getDroppedExperiencePoints(player, lostLevels, lostPoints, deathStorage);
         evt.setDroppedExperience(droppedXp);
       });
@@ -99,7 +99,7 @@ public class ExperienceModule {
   }
 
   private static int getExperiencePoints(PlayerEntity player) {
-    int points = (int) (player.xpBarCap() * player.experience);
+    int points = Math.round(player.xpBarCap() * player.experience);
     return points + getExperiencePointsFromLevel(player.experienceLevel);
   }
 
