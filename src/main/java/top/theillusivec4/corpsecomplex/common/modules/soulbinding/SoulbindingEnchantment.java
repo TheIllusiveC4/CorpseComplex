@@ -67,7 +67,7 @@ public class SoulbindingEnchantment extends Enchantment {
     if (rl != null) {
       isSoulbound = rl.getPath().equals("soulbound");
     }
-    return !isSoulbound && ench != Enchantments.VANISHING_CURSE;
+    return !isSoulbound && ench != Enchantments.VANISHING_CURSE && super.canApplyTogether(ench);
   }
 
   @Override
@@ -76,7 +76,7 @@ public class SoulbindingEnchantment extends Enchantment {
   }
 
   @Override
-  public boolean canApplyAtEnchantingTable(ItemStack stack) {
+  public boolean canApplyAtEnchantingTable(@Nonnull ItemStack stack) {
     return CorpseComplexConfig.canApplyEnchantingTable;
   }
 
