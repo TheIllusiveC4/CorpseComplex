@@ -58,6 +58,7 @@ public class MementoMoriSetting implements Setting<MementoMoriOverride> {
 
   @Override
   public void importConfig() {
+    this.getMementoCures().clear();
     ConfigParser.parseItems(CorpseComplexConfig.mementoCures)
         .forEach((item, integer) -> this.getMementoCures().add(new ItemStack(item, integer)));
     this.setNoFood(CorpseComplexConfig.noFood);

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.block.CakeBlock;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,6 +32,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.UseAction;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
@@ -130,6 +132,21 @@ public class MementoMoriModule {
         evt.setCanceled(true);
       }
     });
+  }
+
+  @SubscribeEvent
+  public void finishItemUse(LivingEntityUseItemEvent.Finish evt) {
+    LivingEntity entity = evt.getEntityLiving();
+
+    if (!entity.getEntityWorld().isRemote() && entity instanceof PlayerEntity) {
+      DeathStorageCapability.getCapability((PlayerEntity) entity).ifPresent(
+          deathStorage -> deathStorage.getSettings().getMementoMoriSettings().getMementoCures()
+              .forEach(itemStack -> {
+                if (ItemStack.areItemsEqual(evt.getItem(), itemStack)) {
+                  entity.curePotionEffects(evt.getItem());
+                }
+              }));
+    }
   }
 
   @SubscribeEvent
