@@ -58,9 +58,15 @@ public class ItemOverrideManager {
   }
 
   public static Optional<ItemOverride> getOverride(Item item) {
+
     for (ItemOverride override : OVERRIDES) {
-      if (override.getItems().stream().anyMatch(overrideItem -> item == overrideItem)) {
-        return Optional.of(override);
+      List<Item> items = override.getItems();
+
+      if (items != null) {
+
+        if (items.stream().anyMatch(overrideItem -> item == overrideItem)) {
+          return Optional.of(override);
+        }
       }
     }
     return Optional.empty();
