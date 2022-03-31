@@ -19,6 +19,9 @@
 
 package top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.integration;
 
+import java.util.Map;
+import java.util.UUID;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -30,6 +33,7 @@ import top.theillusivec4.corpsecomplex.common.modules.inventory.inventories.Inve
 import top.theillusivec4.corpsecomplex.common.util.Enums.InventorySection;
 import top.theillusivec4.corpsecomplex.common.util.InventoryHelper;
 import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
 public class CuriosInventory implements Inventory {
 
@@ -54,6 +58,14 @@ public class CuriosInventory implements Inventory {
           tag.putString("Identifier", id);
           tag.put("Stacks", list1);
           tag.put("CosmeticStacks", list2);
+          ListNBT modifiers = new ListNBT();
+
+          for (Map.Entry<UUID, AttributeModifier> entry : stackHandler.getModifiers().entrySet()) {
+            CompoundNBT mod = new CompoundNBT();
+            mod.put("Modifier", entry.getValue().write());
+            modifiers.add(mod);
+          }
+          tag.put("Modifiers", modifiers);
           list.add(tag);
         }));
     deathStorage.addInventory("curios", list);
@@ -74,6 +86,16 @@ public class CuriosInventory implements Inventory {
             CompoundNBT tag = list.getCompound(i);
             String id = tag.getString("Identifier");
             newHandler.getStacksHandler(id).ifPresent(stacksHandler -> {
+              ListNBT modifiers = tag.getList("Modifiers", NBT.TAG_COMPOUND);
+
+              for (int i1 = 0; i1 < modifiers.size(); i1++) {
+                CompoundNBT mod = modifiers.getCompound(i1);
+                AttributeModifier attributeModifier =
+                    AttributeModifier.read(mod.getCompound("Modifier"));
+                stacksHandler.getCachedModifiers().add(attributeModifier);
+                stacksHandler.addTransientModifier(attributeModifier);
+              }
+              stacksHandler.update();
               ListNBT stacks = tag.getList("Stacks", NBT.TAG_COMPOUND);
 
               for (int j = 0; j < stacks.size(); j++) {
@@ -82,9 +104,10 @@ public class CuriosInventory implements Inventory {
                 ItemStack itemstack = ItemStack.read(compoundnbt);
 
                 if (!itemstack.isEmpty()) {
-                  ItemStack existing = stacksHandler.getStacks().getStackInSlot(slot);
+                  IDynamicStackHandler stackHandler = stacksHandler.getStacks();
 
-                  if (existing.isEmpty()) {
+                  if (stackHandler.getSlots() > slot &&
+                      stackHandler.getStackInSlot(slot).isEmpty()) {
                     stacksHandler.getStacks().setStackInSlot(slot, itemstack);
                     CuriosApi.getCuriosHelper().getCurio(itemstack).ifPresent((curio) -> {
                       player.getAttributeManager()
@@ -104,9 +127,10 @@ public class CuriosInventory implements Inventory {
                 ItemStack itemstack = ItemStack.read(compoundnbt);
 
                 if (!itemstack.isEmpty()) {
-                  ItemStack existing = stacksHandler.getCosmeticStacks().getStackInSlot(slot);
+                  IDynamicStackHandler stackHandler = stacksHandler.getCosmeticStacks();
 
-                  if (existing.isEmpty()) {
+                  if (stackHandler.getSlots() > slot &&
+                      stackHandler.getStackInSlot(slot).isEmpty()) {
                     stacksHandler.getCosmeticStacks().setStackInSlot(slot, itemstack);
                   } else {
                     ItemHandlerHelper.giveItemToPlayer(player, itemstack);

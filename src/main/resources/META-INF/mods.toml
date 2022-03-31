@@ -24,3 +24,9 @@ ${mod_description}
     versionRange="[1.16.3,1.17)"
     ordering="NONE"
     side="BOTH"
+[[dependencies.corpsecomplex]]
+    modId="curios"
+    mandatory=false
+    versionRange="[1.16.5-4.0.6.0,)"
+    ordering="NONE"
+    side="BOTH"
