@@ -2,16 +2,18 @@ buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
         maven { url 'https://plugins.gradle.org/m2/' }
-        jcenter()
         mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
+        classpath group: 'com.modrinth.minotaur', name: 'Minotaur', version: '2.+'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'com.matthewprenger.cursegradle'
+apply plugin: 'com.modrinth.minotaur'
 
 version = "${mod_version}"
 group = "${mod_group}"
@@ -28,6 +30,8 @@ minecraft {
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             mods {
                 corpsecomplex {
@@ -41,6 +45,8 @@ minecraft {
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             mods {
                 corpsecomplex {
@@ -68,7 +74,8 @@ dependencies {
     minecraft "net.minecraftforge:forge:${version_forge}"
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${version_curios}")
     compileOnly fg.deobf("curse.maven:cosmeticarmorreworked-237307:3056451")
-    compile fg.deobf("curse.maven:toolbelt-260262:3086049")
+    implementation fg.deobf("curse.maven:toolbelt-260262:3086049")
+//  compile fg.deobf('curse.maven:obfuscate-289380:3740120')
 }
 
 sourceSets {
@@ -116,12 +123,23 @@ curseforge {
     project {
         apiKey = findProperty('curseKey') ?: 0
         id = "${curse_id}"
-        releaseType = "${curse_release}"
+        releaseType = "${release_type}"
         changelogType = 'markdown'
-        changelog = file('docs/CHANGELOG.md')
+        changelog = file('CHANGELOG_LATEST.md')
         addArtifact(sourcesJar)
-        "${curse_versions}".split(',').each {
+        "${release_versions}".split(',').each {
             addGameVersion "${it}"
         }
     }
+}
+
+modrinth {
+    token = findProperty('modrinthKey') ?: 0
+    projectId = "${modrinth_id}"
+    versionName = getArchivesBaseName() + "-" + getVersion()
+    versionType = "${release_type}"
+    changelog = file('CHANGELOG_LATEST.md').text
+    uploadFile = jar
+    additionalFiles = [sourcesJar]
+    gameVersions = "${release_versions}".split(",") as List<String>
 }

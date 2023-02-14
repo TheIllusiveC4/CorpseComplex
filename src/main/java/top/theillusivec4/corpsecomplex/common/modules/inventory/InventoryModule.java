@@ -96,10 +96,13 @@ public class InventoryModule {
   public void playerRespawn(final PlayerEvent.Clone evt) {
 
     if (evt.isWasDeath()) {
+      PlayerEntity original = evt.getOriginal();
+      original.revive();
       DeathStorageCapability.getCapability(evt.getPlayer()).ifPresent(
           newStorage -> DeathStorageCapability.getCapability(evt.getOriginal()).ifPresent(
               oldStorage -> STORAGE
                   .forEach(storage -> storage.retrieveInventory(newStorage, oldStorage))));
+      original.remove();
     }
   }
 }
